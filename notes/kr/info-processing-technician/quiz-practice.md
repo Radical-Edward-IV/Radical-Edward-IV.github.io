@@ -554,6 +554,14 @@ main() {
    tags="애플리케이션 테스트"
 %}
 
+{% include quiz-text.html
+   id="quiz-25"
+   question="다음 보기에서 화이트박스 테스트 기법이 '아닌' 것을 모두 고르시오."
+   choices_html=choices_block24
+   answer="경계값 분석, 동등 분할 테스트, 비교 테스트"
+   tags="애플리케이션 테스트"
+%}
+
 ---
 
 ## 학습 팁 💡
