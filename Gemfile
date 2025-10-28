@@ -37,3 +37,4 @@ gem "kramdown-parser-gfm"
 gem "webrick", "~> 1.8"
 
 gem 'jekyll-seo-tag'
+gem "csv", "~> 3.3"

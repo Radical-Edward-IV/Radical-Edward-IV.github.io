@@ -31,22 +31,40 @@ keywords: "정보처리기능사, 실기, 응용 SW 기초 기술 활용, 데이
 운영체제는 컴퓨터 시스템의 <span class="blue-text">자원들을 효율적으로 관리</span>하는 여러 프로그램의 모임이다.   
 <span class="blue-text">사용자와 하드웨어 간의 인터페이스</span>로 동작하는 <span class="blue-text">시스템 소프트웨어</span>의 일종이다.
 
-### 운영체제의 목적 `처신반사`{:.success}
-<span class="blue-text">처리 능력</span>, <span class="blue-text">반환 시간</span>, <span class="blue-text">사용 가능도</span>, <span class="blue-text">신뢰성</span>
+### 운영체제의 목적 `처신반사`{:.success} 
+<span class="blue-text">처리 능력</span>, <span class="blue-text">신뢰성</span>, <span class="blue-text">반환 시간</span>, <span class="blue-text">사용 가능도</span>
 > 💡 **팁**: 운영체제의 성능을 평가하는 기준!
+<!-- 약어에 맞게 단어 재배치 -->
 
 ### 운영체제의 구성 `제작감자 처서문어`{:.success}
 <span class="blue-text">제어 프로그램</span>(Control Program)
-- <span class="blue-text">감시 프로그램</span>, <span class="blue-text">작업 제어 프로그램</span>, <span class="blue-text">자료 관리 프로그램</span>   
+- <span class="blue-text">작업 제어 프로그램</span>, <span class="blue-text">감시 프로그램</span>, <span class="blue-text">자료 관리 프로그램</span>   
+<!-- 약어에 맞게 단어 재배치 -->
 
 <span class="blue-text">처리 프로그램</span>(Processing Program)
-- <span class="blue-text">언어 번역 프로그램</span>, <span class="blue-text">서비스 프로그램</span>, <span class="blue-text">문제 프로그램</span>
+- <span class="blue-text">서비스 프로그램</span>, <span class="blue-text">문제 프로그램</span>, <span class="blue-text">언어 번역 프로그램</span>
+<!-- 약어에 맞게 단어 재배치 -->
 
 ### 운영체제의 종류 `W U LI M A M I`{:.success}
 <span class="blue-text">Windows</span>, <span class="blue-text">UNIX</span>, <span class="blue-text">LINUX</span>, <span class="blue-text">MacOS</span>, <span class="blue-text">MS_DOS</span>, <span class="blue-text">Android</span>, <span class="blue-text">iOS</span>
 
 ### 운영체제 운영 기법의 발달 과정 `일다시실범분`{:.success}
 <span class="blue-text">일괄 처리 시스템</span> → <span class="blue-text">다중 프로그래밍 시스템</span> → <span class="blue-text">시분할 시스템</span> → <span class="blue-text">다중 처리 시스템</span> → <span class="blue-text">실시간 처리 시스템</span> → <span class="blue-text">범용 시스템</span> → <span class="blue-text">분산 처리 시스템</span>
+<details markdown="1">
+<summary>🌟 각 과정 핵심 한눈에 보기</summary>
+
+| 발달과정(시스템 명칭) | 핵심 특징 |
+|----------------------|----------|
+| 일괄처리(Batch) | 작업을 모아 한 번에 처리 |
+| 다중 프로그래밍(Multiprogramming) | CPU 활용 극대화 |
+| 시분할(Time-sharing) | 사용자 체감 동시 사용 |
+| 다중 처리(Multiprocessing) | 여러 CPU 병렬 처리 |
+| 실시간(Real-time) | 응답 기한 반드시 준수 |
+| 범용(General-purpose) | 다양한 작업 가능 |
+| 분산 처리(Distributed) | 여러 컴퓨터 공동 처리 |
+
+<!-- 각 발달과정의 특징을 같이 정리하면 암기에 도움이 될 것 같아서 작성해봤습니다. -->
+</details>
 
 ## 2. Windows :star::star::star:
 ### 최신 Windows의 특징 `그32선플DO파기향`{:.success}
@@ -90,13 +108,16 @@ UNIX는 1960년대 <span class="blue-text">AT&T 벨 연구소</span>, <span clas
 * <span class="blue-text">계층적 트리 구조의 파일 시스템</span>
 * <span class="blue-text">표준 입/출력</span>을 통해 <span class="blue-text">명령어 파이프 라인</span> 구성
 
-### UNIX 시스템의 구성 `커쉬유`{:.success}
+### UNIX 시스템의 구성 `커쉘유`{:.success}
+<!-- 커쉬유 > 커쉘유 오타 수정, line.116 "UNIX의 가장핵심" 을 span처리하여 강조했습니다. -->
 
 | 요소 | 특징 |
-|------|------|
-| <span class="blue-text">커널(Kernel)</span> | UNIX의 가장 핵심적인 부분<br/>컴퓨터 부팅될 때 주기억장치 적재 후 상주하면서 실행<br/>하드웨어 보호 및 프로그램과 하드웨어간 인터페이스<br/>프로세스 관리, 기억장치 관리, 파일 관리, 입/출력 관리, 데이터 전송 및 변환 등 여러 가지 기능 수행 |
+|------|------| 
+| <span class="blue-text">커널(Kernel)</span> | <span class="blue-text">UNIX의 가장 핵심</span>적인 부분<br/>컴퓨터 부팅될 때 주기억장치 적재 후 상주하면서 실행<br/>하드웨어 보호 및 프로그램과 하드웨어간 인터페이스<br/>프로세스 관리, 기억장치 관리, 파일 관리, 입/출력 관리, 데이터 전송 및 변환 등 여러 가지 기능 수행 |
 | <span class="blue-text">쉘(Shell)</span> | <span class="blue-text">사용자와 커널 사이의 인터페이스</span> 역할<br/><span class="blue-text">명령어 해석 및 실행</span><br/>다양한 쉘 종류: <span class="blue-text">Bourne Shell</span>, <span class="blue-text">C Shell</span>, <span class="blue-text">Korn Shell</span>, <span class="blue-text">Bash</span> 등 |
 | <span class="blue-text">유틸리티 프로그램</span> | <span class="blue-text">시스템 관리</span> 및 <span class="blue-text">사용자 작업</span>을 위한 <span class="blue-text">보조 프로그램</span><br/><span class="blue-text">파일 조작</span>, <span class="blue-text">텍스트 처리</span>, <span class="blue-text">네트워크 관리</span> 등<br/><span class="blue-text">ls</span>, <span class="blue-text">cp</span>, <span class="blue-text">mv</span>, <span class="blue-text">grep</span>, <span class="blue-text">awk</span>, <span class="blue-text">sed</span> 등 |
+
+
 
 ### LINUX의 개요 및 특징
 LINUX는 1991년대 <span class="blue-text">리누스 토발즈</span>가 <span class="blue-text">UNIX를 기반</span>으로 개발한 운영체제
@@ -125,6 +146,23 @@ LINUX는 1991년대 <span class="blue-text">리누스 토발즈</span>가 <span 
 | `md` | 디렉토리 생성 | `md newfolder` |
 | `cd` | 디렉토리 이동 | `cd C:\Windows` |
 
+<!-- 명령어 모음집을 만들어서 접어놓아봤습니다. -->
+<details markdown="1">
+<summary>🌟 Windows CLI 명령어 요약표 </summary>
+
+| 파일/디렉토리 관리 | 설명 | 정보확인/네트워크 | 설명 | 시스템 제어/유틸 | 설명 |
+|----------------|------|------------------|------|----------------|------|
+| dir | 목록 출력 | ipconfig | IP 정보 확인 | tasklist | 프로세스 목록 |
+| copy | 파일 복사 | ping | 네트워크 연결 테스트 | taskkill | 프로세스 종료 |
+| move | 이동/이름 변경 | tracert | 경로 추적 | cls | 화면 지우기 |
+| del | 파일 삭제 | systeminfo | OS 환경 정보 | shutdown | 시스템 종료/재부팅 |
+| md / mkdir | 디렉토리 생성 | netstat | 포트/통신 확인 | sfc | 시스템 파일 검사 |
+| cd / chdir | 디렉토리 이동 | arp | MAC/IP 변환 정보 | sc | 서비스 제어 |
+| ren | 파일 이름 변경 | nslookup | DNS 조회 | driverquery | 드라이버 목록 |
+| rd / rmdir | 디렉토리 삭제 | hostname | 호스트명 표시 | reg | 레지스트리 관리 |
+
+</details>
+
 #### GUI 기본 명령어
 바탕 화면이나 Windows 탐색기에서 마우스로 아이콘을 클릭하여 실행
 
@@ -140,6 +178,23 @@ LINUX는 1991년대 <span class="blue-text">리누스 토발즈</span>가 <span 
 | `rm` | 파일 삭제 | `rm file.txt` |
 | `chmod` | 파일 권한 변경 | `chmod 755 file.txt` |
 | `pwd` | 현재 디렉토리 경로 보기 | `pwd` |
+
+<details markdown="1">
+<summary>🌟 Unix 명령어 요약표 </summary>
+
+| 파일 관리 | 설명 | 텍스트/로그 처리 | 설명 | 시스템/권한 관리 | 설명 |
+|----------|------|-----------------|------|----------------|------|
+| ls | 목록 출력 | grep | 패턴 검색 | ps | 프로세스 목록 |
+| cp | 파일 복사 | awk | 필드 기반 처리 | kill | 프로세스 종료 |
+| mv | 이동/이름 변경 | sed | 스트림 편집 | chmod | 권한 변경 |
+| rm | 파일 삭제 | head | 앞부분 출력 | chown | 소유자 변경 |
+| mkdir | 디렉토리 생성 | tail | 뒷부분 출력 | | |
+| pwd | 현재 위치 | cat | 내용 출력 | | |
+| cd | 디렉토리 이동 | find | 검색 | | |
+| rmdir | 디렉토리 삭제 | tar | 압축/묶기 | | |
+
+
+</details>
 
 #### GUI 기본 명령어
 UNIX와 LINUX는 기본적으로 CLI를 사용하지만, X Window라는 별도의 프로그램을 설치하여 GUI 방식으로 운영 가능
@@ -176,15 +231,17 @@ UNIX와 LINUX는 기본적으로 CLI를 사용하지만, X Window라는 별도�
 * 프로세스가 생성되어 완료될 때까지 프로세스는 여러 종류의 스케줄링 과정을 거침
 * 프로세스 스케줄링 기법에는 <span class="blue-text">비선점(Non-preemptive)</span> 스케줄링과 <span class="blue-text">선점(Preemptive)</span> 스케줄링이 있다
 
-#### 비선점 스케줄링 `FCSH`{:.success}
+<!-- line.236 'FCSH' > FSHP 오타수정 및 표 내부 오타 수정 하였습니다. -->
+
+#### 비선점 스케줄링 `FSHP`{:.success}
 이미 할당된 <span class="blue-text">CPU</span>를 다른 프로세스가 <span class="blue-text">강제로 빼앗아 사용할 수 없는</span> 스케줄링 기법
 
 | 기법 | 설명 | 특징 |
 |------|------|------|
 | <span class="blue-text">F</span>CFS | First Come First Served<br/>준비상태 큐에 도착한 순서에 따라 차례로 CPU 할당 | FIFO 방식, 공정하지만 긴 작업이 있으면 대기시간 증가 |
-| <span class="blue-text">C</span>SJF | Shortest Job First<br/>실행 시간이 가장 짧은 프로세스에게 먼저 CPU 할당 | 평균 대기시간 최소화, 기아현상 발생 가능 |
-| <span class="blue-text">S</span>HRN | Highest Response Ratio Next<br/>대기 시간과 서비스 실행 시간을 이용하는 기법 | SJF의 기아현상 보완, 응답비율 계산 |
-| <span class="blue-text">H</span>우선순위 | Priority Scheduling<br/>가장 높은 우선순위 프로세스에게 먼저 CPU 할당 | 우선순위에 따른 처리, 기아현상 발생 가능 |
+| <span class="blue-text">S</span>JF | Shortest Job First<br/>실행 시간이 가장 짧은 프로세스에게 먼저 CPU 할당 | 평균 대기시간 최소화, 기아현상 발생 가능 |
+| <span class="blue-text">H</span>RRN | Highest Response Ratio Next<br/>대기 시간과 서비스 실행 시간을 이용하는 기법 | SJF의 기아현상 보완, 응답비율 계산 |
+| <span class="blue-text">P</span>S(우선순위) | Priority Scheduling<br/>가장 높은 우선순위 프로세스에게 먼저 CPU 할당 | 우선순위에 따른 처리, 기아현상 발생 가능 |
 
 #### 선점 스케줄링 `SR다다`{:.success}
 <span class="blue-text">우선순위가 높은</span> 다른 프로세스가 <span class="blue-text">CPU를 강제로 빼앗아 사용할 수 있는</span> 스케줄링 기법
