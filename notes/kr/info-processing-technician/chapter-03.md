@@ -38,11 +38,9 @@ keywords: "정보처리기능사, 실기, 네트워크 기초 활용, 데이터 
 ### 인터넷(Internet)의 개요
 인터넷이란 <span class="blue-text">TCP/IP 프로토콜을 기반으로 하여 전 세계 수많은 컴퓨터와 네트워크들이 연결된 광범위한 통신망</span>이다.
 
-<!-- TCP/IP 역할과 관계를 표로 정리해보았습니다. -->
-
-<details markdown="1">
 <summary> 🌟 TCP/IP </summary>
-⊙ **TCP/IP** : 컴퓨터끼리 데이터를 주고받기 위한 **통신 규칙(Protocol)** 들의 **모음(집합)**
+
++ 컴퓨터끼리 데이터를 주고받기 위한 **통신 규칙(Protocol)** 들의 **모음(집합)**
 
 
 | 구분 | TCP (Transmission Control Protocol) | IP (Internet Protocol) |
@@ -55,7 +53,7 @@ keywords: "정보처리기능사, 실기, 네트워크 기초 활용, 데이터 
 | **관계** | IP 위에서 작동(TCP는 IP의 서비스를 이용) | TCP의 하위계층, 데이터 운반 담당|
 
 
-</details>
+
 
 #### 인터넷의 특징 `미유모네백`{:.success}
 * <span class="blue-text">미국 국방성의 ARPANET</span>에서 시작
@@ -141,9 +139,9 @@ OSI 참조 모델은 <span class="blue-text">다른 시스템 간의 원활한 �
 <figcaption>https://www.geeksforgeeks.org/computer-networks/tcp-ip-model/</figcaption>
 </figure>
 
-<details markdown="1">
+
 <summary> 🌟 OSI vs TCP/IP 비교 </summary>
-<!-- OSI와 TCP/IP의 차이점을 정리해보았습니다. -->
+
 
 | 구분 | OSI 7계층 | TCP/IP 4계층 |
 |------|------------|---------------|
@@ -167,7 +165,7 @@ OSI 참조 모델은 <span class="blue-text">다른 시스템 간의 원활한 �
 | **데이터링크** (Data Link) | 네트워크 액세스 계층 | Ethernet, PPP |
 | 물리 (Physical) | ↑ 통합됨 | RS-232C, X.21 |
 
-</details>
+
 
 #### OSI 모델의 특징 `개개`{:.success}
 * <span class="blue-text">개방형 시스템</span> 간의 데이터 통신 시 필요한 장비 및 처리 방법을 7단계로 표준화
