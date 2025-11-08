@@ -31,6 +31,7 @@ keywords: "정보처리기능사, 실기, 라이브러리, 프로그래밍 언�
 ### 라이브러리의 개념
 
 라이브러리는 <span class="blue-text">프로그램을 효율적으로 개발할 수 있도록 자주 사용하는 함수나 데이터들을 미리 만들어 모아 놓은 집합체</span>이다.
+<small style="color: #203BB0;"> = 🧰도구상자</small>
 
 #### 라이브러리의 분류
 * <span class="blue-text">표준 라이브러리</span>: 프로그래밍 언어에 기본적으로 포함되어 있는 라이브러리로 여러 종류의 모듈이나 패키지 형태
@@ -52,19 +53,20 @@ keywords: "정보처리기능사, 실기, 라이브러리, 프로그래밍 언�
 C언어는 <span class="blue-text">라이브러리를 헤더 파일로 제공</span>한다.  
 각 헤더 파일에는 <span class="blue-text">응용 프로그램 개발에 필요한 함수들이 정리</span>되어 있다.
 
-C언어에서 헤더 파일을 사용하려면 <span class="yellow-code">#include <stdio.h></span>와 같이 <span class="yellow-code">include문</span>을 이용해 선언한 후 사용해야 한다.
+C언어에서 헤더 파일을 사용하려면 <span class="yellow-code">#include < stdio.h > </span>와 같이 <span class="yellow-code">include문</span>을 이용해 선언한 후 사용해야 한다.
 
 #### C언어 주요 헤더 파일
 
 | 헤더 파일 | 기능 | 주요 함수 |
 |-----------|------|-----------|
 | <span class="blue-text">stdio.h</span> | 데이터의 입출력에 사용되는 기능들 | <span class="yellow-code">printf()</span>, <span class="yellow-code">scanf()</span>, <span class="yellow-code">fprintf()</span>, <span class="yellow-code">fclose()</span>, <span class="yellow-code">fopen()</span> 등 |
-| <span class="blue-text">math.h</span> | 수학 함수들을 제공 | <span class="yellow-code">sqrt()</span>, <span class="yellow-code">pow()</span>, <span class="yellow-code">abs()</span>, <span class="yellow-code">log()</span> 등 |
+| <span class="blue-text">math.h</span> | 수학 함수들을 제공 | <span class="yellow-code">sqrt()</span>, <span class="yellow-code">pow()</span>, <span class="yellow-code">log()</span>, <span class="yellow-code">fabs()</span> 등 |
 | <span class="blue-text">string.h</span> | 문자열 처리에 사용되는 기능들을 제공 | <span class="yellow-code">strlen()</span>, <span class="yellow-code">strcpy()</span>, <span class="yellow-code">strcmp()</span> 등 |
-| <span class="blue-text">stdlib.h</span> | 자료형 변환, 난수 발생, 메모리 할당에 사용되는 기능들을 제공 | <span class="yellow-code">atoi()</span>, <span class="yellow-code">atof()</span>, <span class="yellow-code">srand()</span>, <span class="yellow-code">rand()</span>, <span class="yellow-code">malloc()</span>, <span class="yellow-code">free()</span> 등 |
+| <span class="blue-text">stdlib.h</span> | 자료형 변환, 난수 발생, 메모리 할당 및 정수 수학 함수 제공 | <span class="yellow-code">atoi()</span>, <span class="yellow-code">atof()</span>, <span class="yellow-code">srand()</span>, <span class="yellow-code">rand()</span>, <span class="yellow-code">malloc()</span>, <span class="yellow-code">free()</span>,<span class="yellow-code">abs()</span> 등 |
 | <span class="blue-text">time.h</span> | 시간 처리에 사용되는 기능 | <span class="yellow-code">time()</span>, <span class="yellow-code">clock()</span> 등 |
 
-> 💡 **팁**: <span class="blue-text">C언어는 헤더 파일을 통해 라이브러리를 제공</span>하며, <span class="yellow-code">#include</span>로 선언 후 사용합니다! 📚
+> 💡 **팁**: <span class="blue-text">C언어는 헤더 파일을 통해 라이브러리를 제공</span>하며, <span class="yellow-code">#include < 헤더 파일 ></span>로 선언 후 사용합니다! 📚 <br>
+> 🌟<span class="yellow-code">abs()</span>는 정수 절댓값, <span class="yellow-code">fabs()</span>는 실수 절댓값을 계산.
 
 ### Java의 주요 표준 라이브러리
 
@@ -83,6 +85,9 @@ import로 선언된 패키지 안에 있는 클래스의 메소드를 사용할 
 | <span class="blue-text">java.io</span> | 파일 입출력과 관련된 기능 및 프로토콜을 제공 | <span class="yellow-code">InputStream</span>, <span class="yellow-code">OutputStream</span>, <span class="yellow-code">Writer</span> 등 |
 | <span class="blue-text">java.net</span> | 네트워크 관련된 기능 제공 | <span class="yellow-code">Socket</span>, <span class="yellow-code">URL</span>, <span class="yellow-code">InetAddress</span> 등 |
 | <span class="blue-text">java.awt</span> | 사용자 인터페이스(UI)와 관련된 기능 제공 | <span class="yellow-code">Frame</span>, <span class="yellow-code">Panel</span>, <span class="yellow-code">Dialog</span>, <span class="yellow-code">Button</span>, <span class="yellow-code">Checkbox</span> 등 |
+| <span class="blue-text">java.sql</span> | 데이터베이스 연동 | <span class="yellow-code">Connection</span>, <span class="yellow-code">Statement</span>, <span class="yellow-code">ResultSet</span> |
+| <span class="blue-text">java.text</span> | 형식화/파싱 | <span class="yellow-code">SimpleDateFormat</span>, <span class="yellow-code">DecimalFormat</span> |
+
 
 #### Java 주요 메소드
 
@@ -197,6 +202,8 @@ Python에서 라이브러리를 사용하려면 <span class="yellow-code">import
 * <span class="blue-text">명령과 데이터로 구성된 객체를 중심으로 하는 프로그래밍 기법</span>
 * <span class="blue-text">한 프로그램을 다른 프로그램에서 이용 가능</span>
 
+> 💡 **팁:**  객체지향의 4대 핵심 개념 : <span class="blue-text">추상화, 캡슐화, 상속, 다형성</span>
+
 ### 객체지향 프로그래밍 언어의 종류
 <!-- 객체지향 프로그래밍 언어의 종류 (HTML Table) -->
 <table>
@@ -221,6 +228,7 @@ Python에서 라이브러리를 사용하려면 <span class="yellow-code">import
     </tr>
   </tbody>
 </table>
+- <small> 객체지향 언어 : Java, C++, Python, C#, Ruby, Kotlin, JavaScript </small> <br>
 
 > 💡 **팁**: <span class="blue-text">객체지향 프로그래밍은 코드의 재사용성과 유지보수성을 높여주는</span> 현대적인 프로그래밍 패러다임입니다! 🎯
 
@@ -228,7 +236,7 @@ Python에서 라이브러리를 사용하려면 <span class="yellow-code">import
 
 스크립트 언어는 <span class="blue-text">HTML 문서 안에 직접 프로그래밍 언어를 삽입하여 사용하는 언어</span>이다.
 
-* <span class="blue-text">기계어로 컴파일되지 않고 별도의 번역기가 소스를 분석하여 동작</span>
+* <span class="blue-text">기계어로 컴파일되지 않고 별도의 번역기가 소스를 분석하여 동작</span> → 인터프리터 언어
 * <span class="blue-text">게시판 입력, 상품 검색, 회원 가입 등과 같은 데이터베이스 처리 작업을 수행하기 위해 주로 사용</span>
 
 ### 스크립트 언어의 분류
