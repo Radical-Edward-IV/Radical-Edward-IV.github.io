@@ -26,7 +26,6 @@ keywords: "정보처리기능사, 실기, 데이터베이스 기초 활용, 데�
 
 ![header](https://capsule-render.vercel.app/api?type=waving&height=300&color=gradient&text=%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EA%B8%B0%EB%8A%A5%EC%82%AC&reversal=false&textBg=false)
 
-<!-- line.33~43 span, line.46~48 __으로 주요 단어의 가독성을 향상시켜봤습니다. -->
 
 ## 1. 데이터베이스의 개념 :star::star::star:
 ### 데이터베이스(Database) `통저운공`{:.success}
@@ -58,8 +57,8 @@ keywords: "정보처리기능사, 실기, 데이터베이스 기초 활용, 데�
     - 성능 향상을 위해 데이터베이스 재구성
 * <span class="blue-text">응용 프로그래머(Application Programmer)</span>: 데이터베이스에 접근하여 일반 사용자가 사용할 수 있는 인터페이스 제공
 * <span class="blue-text">일반 사용자(End User)</span>: 터미널을 통해 데이터베이스에 접근하여 자원을 활용
+<br>
 
-<details markdown="1">
 <summary>🌟 데이터베이스 3단계 스키마 & 사용자 구분 보기</summary>
 
 | 스키마 종류 | 담당 사용자 | 주요 역할 |
@@ -68,8 +67,7 @@ keywords: "정보처리기능사, 실기, 데이터베이스 기초 활용, 데�
 | **개념 스키마** (Conceptual) | **DBA (데이터베이스 관리자)** | **전체 DB 통합 구조** 관리<br/>데이터 독립성 확보 |
 | **내부 스키마** (Internal) | **시스템 프로그래머** | **물리적 저장 구조** 관리<br/>인덱스, 파일 구조, 최적화 |
 
-<!-- 개인적으로 어려웠던 스키마의 종류와 특성 및 사용자를 구분하여 표를 만들어봤습니다. -->
-</details>
+---
 
 ## 2. 데이터 모델 :star::star::star:
 ### 데이터 모델의 정의
@@ -101,44 +99,25 @@ keywords: "정보처리기능사, 실기, 데이터베이스 기초 활용, 데�
 <figcaption>https://en.wikipedia.org/wiki/Entity-relationship_model</figcaption>
 </figure>
 
-| 도형 | 의미 |
-|------|------|
-| <span class="blue-text">사각형</span> | 개체 타입(Entity Type) |
-| <span class="blue-text">마름모</span> | 관계 타입(Relationship Type) |
-| <span class="blue-text">타원</span> | 속성(Attribute) |
-| <span class="blue-text">밑줄 친 타원</span> | 기본키(Primary Key) 속성 |
-| <span class="blue-text">이중 타원</span> | 다중값 속성(Multivalued Attribute) |
-| <span class="blue-text">점선 타원</span> | 유도 속성(Derived Attribute) |
-| <span class="blue-text">삼각형(ISA)</span> | ISA 관계 |
-| <span class="blue-text">선</span> | 개체 타입과 속성을 연결 |
-| <span class="blue-text">겹치는 타원</span> | 복합 속성(Composite Attribute) |
-
-<!-- 아래와 같이 표를 변형하여 직관성을 높이려 해봤으나 제가 잘못 그린 도형이 있는지 불확실하여 우선 접는형식으로 만들어 봤습니다. -->
-<details markdown="1">
-<summary>🌟 ERD 주요 도형 표 펼치기</summary>
-
-
 | 도형 | 의미 | 모양 |
 |------|------|:----:|
 | <span class="blue-text">사각형</span> | 개체 타입(Entity Type) | <svg width="48" height="24" viewBox="0 0 48 24"><rect x="4" y="4" width="40" height="16" fill="none" stroke="black" stroke-width="2"/></svg> |
 | <span class="blue-text">마름모</span> | 관계 타입(Relationship Type) | <svg width="48" height="24" viewBox="0 0 48 24"><rect x="16" y="4" width="16" height="16" fill="none" stroke="black" stroke-width="2" transform="rotate(45 24 12)"/></svg> |
 | <span class="blue-text">타원</span> | 속성(Attribute) | <svg width="48" height="24" viewBox="0 0 48 24"><ellipse cx="24" cy="12" rx="18" ry="8" fill="none" stroke="black" stroke-width="2"/></svg> |
 | <span class="blue-text">밑줄 친 타원</span> | 기본키(Primary Key) 속성 | <svg width="60" height="28" viewBox="0 0 60 28"><ellipse cx="30" cy="12" rx="22" ry="9" fill="none" stroke="black" stroke-width="2"/><line x1="12" y1="15" x2="48" y2="15" stroke="black" stroke-width="2"/></svg> |
-| <span class="blue-text">이중 타원</span> | 다중값 속성(Multivalued) | <svg width="60" height="28" viewBox="0 0 60 28"><ellipse cx="30" cy="14" rx="20" ry="9" fill="none" stroke="black" stroke-width="2"/><ellipse cx="30" cy="14" rx="24" ry="12" fill="none" stroke="black" stroke-width="2"/></svg> |
-| <span class="blue-text">점선 타원</span> | 유도 속성(Derived) | <svg width="60" height="28" viewBox="0 0 60 28"><ellipse cx="30" cy="14" rx="22" ry="10" fill="none" stroke="black" stroke-width="2" stroke-dasharray="4 4"/></svg> |
+| <span class="blue-text">이중 타원</span> | 다중값 속성(Multivalued Attribute) | <svg width="60" height="28" viewBox="0 0 60 28"><ellipse cx="30" cy="14" rx="20" ry="9" fill="none" stroke="black" stroke-width="2"/><ellipse cx="30" cy="14" rx="24" ry="12" fill="none" stroke="black" stroke-width="2"/></svg> |
+| <span class="blue-text">점선 타원</span> | 유도 속성(Derived Attribute) | <svg width="60" height="28" viewBox="0 0 60 28"><ellipse cx="30" cy="14" rx="22" ry="10" fill="none" stroke="black" stroke-width="2" stroke-dasharray="4 4"/></svg> |
 | <span class="blue-text">삼각형(ISA)</span> | ISA 관계 | <svg width="48" height="28" viewBox="0 0 48 28"><polygon points="24,4 40,24 8,24" fill="none" stroke="black" stroke-width="2"/></svg> |
 | <span class="blue-text">선</span> | 개체 타입과 속성 연결 | <svg width="60" height="16" viewBox="0 0 60 16"><line x1="6" y1="8" x2="54" y2="8" stroke="black" stroke-width="2"/></svg> |
-| <span class="blue-text">겹치는 타원</span> | 복합 속성(Composite) | <svg width="64" height="28" viewBox="0 0 64 28"><ellipse cx="28" cy="14" rx="18" ry="9" fill="none" stroke="black" stroke-width="2"/><ellipse cx="36" cy="14" rx="18" ry="9" fill="none" stroke="black" stroke-width="2"/></svg> |
+| <span class="blue-text">겹치는 타원</span> | 복합 속성(Composite Attribute) | <svg width="64" height="28" viewBox="0 0 64 28"><ellipse cx="28" cy="14" rx="18" ry="9" fill="none" stroke="black" stroke-width="2"/><ellipse cx="36" cy="14" rx="18" ry="9" fill="none" stroke="black" stroke-width="2"/></svg> |
 
 
-</details>
 
 
 ### ISA 관계
 특정 개체를 여러 하위 개체로 나눌 수 있을 때, 상위 개체와 하위 개체 간의 관계를 나타낸다.
 > 예: 학생 → 재학생, 휴학생, 졸업생
 
-<!-- 이미지를 활용하여 테이블의 구조, 구성요소를 시각화 하여 각인시켜봤습니다. -->
 
 ## 4. 관계형 데이터베이스의 구조 :star::star::star:
 ### 관계형 데이터베이스의 개요
@@ -157,7 +136,7 @@ keywords: "정보처리기능사, 실기, 데이터베이스 기초 활용, 데�
   - <span class="blue-text">디그리(Degree)</span>: 속성의 개수
 * <span class="blue-text">튜플(Tuple)</span>: 릴레이션을 구성하는 각각의 행
   - <span class="blue-text">카디널리티(Cardinality)</span>: 튜플의 개수
-<img src="/notes/assets/info-processing-technician/chapter-02-07.png" width="80%;" alt="디그리와 카디널리티의 차이">
+<img src="/notes/assets/info-processing-technician/chapter-02-07.PNG" width="80%;" alt="디그리와 카디널리티의 차이">
 <figcaption>출처 : https://tragramming.tistory.com/48</figcaption>
 
 ### 릴레이션의 특징 `유순변중원키`{:.success}
@@ -370,7 +349,6 @@ A, B, C 3개의 속성을 가진 릴레이션 R에서 (A, C)에 대응하는 B �
 * 데이터 구조에 따라 <span class="blue-text">Key-Value, Document, Graph DBMS</span> 등으로 분류
 
 
-<details markdown="1">
 <summary><strong>🌟 Key-Value, Document, Graph DBMS ?</strong></summary>
 
 
@@ -382,6 +360,3 @@ A, B, C 3개의 속성을 가진 릴레이션 R에서 (A, C)에 대응하는 B �
 | 대표 사례 | Redis, DynamoDB | MongoDB, CouchDB | Neo4j, ArangoDB |
 | 사용 예 | 세션/캐시 | 사용자/게시글 | 추천/소셜 |
 
-</details>
-
-<!-- NoSQL은 아직 학원에서 비중있게 다루지 않아 간단하게 비교표를 만들어봤습니다. -->

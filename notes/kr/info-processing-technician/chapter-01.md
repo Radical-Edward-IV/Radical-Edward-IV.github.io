@@ -34,23 +34,23 @@ keywords: "정보처리기능사, 실기, 응용 SW 기초 기술 활용, 데이
 ### 운영체제의 목적 `처신반사`{:.success} 
 <span class="blue-text">처리 능력</span>, <span class="blue-text">신뢰성</span>, <span class="blue-text">반환 시간</span>, <span class="blue-text">사용 가능도</span>
 > 💡 **팁**: 운영체제의 성능을 평가하는 기준!
-<!-- 약어에 맞게 단어 재배치 -->
+
 
 ### 운영체제의 구성 `제작감자 처서문어`{:.success}
 <span class="blue-text">제어 프로그램</span>(Control Program)
 - <span class="blue-text">작업 제어 프로그램</span>, <span class="blue-text">감시 프로그램</span>, <span class="blue-text">자료 관리 프로그램</span>   
-<!-- 약어에 맞게 단어 재배치 -->
+
 
 <span class="blue-text">처리 프로그램</span>(Processing Program)
 - <span class="blue-text">서비스 프로그램</span>, <span class="blue-text">문제 프로그램</span>, <span class="blue-text">언어 번역 프로그램</span>
-<!-- 약어에 맞게 단어 재배치 -->
+
 
 ### 운영체제의 종류 `W U LI M A M I`{:.success}
 <span class="blue-text">Windows</span>, <span class="blue-text">UNIX</span>, <span class="blue-text">LINUX</span>, <span class="blue-text">MacOS</span>, <span class="blue-text">MS_DOS</span>, <span class="blue-text">Android</span>, <span class="blue-text">iOS</span>
 
 ### 운영체제 운영 기법의 발달 과정 `일다시실범분`{:.success}
 <span class="blue-text">일괄 처리 시스템</span> → <span class="blue-text">다중 프로그래밍 시스템</span> → <span class="blue-text">시분할 시스템</span> → <span class="blue-text">다중 처리 시스템</span> → <span class="blue-text">실시간 처리 시스템</span> → <span class="blue-text">범용 시스템</span> → <span class="blue-text">분산 처리 시스템</span>
-<details markdown="1">
+
 <summary>🌟 각 과정 핵심 한눈에 보기</summary>
 
 | 발달과정(시스템 명칭) | 핵심 특징 |
@@ -63,8 +63,8 @@ keywords: "정보처리기능사, 실기, 응용 SW 기초 기술 활용, 데이
 | 범용(General-purpose) | 다양한 작업 가능 |
 | 분산 처리(Distributed) | 여러 컴퓨터 공동 처리 |
 
-<!-- 각 발달과정의 특징을 같이 정리하면 암기에 도움이 될 것 같아서 작성해봤습니다. -->
-</details>
+
+
 
 ## 2. Windows :star::star::star:
 ### 최신 Windows의 특징 `그32선플DO파기향`{:.success}
@@ -109,7 +109,7 @@ UNIX는 1960년대 <span class="blue-text">AT&T 벨 연구소</span>, <span clas
 * <span class="blue-text">표준 입/출력</span>을 통해 <span class="blue-text">명령어 파이프 라인</span> 구성
 
 ### UNIX 시스템의 구성 `커쉘유`{:.success}
-<!-- 커쉬유 > 커쉘유 오타 수정, line.116 "UNIX의 가장핵심" 을 span처리하여 강조했습니다. -->
+
 
 | 요소 | 특징 |
 |------|------| 
@@ -146,8 +146,8 @@ LINUX는 1991년대 <span class="blue-text">리누스 토발즈</span>가 <span 
 | `md` | 디렉토리 생성 | `md newfolder` |
 | `cd` | 디렉토리 이동 | `cd C:\Windows` |
 
-<!-- 명령어 모음집을 만들어서 접어놓아봤습니다. -->
-<details markdown="1">
+
+
 <summary>🌟 Windows CLI 명령어 요약표 </summary>
 
 | 파일/디렉토리 관리 | 설명 | 정보확인/네트워크 | 설명 | 시스템 제어/유틸 | 설명 |
@@ -161,7 +161,7 @@ LINUX는 1991년대 <span class="blue-text">리누스 토발즈</span>가 <span 
 | ren | 파일 이름 변경 | nslookup | DNS 조회 | driverquery | 드라이버 목록 |
 | rd / rmdir | 디렉토리 삭제 | hostname | 호스트명 표시 | reg | 레지스트리 관리 |
 
-</details>
+
 
 #### GUI 기본 명령어
 바탕 화면이나 Windows 탐색기에서 마우스로 아이콘을 클릭하여 실행
@@ -179,7 +179,7 @@ LINUX는 1991년대 <span class="blue-text">리누스 토발즈</span>가 <span 
 | `chmod` | 파일 권한 변경 | `chmod 755 file.txt` |
 | `pwd` | 현재 디렉토리 경로 보기 | `pwd` |
 
-<details markdown="1">
+
 <summary>🌟 Unix 명령어 요약표 </summary>
 
 | 파일 관리 | 설명 | 텍스트/로그 처리 | 설명 | 시스템/권한 관리 | 설명 |
@@ -194,7 +194,7 @@ LINUX는 1991년대 <span class="blue-text">리누스 토발즈</span>가 <span 
 | rmdir | 디렉토리 삭제 | tar | 압축/묶기 | | |
 
 
-</details>
+
 
 #### GUI 기본 명령어
 UNIX와 LINUX는 기본적으로 CLI를 사용하지만, X Window라는 별도의 프로그램을 설치하여 GUI 방식으로 운영 가능
@@ -231,7 +231,6 @@ UNIX와 LINUX는 기본적으로 CLI를 사용하지만, X Window라는 별도�
 * 프로세스가 생성되어 완료될 때까지 프로세스는 여러 종류의 스케줄링 과정을 거침
 * 프로세스 스케줄링 기법에는 <span class="blue-text">비선점(Non-preemptive)</span> 스케줄링과 <span class="blue-text">선점(Preemptive)</span> 스케줄링이 있다
 
-<!-- line.236 'FCSH' > FSHP 오타수정 및 표 내부 오타 수정 하였습니다. -->
 
 #### 비선점 스케줄링 `FSHP`{:.success}
 이미 할당된 <span class="blue-text">CPU</span>를 다른 프로세스가 <span class="blue-text">강제로 빼앗아 사용할 수 없는</span> 스케줄링 기법
