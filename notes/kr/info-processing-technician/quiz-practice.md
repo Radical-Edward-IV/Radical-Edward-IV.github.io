@@ -556,6 +556,198 @@ main() {
 
 ---
 
+<div class="quiz-number">문제 25</div><strong>SELECT문 실행 순서</strong>
+
+{% include quiz-text.html
+   id="quiz-25"
+   question="SELECT문의 실행 순서를 올바르게 나열한 것은? (화살표 →로 구분하여 작성)"
+   answer="FROM → WHERE → GROUP BY → HAVING → SELECT → DISTINCT → ORDER BY"
+   placeholder="예: FROM → WHERE → ..."
+   tags="데이터베이스 기초 활용"
+%}
+
+---
+
+<div class="quiz-number">문제 26</div><strong>LIKE 연산자의 대표 문자</strong>
+
+{% capture choices_block26 %}
+<div class="quiz-choices" style="margin-bottom: 15px; padding: 10px; background-color: #fff; border-left: 3px solid #203BB0;">
+    <strong>대표 문자 설명</strong><br><br>
+    <strong>①</strong> 모든 문자를 대표한다.<br>
+    <strong>②</strong> 문자 하나를 대표한다.<br>
+    <strong>③</strong> 숫자 하나를 대표한다.
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz-26"
+   question="LIKE 연산자에서 사용하는 대표 문자 %, _, #의 의미를 순서대로 쓰시오."
+   choices_html=choices_block26
+   answer="① %, ② _, ③ #|①%, ②_, ③#"
+   placeholder="예: @, @, ..."
+   tags="데이터베이스 기초 활용"
+%}
+
+---
+
+<div class="quiz-number">문제 27</div><strong>그룹 함수</strong>
+
+{% include quiz-text.html
+   id="quiz-27"
+   question="집합으로 묶은 값을 요약하거나 집계하는 함수를 무엇이라고 하는가?"
+   answer="그룹 함수|집단 함수|그룹함수|집단함수"
+   tags="데이터베이스 기초 활용"
+%}
+
+---
+
+<div class="quiz-number">문제 28</div><strong>PREDICATE 옵션</strong>
+
+{% capture choices_block28 %}
+<div class="quiz-choices" style="margin-bottom: 15px; padding: 10px; background-color: #fff; border-left: 3px solid #203BB0;">
+    <strong>보기</strong><br>
+    ㉠ ALL<br>
+    ㉡ DISTINCT<br>
+    ㉢ DISTINCTROW<br>
+    ㉣ UNIQUE<br>
+    ㉤ TOP
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz-28"
+   question="SELECT문에서 중복된 튜플이 있으면 그 중 첫 번째 튜플만 검색하도록 하는 PREDICATE 옵션을 보기에서 찾아 기호로 쓰시오."
+   choices_html=choices_block28
+   answer="㉡|DISTINCT"
+   tags="데이터베이스 기초 활용"
+%}
+
+---
+
+<div class="quiz-number">문제 29</div><strong>JOIN의 종류</strong>
+
+{% capture choices_block29 %}
+<div class="quiz-choices" style="margin-bottom: 15px; padding: 10px; background-color: #fff; border-left: 3px solid #203BB0;">
+    <strong>보기</strong><br>
+    ㉠ INNER JOIN<br>
+    ㉡ LEFT OUTER JOIN<br>
+    ㉢ RIGHT OUTER JOIN<br>
+    ㉣ FULL OUTER JOIN<br>
+    ㉤ CROSS JOIN
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz-29"
+   question="공통 속성을 기준으로 일치하는 튜플만 반환하는 가장 일반적인 조인을 보기에서 찾아 기호로 쓰시오."
+   choices_html=choices_block29
+   answer="㉠|INNER JOIN"
+   tags="데이터베이스 기초 활용"
+%}
+
+---
+
+<div class="quiz-number">문제 30</div><strong>집합 연산자</strong>
+
+{% capture choices_block30 %}
+<div class="quiz-choices" style="margin-bottom: 15px; padding: 10px; background-color: #fff; border-left: 3px solid #203BB0;">
+    <strong>집합 연산자 설명</strong><br><br>
+    <strong>1.</strong> 두 SELECT문의 조회 결과를 통합하여 모두 출력한다. 중복된 행은 한 번만 출력한다.<br><br>
+    <strong>2.</strong> 두 SELECT문의 공통 행만 출력한다.<br><br>
+    <strong>3.</strong> 첫 번째 SELECT문의 결과에서 두 번째 SELECT문의 결과를 제외한다.
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz-30"
+   question="위 설명에 해당하는 집합 연산자를 순서대로 작성하시오."
+   choices_html=choices_block30
+   answer="UNION > INTERSECT > EXCEPT|UNION, INTERSECT, EXCEPT"
+   placeholder="예: ANSWER > ANSWER > ANSWER"
+   tags="데이터베이스 기초 활용"
+%}
+
+---
+
+<div class="quiz-number">문제 31</div><strong>ORDER BY 정렬</strong>
+
+{% include quiz-text.html
+   id="quiz-31"
+   question="ORDER BY절에서 내림차순 정렬을 지정하는 키워드는?"
+   answer="DESC"
+   placeholder="영문 약어 입력"
+   tags="데이터베이스 기초 활용"
+%}
+
+---
+
+<div class="quiz-number">문제 32</div><strong>연산자 우선순위</strong>
+
+{% capture choices_block32 %}
+<div class="quiz-choices" style="margin-bottom: 15px; padding: 10px; background-color: #fff; border-left: 3px solid #203BB0;">
+    <strong>보기</strong><br>
+    ㉠ 산술 연산자<br>
+    ㉡ 비교 연산자<br>
+    ㉢ 논리 연산자
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz-32"
+   question="연산자의 우선순위가 높은 순서대로 나열하시오."
+   choices_html=choices_block32
+   answer="㉠ > ㉡ > ㉢|㉠㉡㉢|산술 > 비교 > 논리"
+   placeholder="예: ㄱ > ㄴ > ..."
+   tags="데이터베이스 기초 활용"
+%}
+
+---
+
+<div class="quiz-number">문제 33</div><strong>SQL 함수</strong>
+
+{% capture choices_block33 %}
+<div class="quiz-choices" style="margin-bottom: 15px; padding: 10px; background-color: #fff; border-left: 3px solid #203BB0;">
+    <strong>함수 설명</strong><br><br>
+    <strong>①</strong> 문자열의 왼쪽에서 주어진 자릿수만큼 추출한다.<br>
+    <strong>②</strong> 문자열의 좌우 공백을 제거한다.<br>
+    <strong>③</strong> 필드의 평균을 구한다.<br>
+    <strong>④</strong> 레코드 수를 구한다.
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz-33"
+   question="위 설명에 해당하는 SQL 함수를 순서대로 작성하시오."
+   choices_html=choices_block33
+   answer="LEFT, TRIM, AVG, COUNT|LEFT,TRIM,AVG,COUNT"
+   placeholder="예: ANSWER, ANSWER, ..."
+   tags="데이터베이스 기초 활용"
+%}
+
+---
+
+<div class="quiz-number">문제 34</div><strong>OUTER JOIN</strong>
+
+{% include quiz-text.html
+   id="quiz-34"
+   question="JOIN 조건에 만족하지 않는 튜플도 결과에 포함시키며, 왼쪽 릴레이션의 모든 튜플을 포함하는 조인 방식을 쓰시오."
+   answer="LEFT OUTER JOIN|LEFT JOIN"
+   tags="데이터베이스 기초 활용"
+%}
+
+---
+
+<div class="quiz-number">문제 35</div><strong>SQL 하위 질의</strong>
+
+{% include quiz-text.html
+   id="quiz-35"
+   question="SELECT문 안에 있는 SELECT문을 무엇이라고 하는가?"
+   answer="하위 질의|서브쿼리|Subquery|부질의"
+   tags="데이터베이스 기초 활용"
+%}
+
+---
+
 ## 학습 팁 💡
 
 <div style="background-color: #e8f4f8; padding: 15px; border-radius: 8px; margin: 20px 0;">
@@ -566,6 +758,7 @@ main() {
         <li><strong>선택형 문제</strong>: 각 보기의 특징을 비교하며 소거법을 활용하세요</li>
         <li><strong>명령어 문제</strong>: 자주 사용되는 명령어는 반복 학습으로 암기하세요</li>
         <li><strong>애플리케이션 테스트</strong>: 테스트 원칙과 기법의 차이점을 명확히 구분하세요</li>
+        <li><strong>SQL 문제</strong>: SELECT문의 실행 순서와 각 절의 역할을 명확히 이해하세요</li>
     </ul>
 </div>
 

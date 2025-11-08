@@ -533,3 +533,451 @@ DELETE: 삭제
 | **ROLLBACK** | 불가능 | 가능 (COMMIT 전) |
 
 > 💡 **전문가의 조언**: SQL은 데이터베이스 관리의 핵심 도구입니다. DDL로 구조를 정의하고, DML로 데이터를 조작하며, DCL로 보안과 무결성을 제어하는 전체 흐름을 이해하는 것이 중요합니다!
+
+## 5. DML - SELECT :star::star::star:
+
+> 💡 **전문가의 조언**: SELECT문은 실무에서 가장 많이 사용되는 SQL 명령입니다. 명령어의 위치와 순서 및 옵션을 명확히 구분 지어 암기해 두는 것이 중요합니다.
+
+SELECT문은 테이블을 구성하는 튜플(행)들 중에서 전체 또는 조건을 만족하는 튜플(행)을 검색하여 주기억장치 상에 임시 테이블로 구성하는 명령문입니다.
+
+### 일반 형식
+
+```sql
+SELECT PREDICATE [테이블명.속성명1, 테이블명.속성명2, ...]
+FROM 테이블명, 테이블명, ...
+[WHERE 조건]
+[GROUP BY 속성명1, 속성명2, ...]
+[HAVING 조건]
+[ORDER BY 속성명 [ASC | DESC]];
+```
+
+#### SELECT문의 실행 순서
+
+<span class="blue-text">SELECT문의 실행 순서는 FROM → WHERE → GROUP BY → HAVING → SELECT → DISTINCT → ORDER BY 순입니다.</span>
+
+#### SELECT절
+
+- **속성명**: 검색하여 보여줄 속성(열) 또는 속성을 이용한 수식을 지정한다.
+  - 기본 테이블을 구성하는 모든 속성을 지정할 때는 `*`를 기술한다.
+  - 두 개 이상의 테이블을 이용할 경우 테이블명과 함께 `테이블명.속성명`으로 기술한다.
+- **PREDICATE**: 불러올 튜플 수를 제한할 명령어를 기술한다.
+
+| PREDICATE 옵션 | 설명 |
+|----------------|------|
+| <span class="yellow-code">ALL</span> | 모든 튜플을 검색할 때 지정하는 것으로, 주로 생략된다. |
+| <span class="yellow-code">DISTINCT</span> | 중복된 튜플이 있으면 그 중 첫 번째 튜플만 검색된다. |
+| <span class="yellow-code">DISTINCTROW</span> | 중복된 튜플을 제거하되 한 개의 속성이 아닌 튜플 전체를 대상으로 한다. |
+
+#### FROM절
+
+- 질의에 의해 검색될 데이터들을 포함하는 테이블명을 기술한다.
+
+#### WHERE절
+
+- 검색할 조건을 기술한다.
+
+#### GROUP BY절
+
+- 특정 속성을 기준으로 그룹화하여 검색할 때 그룹화할 속성을 지정한다.
+- 일반적으로 GROUP BY절은 그룹 함수와 함께 사용된다.
+
+#### HAVING절
+
+- GROUP BY와 함께 사용되며, 그룹에 대한 조건을 지정한다.
+
+#### ORDER BY절
+
+- 특정 속성을 기준으로 정렬하여 검색할 때 사용한다.
+- 속성명: 기준이 되는 속성명을 기술한다.
+- `[ASC|DESC]`: 정렬 방식으로서 `ASC`는 오름차순, `DESC`는 내림차순이다.
+  단, 생략하면 오름차순으로 지정된다.
+
+### 그룹 함수(집단 함수)
+
+집합으로 묶은 값을 요약하거나 집계하는 함수로, 그룹 함수에는 <span class="yellow-code">COUNT</span>, <span class="yellow-code">MAX</span>, <span class="yellow-code">MIN</span>, <span class="yellow-code">SUM</span>, <span class="yellow-code">AVG</span> 등이 있습니다.
+
+### 조건 연산자 / 연산자 우선순위 / 주요 함수
+
+#### 조건 연산자
+
+**비교 연산자**
+
+| 연산자 | = | > | < | >= | <= |
+|--------|---|---|---|----|-----|
+| 의미 | 같다 | 크다 | 작다 | 크거나 같다 | 작거나 같다 |
+
+**논리 연산자: NOT, AND, OR**
+
+| 연산자 | 의미 |
+|--------|------|
+| <span class="yellow-code">NOT</span> | 조건을 만족하지 않을 경우에만 데이터를 추출한다. |
+| <span class="yellow-code">AND</span> | 두 조건을 모두 만족할 경우에만 데이터를 추출한다. |
+| <span class="yellow-code">OR</span> | 두 조건식 중 하나라도 만족할 경우 데이터를 추출한다. |
+
+**LIKE 연산자**
+
+가장 일반적으로 사용되는 문자열에 대한 연산으로, 대표 문자를 이용해 지정된 속성의 문자 패턴을 검색하기 위해 사용됩니다.
+
+| 대표 문자 | 의미 |
+|-----------|------|
+| <span class="yellow-code">%</span> | 모든 문자를 대표한다. |
+| <span class="yellow-code">_</span> | 문자 하나를 대표한다. |
+| <span class="yellow-code">#</span> | 숫자 하나를 대표한다. |
+
+#### 연산자 우선순위
+
+| 종류 | 연산자 | 우선순위 |
+|------|---------|----------|
+| 산술 연산자 | +, -, *, / | 왼쪽에서 오른쪽으로 계산. 우선순위 높다. |
+| 비교 연산자 | =, <>, <, <=, >, >= | 왼쪽에서 오른쪽으로 계산. 우선순위 낮다. |
+| 논리 연산자 | NOT, AND, OR | NOT → AND → OR 순으로 우선순위가 낮아진다. |
+
+> <span class="blue-text">산술 > 관계 > 논리 연산자 순서로 우선순위가 정해진다.</span>
+
+#### 주요 함수
+
+| 함수 | 설명 |
+|------|------|
+| <span class="yellow-code">NOW()</span> | 현재 날짜와 시간을 표시한다. |
+| <span class="yellow-code">DATE()</span> | 현재 날짜를 표시한다. |
+| <span class="yellow-code">LEFT(문자열, 자릿수)</span> | 문자열의 왼쪽에서 주어진 자릿수만큼 추출한다. |
+| <span class="yellow-code">MID(문자열, 시작값, 자릿수)</span> | 문자열의 시작 위치에서 주어진 자릿수만큼 추출한다. |
+| <span class="yellow-code">RIGHT(문자열, 자릿수)</span> | 문자열의 오른쪽에서 주어진 자릿수만큼 추출한다. |
+| <span class="yellow-code">TRIM(문자열)</span> | 문자열의 좌우 공백을 제거한다. |
+| <span class="yellow-code">LEN(문자열)</span> | 문자열의 길이를 반환한다. |
+| <span class="yellow-code">UPPER(문자열)</span> | 문자열을 모두 대문자로 변환한다. |
+| <span class="yellow-code">LOWER(문자열)</span> | 문자열을 모두 소문자로 변환한다. |
+| <span class="yellow-code">AVG(필드명)</span> | 필드의 평균을 구한다. |
+| <span class="yellow-code">SUM(필드명)</span> | 필드의 합계를 구한다. |
+| <span class="yellow-code">COUNT(필드명)</span> | 레코드 수를 구한다. |
+| <span class="yellow-code">MIN(필드명)</span> | 필드에서 최소값을 구한다. |
+| <span class="yellow-code">MAX(필드명)</span> | 필드에서 최대값을 구한다. |
+
+### 기본 검색
+
+SELECT절에 원하는 속성을 지정하여 검색합니다.
+
+#### 예제 테이블: (사원)
+
+| 이름 | 부서 | 생일 | 주소 | 기본급 |
+|------|------|------|------|--------|
+| 홍길동 | 기획 | 04/05/61 | 망원동 | 120 |
+| 임꺽정 | 인터넷 | 01/09/69 | 서교동 | 80 |
+| 황진이 | 편집 | 07/21/75 | 합정동 | 100 |
+| 김선달 | 기획 | 02/20/64 | 대흥동 | 110 |
+| 성춘향 | 편집 | 07/22/63 | 당인동 | 100 |
+| 장길산 | 편집 | 03/11/67 | 상암동 | 120 |
+| 일지매 | 기획 | 04/29/78 | 연남동 | 110 |
+| 강감찬 | 인터넷 | 12/11/80 | 망원동 | 90 |
+
+#### 예제 테이블: (여가활동)
+
+| 이름 | 취미 | 경력 |
+|------|------|------|
+| 김선달 | 당구 | 10 |
+| 성춘향 | 나이트댄스 | 5 |
+| 일지매 | 태권도 | 15 |
+| 임꺽정 | 씨름 | 8 |
+
+#### 예제 1
+
+*(사원) 테이블의 모든 튜플을 검색하시오.*
+
+```sql
+SELECT * FROM 사원;
+```
+
+#### 예제 2
+
+*(사원) 테이블에서 주소만 검색하되 같은 주소는 한 번만 출력하시오.*
+
+```sql
+SELECT DISTINCT 주소 FROM 사원;
+```
+
+**결과**: 대흥동, 망원동, 상암동, 서교동, 연남동, 합정동, 당인동
+
+#### 예제 3
+
+*(사원) 테이블에서 '기본급'에 10을 더한 형태로 출력하시오.*
+
+```sql
+SELECT 부서 AS 부서2, 이름 AS 이름, 기본급+10 AS 기본급2 FROM 사원;
+```
+
+### 조건 지정 검색
+
+WHERE절에 조건을 지정하여 조건에 만족하는 튜플을 검색합니다.
+
+#### 예제 1
+
+*(사원) 테이블에서 '기획' 부서에 근무하는 사원을 검색하시오.*
+
+```sql
+SELECT * FROM 사원 WHERE 부서='기획';
+```
+
+#### 예제 2
+
+*(사원) 테이블에서 '기획' 부서에 근무하면서 '기본급'이 110 이상인 사원을 검색하시오.*
+
+```sql
+SELECT * FROM 사원 WHERE 부서='기획' AND 기본급>=110;
+```
+
+#### 예제 3
+
+*(사원) 테이블에서 '기획' 부서 또는 '인터넷' 부서에 근무하는 사원을 검색하시오.*
+
+```sql
+SELECT * FROM 사원 WHERE 부서='기획' OR 부서='인터넷';
+```
+
+#### 예제 4
+
+*'김'으로 시작하는 이름을 검색하시오.*
+
+```sql
+SELECT * FROM 사원 WHERE 이름 LIKE '김%';
+```
+
+#### 예제 5
+
+*생일이 '01/01/69' ~ '12/31/73' 사이인 튜플을 검색하시오.*
+
+```sql
+SELECT * FROM 사원 WHERE 생일 BETWEEN #01/01/69# AND #12/31/73#;
+```
+
+#### 예제 6
+
+*주소가 NULL인 튜플을 검색하시오.*
+
+```sql
+SELECT * FROM 사원 WHERE 주소 IS NULL;
+```
+
+### 정렬 검색
+
+ORDER BY절에 특정 속성을 지정하여 정렬합니다.
+
+#### 예제 1
+
+*(사원) 테이블에서 '주소'를 기준으로 내림차순 정렬시켜 상위 2개의 튜플만 검색하시오.*
+
+```sql
+SELECT TOP 2 * FROM 사원 ORDER BY 주소 DESC;
+```
+
+#### 예제 2
+
+*(사원) 테이블에서 '부서'를 기준으로 오름차순 정렬하고, 같은 '부서'는 '이름'을 기준으로 내림차순 정렬하시오.*
+
+```sql
+SELECT * FROM 사원 ORDER BY 부서 ASC, 이름 DESC;
+```
+
+### 그룹 지정 검색
+
+GROUP BY절에 지정한 속성을 기준으로 그룹화합니다.
+
+#### 예제 1
+
+*(사원) 테이블에서 '부서'별 '기본급'의 평균을 구하시오.*
+
+```sql
+SELECT 부서, AVG(기본급) AS 평균 FROM 사원 GROUP BY 부서;
+```
+
+#### 예제 2
+
+*(사원) 테이블에서 '부서'별 튜플의 개수를 검색하시오.*
+
+```sql
+SELECT 부서, COUNT(*) AS 사원수 FROM 사원 GROUP BY 부서;
+```
+
+#### 예제 3
+
+*(사원) 테이블에서 '기본급'이 100 이상인 사원에 대하여 '부서'별 튜플 개수를 구하되, 튜플 개수가 2 이상인 '부서'만 검색하시오.*
+
+```sql
+SELECT 부서, COUNT(*) AS 사원수
+FROM 사원
+WHERE 기본급>=100
+GROUP BY 부서
+HAVING COUNT(*)>=2;
+```
+
+### 하위 질의(Subquery)
+
+하위 질의는 SELECT문 안에 있는 SELECT문입니다.
+
+#### 예제 1
+
+*(여가활동) 테이블에서 '취미'가 '나이트댄스'인 사원의 '이름'과 '주소'를 (사원) 테이블에서 검색하시오.*
+
+```sql
+SELECT 이름, 주소
+FROM 사원
+WHERE 이름=(SELECT 이름 FROM 여가활동 WHERE 취미='나이트댄스');
+```
+
+#### 예제 2
+
+*(여가활동) 테이블에 없는 사원의 정보를 (사원) 테이블에서 검색하시오.*
+
+```sql
+SELECT *
+FROM 사원
+WHERE 이름 NOT IN (SELECT 이름 FROM 여가활동);
+```
+
+### 통합(UNION) 질의
+
+두 SELECT문의 결과를 통합합니다.
+
+#### 예제 테이블: (사원)
+
+| 사원 | 직급 |
+|------|------|
+| 김형석 | 대리 |
+| 홍영섭 | 과장 |
+| 류기선 | 부장 |
+| 김현진 | 이사 |
+
+#### 예제 테이블: (직원)
+
+| 사원 | 직급 |
+|------|------|
+| 신원철 | 대리 |
+| 이상윤 | 대리 |
+| 홍영섭 | 과장 |
+| 류기선 | 부장 |
+
+#### 예제
+
+*(사원) 테이블과 (직원) 테이블을 통합하는 SQL문을 작성하시오.*
+
+```sql
+SELECT * FROM 사원
+UNION
+SELECT * FROM 직원;
+```
+
+**결과**: 김현진, 김형석, 류기선, 신원철, 이상윤, 홍영섭
+
+### 집합 연산자의 종류
+
+| 집합 연산자 | 설명 | 집합 종류 |
+|-------------|------|-----------|
+| <span class="yellow-code">UNION</span> | 두 SELECT문의 조회 결과를 통합하여 모두 출력한다. 중복된 행은 한 번만 출력한다. | 합집합 |
+| <span class="yellow-code">UNION ALL</span> | 중복된 행을 그대로 출력한다. | 합집합 |
+| <span class="yellow-code">INTERSECT</span> | 두 SELECT문의 공통 행만 출력한다. | 교집합 |
+| <span class="yellow-code">EXCEPT</span> | 첫 번째 SELECT문의 결과에서 두 번째 SELECT문의 결과를 제외한다. | 차집합 |
+
+## 6. SQL - JOIN :star::star::star:
+
+> 💡 **전문가의 조언**: JOIN은 2개 이상의 테이블을 연결하여 데이터를 검색하는 매우 중요한 기능입니다. INNER JOIN과 OUTER JOIN의 차이를 명확히 이해해야 합니다.
+
+JOIN(조인)은 2개 이상의 테이블에 대해 연관된 튜플들을 결합하여 하나의 새로운 테이블을 반환합니다.
+
+JOIN은 <span class="blue-text">INNER JOIN</span>과 <span class="blue-text">OUTER JOIN</span>으로 구분됩니다.
+
+### INNER JOIN
+
+<span class="blue-text">가장 일반적인 조인</span>으로, 공통 속성을 기준으로 일치하는 튜플만 반환합니다.
+
+#### WHERE절을 이용한 형식
+
+```sql
+SELECT 테이블명1.속성명, 테이블명2.속성명
+FROM 테이블명1, 테이블명2
+WHERE 테이블명1.속성명 = 테이블명2.속성명;
+```
+
+#### ON절 이용 형식
+
+```sql
+SELECT 테이블명1.속성명, 테이블명2.속성명
+FROM 테이블명1 INNER JOIN 테이블명2
+ON 테이블명1.속성명 = 테이블명2.속성명;
+```
+
+#### NATURAL JOIN 형식
+
+```sql
+SELECT 테이블명1.속성명, 테이블명2.속성명
+FROM 테이블명1 NATURAL JOIN 테이블명2;
+```
+
+#### USING절 이용 형식
+
+```sql
+SELECT 테이블명1.속성명, 테이블명2.속성명
+FROM 테이블명1 JOIN 테이블명2 USING(속성명);
+```
+
+### OUTER JOIN
+
+릴레이션에서 JOIN 조건에 만족하지 않는 튜플도 결과에 포함시킵니다.
+
+- <span class="blue-text">LEFT OUTER JOIN</span>: 왼쪽 릴레이션의 모든 튜플을 포함
+- <span class="blue-text">RIGHT OUTER JOIN</span>: 오른쪽 릴레이션의 모든 튜플을 포함
+
+#### LEFT OUTER JOIN
+
+```sql
+SELECT 테이블1.속성명, 테이블2.속성명
+FROM 테이블1 LEFT OUTER JOIN 테이블2
+ON 테이블1.속성명 = 테이블2.속성명;
+```
+
+#### RIGHT OUTER JOIN
+
+```sql
+SELECT 테이블1.속성명, 테이블2.속성명
+FROM 테이블1 RIGHT OUTER JOIN 테이블2
+ON 테이블1.속성명 = 테이블2.속성명;
+```
+
+---
+
+## 최종 요약 정리
+
+### SQL 명령어 전체 구조
+
+```
+DDL (데이터 정의어)
+├─ CREATE: 생성
+├─ ALTER: 변경
+└─ DROP: 삭제
+
+DML (데이터 조작어)
+├─ SELECT: 검색
+├─ INSERT: 삽입
+├─ UPDATE: 갱신
+└─ DELETE: 삭제
+
+DCL (데이터 제어어)
+├─ COMMIT: 확정
+├─ ROLLBACK: 취소
+├─ GRANT: 권한 부여
+└─ REVOKE: 권한 취소
+```
+
+### SELECT문 실행 순서 (중요!)
+
+```
+FROM → WHERE → GROUP BY → HAVING → SELECT → DISTINCT → ORDER BY
+```
+
+### JOIN의 종류
+
+| JOIN 종류 | 설명 |
+|-----------|------|
+| <span class="blue-text">INNER JOIN</span> | 두 테이블에서 일치하는 행만 반환 |
+| <span class="blue-text">LEFT OUTER JOIN</span> | 왼쪽 테이블의 모든 행 + 일치하는 오른쪽 테이블 행 |
+| <span class="blue-text">RIGHT OUTER JOIN</span> | 오른쪽 테이블의 모든 행 + 일치하는 왼쪽 테이블 행 |
+
+> 💡 **전문가의 조언**: SQL 문법을 완벽하게 외우는 것보다는 각 명령어의 역할과 구조를 이해하고, 실제 문제를 풀어보며 익숙해지는 것이 중요합니다!
