@@ -94,6 +94,8 @@ notes-kr:
         url:    /notes/kr/info-processing-technician/quiz-practice
       - title:  모의고사 1
         url:    /notes/kr/info-processing-technician/mock-exam-01
+      - title:  모의고사 2
+        url:    /notes/kr/info-processing-technician/mock-exam-02
   - title:      정보처리기사
     children:
       - title:  1. 요구사항 분석
