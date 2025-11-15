@@ -92,6 +92,8 @@ notes-kr:
         url:    /notes/kr/info-processing-technician/chapter-10
       - title:  실전 문제 연습
         url:    /notes/kr/info-processing-technician/quiz-practice
+      - title:  모의고사 1
+        url:    /notes/kr/info-processing-technician/mock-exam-01
   - title:      정보처리기사
     children:
       - title:  1. 요구사항 분석
@@ -166,6 +168,10 @@ notes-kr:
         url: /notes/kr/java-deep-dive/chapter-07
       - title: 8. 파일 입출력
         url: /notes/kr/java-deep-dive/chapter-08
+  - title: C Basic
+    children:
+      - title: 1. Orientation & 개발 환경 설정
+        url: /notes/kr/c-basic/chapter-01
 layouts:
   - title: Layouts
     children:
