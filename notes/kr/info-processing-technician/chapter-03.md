@@ -312,13 +312,13 @@ OSI 참조 모델은 <span class="blue-text">다른 시스템 간의 원활한 �
 ### TCP/IP의 개요
 TCP/IP는 <span class="blue-text">인터넷에 연결된 서로 다른 기종의 컴퓨터들이 데이터를 주고받을 수 있도록 하는 표준 프로토콜</span>이다.
 
-#### TCP와 UDP 비교 `신연패`{:.success}
-
+#### TCP와 IP 비교 `신연패`{:.success} //
+<!-- 기존 UDP 에서 IP로 변경 책에서는 IP로 표시되어있습니다.-->
 | 프로토콜 | OSI 계층 | 서비스 유형 | 주요 특징 |
 |----------|----------|-------------|-----------|
 | <span class="blue-text">TCP</span> | 전송 계층 | <span class="blue-text">신뢰성 있는 연결형</span> 서비스 | 3-way-handshake, 패킷의 다중화, 순서 제어, 오류 제어, 흐름 제어 |
-| <span class="blue-text">UDP</span> | 전송 계층 | <span class="blue-text">비연결형</span> 서비스 | 데이터그램 기반, 패킷의 분해/조립, 주소 지정, 경로 선택 |
-
+| <span class="blue-text">IP</span> | 전송 계층 | <span class="blue-text">비연결형</span> 서비스 | 데이터그램 기반, 패킷의 분해/조립, 주소 지정, 경로 선택 |
+<!--이쪽도 UDP에서 IP로 변경했습니다.-->
 ### TCP/IP의 구조 `응전인네`{:.success}
 
 | OSI 모델 | TCP/IP 계층 | 주요 기능 | 프로토콜 예시 |
