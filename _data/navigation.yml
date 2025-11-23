@@ -176,6 +176,10 @@ notes-kr:
         url: /notes/kr/c-basic/chapter-01
       - title: 2. 변수와 자료형
         url: /notes/kr/c-basic/chapter-02
+      - title: 3. 연산자
+        url: /notes/kr/c-basic/chapter-03
+      - title: 4. 조건문
+        url: /notes/kr/c-basic/chapter-04
 layouts:
   - title: Layouts
     children:

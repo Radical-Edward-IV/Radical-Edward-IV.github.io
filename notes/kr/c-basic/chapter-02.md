@@ -614,25 +614,25 @@ int main() {
 
 <div style="background-color: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #203BB0;">
 
-**1. 변수**
-- 데이터를 저장하는 메모리 공간
-- 선언 시 자료형을 반드시 지정
+<strong>1. 변수</strong><br>
+• 데이터를 저장하는 메모리 공간<br>
+• 선언 시 자료형을 반드시 지정<br><br>
 
-**2. 자료형**
-- 정수: `char`, `short`, `int`, `long`
-- 실수: `float`, `double`
-- 문자: `char` (작은따옴표 사용)
+<strong>2. 자료형</strong><br>
+• 정수: <code>char</code>, <code>short</code>, <code>int</code>, <code>long</code><br>
+• 실수: <code>float</code>, <code>double</code><br>
+• 문자: <code>char</code> (작은따옴표 사용)<br><br>
 
-**3. printf 형식 지정자**
-- `%d`: 정수, `%f`: 실수, `%c`: 문자
+<strong>3. printf 형식 지정자</strong><br>
+• <code>%d</code>: 정수, <code>%f</code>: 실수, <code>%c</code>: 문자<br><br>
 
-**4. 상수**
-- `const`: 변경 불가능한 변수
-- `#define`: 매크로 상수 (컴파일 전 치환)
+<strong>4. 상수</strong><br>
+• <code>const</code>: 변경 불가능한 변수<br>
+• <code>#define</code>: 매크로 상수 (컴파일 전 치환)<br><br>
 
-**5. 형 변환**
-- 명시적 변환: `(자료형)변수`
-- 자동 변환: 더 큰 자료형으로 자동 변환
+<strong>5. 형 변환</strong><br>
+• 명시적 변환: <code>(자료형)변수</code><br>
+• 자동 변환: 더 큰 자료형으로 자동 변환
 
 </div>
 
