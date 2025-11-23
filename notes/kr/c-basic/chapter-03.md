@@ -1,14 +1,14 @@
 ---
 layout: article
-title: 3. 연산자
+title: 3. 변수와 자료형
 permalink: /notes/kr/c-basic/chapter-03
 key: notes
 sidebar:
   nav: notes-kr
 aside:
   toc: true
-excerpt: C 기초 과정 강의 노트, 산술/대입/비교/증감/논리 연산자 및 연산자 우선순위를 다룹니다.
-keywords: "C언어, 연산자, 산술연산자, 비교연산자, 논리연산자, 증감연산자, 삼항연산자"
+excerpt: C 기초 과정 강의 노트, 변수의 선언과 초기화, 기본 자료형, 형 변환, printf 함수 활용 방법을 다룹니다.
+keywords: "C언어, 변수, 자료형, int, float, double, char, printf, 형변환"
 ---
 
 <script src="/assets/js/quiz.js"></script>
@@ -49,41 +49,97 @@ keywords: "C언어, 연산자, 산술연산자, 비교연산자, 논리연산자
 
 ---
 
-## 1. 산술 연산자
+## 1. 변수란?
 
-산술 연산자는 덧셈, 뺄셈, 곱셈, 나눗셈 등 수학적 연산을 수행하는 연산자입니다.
+변수는 데이터를 저장하는 <span class="blue-text">메모리 공간</span>입니다. 값을 담는 상자라고 생각하면 쉽습니다.
 
-### 기본 산술 연산자
+```c
+int number = 3;  // 정수형 변수 number를 선언하고 3을 저장
+```
 
-| 연산자 | 기능 | 사용 예 |
-|--------|------|---------|
-| `+` | 두 값을 더합니다 | `5 + 3` → `8` |
-| `-` | 왼쪽 값에서 오른쪽 값을 뺍니다 | `10 - 4` → `6` |
-| `*` | 두 값을 곱합니다 | `6 * 8` → `48` |
-| `/` | 왼쪽 값을 오른쪽 값으로 나눕니다 | `9 / 3` → `3` |
-| `%` | 나눗셈의 나머지를 구합니다 | `9 % 2` → `1` |
+<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
+<strong>변수 = 값을 저장하는 메모리 공간</strong><br>
+변수를 선언하면 메모리에 공간이 할당되고, 그 공간에 값을 저장할 수 있습니다.
+</div>
+
+---
+
+## 2. 변수명 규칙
+
+변수명을 지을 때는 다음 규칙을 따라야 합니다:
+
+- **문자, 숫자, 언더바(_)만** 사용 가능 (특수문자 ✕)
+- **숫자로 시작 불가** (✕ `3number`, ✓ `number3`)
+- **키워드 사용 불가** (✕ `int`, `return`, `if` 등)
+- **대소문자 구분** (`Number`와 `number`는 다른 변수)
 
 <div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
-<strong>💡 나머지 연산자 %</strong><br>
-나머지 연산자는 정수 나눗셈에서만 사용 가능합니다. 홀수/짝수 판별, 배수 확인 등에 유용합니다.
+<strong>💡 좋은 변수명 짓기</strong><br>
+의미있는 이름을 사용하세요: <span class="green-text">age</span>, <span class="green-text">studentCount</span> (✓)<br>
+무의미한 이름은 피하세요: <span class="red-text">a</span>, <span class="red-text">x123</span> (✕)
+</div>
+
+```c
+// 올바른 변수명
+int age = 25;
+int student_count = 30;
+int number1 = 10;
+
+// 잘못된 변수명
+int 3number = 10;    // 숫자로 시작 (에러!)
+int hello boy = 3;   // 공백 포함 (에러!)
+int int = 5;         // 키워드 사용 (에러!)
+```
+
+---
+
+## 3. 변수 선언과 초기화
+
+### 선언
+
+```c
+int number;        // 변수 선언만 (값 없음)
+```
+
+### 초기화
+
+```c
+int number = 10;   // 선언과 동시에 초기화
+```
+
+### 다양한 초기화 방법
+
+```c
+// 한 번에 여러 변수 선언
+int number1, number2;
+
+// 선언과 초기화를 동시에
+int number3 = 3, number4 = 4;
+```
+
+<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
+<strong>⚠️ 초기화하지 않은 변수</strong><br>
+선언만 하고 초기화하지 않으면 <span class="red-text">쓰레기 값(garbage value)</span>이 들어있습니다. 반드시 초기화 후 사용하세요!
 </div>
 
 ### 실습 1
 
-다음 코드를 실행해보세요:
+다음 코드의 실행 결과를 확인해보세요:
 
 ```c
 #include <stdio.h>
 
 int main() {
-    int num1 = 7, num2 = 3;
-
-    printf("%d + %d = %d\n", num1, num2, num1 + num2);
-    printf("%d - %d = %d\n", num1, num2, num1 - num2);
-    printf("%d * %d = %d\n", num1, num2, num1 * num2);
-    printf("%d / %d = %d\n", num1, num2, num1 / num2);
-    printf("%d %% %d = %d\n", num1, num2, num1 % num2);
-
+    int number1, number2;
+    number1 = 1;
+    number2 = 2;
+    int number3 = 3, number4 = 4;
+    
+    printf("%d\n", number1);
+    printf("%d\n", number2);
+    printf("%d\n", number3);
+    printf("%d\n", number4);
+    
     return 0;
 }
 ```
@@ -92,406 +148,464 @@ int main() {
 <summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-7 + 3 = 10
-7 - 3 = 4
-7 * 3 = 21
-7 / 3 = 2
-7 % 3 = 1
+1
+2
+3
+4
+</pre>
+
+</details>
+
+---
+
+## 4. C언어 기본 자료형
+
+| 자료형 | 의미 | 크기 | 값의 범위 |
+|--------|------|------|-----------|
+| `char` | 문자 | 1바이트 | -128 ~ 127 |
+| `short` | 정수 | 2바이트 | -32,768 ~ 32,767 |
+| `int` | 정수 | 4바이트 | 약 -21억 ~ 21억 |
+| `long` | 정수 | 4/8바이트 | 약 -21억 ~ 21억 |
+| `float` | 실수 | 4바이트 | 소수점 7자리 |
+| `double` | 실수 | 8바이트 | 소수점 15자리 |
+
+### 정수형
+
+```c
+int age = 25;
+short temperature = -10;
+long population = 5000000;
+```
+
+### 실수형
+
+```c
+float pi = 3.14f;        // f를 붙여 float 표시
+double e = 2.718281828;
+```
+
+### 문자형
+
+```c
+char grade = 'A';        // 단일 문자는 작은따옴표
+```
+
+### 실습 2
+
+다음 프로그램을 작성하고 실행해보세요:
+
+```c
+#include <stdio.h>
+
+int main() {
+    double number1 = 10;
+    int number2 = 1.2345;
+    short number3 = 70000;
+    
+    printf("%f\n%d\n%d", number1, number2, number3);
+    
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 및 설명 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+10.000000
+1
+4464
 </pre>
 
 <ul style="margin-top: 10px;">
-<li><span class="blue-text">정수 나눗셈:</span> 7 / 3 = 2 (소수점 이하 버림)</li>
-<li><span class="blue-text">나머지:</span> 7을 3으로 나눈 나머지는 1</li>
+<li><span class="blue-text">05번:</span> 정수를 double에 저장하면 실수형으로 변환됩니다.</li>
+<li><span class="blue-text">06번:</span> 실수를 int에 저장하면 소수점 이하가 잘립니다.</li>
+<li><span class="blue-text">07번:</span> short 범위를 초과하면 오버플로우가 발생합니다.</li>
 </ul>
 
 </details>
 
-### 연산 결과의 자료형
-
-산술 연산의 결과는 두 피연산자의 자료형에 따라 결정됩니다.
-
-| 피연산자 자료형 | 결과 자료형 |
-|----------------|------------|
-| `int` + `int` | `int` |
-| `int` + `float` | `float` |
-| `double` + `int` | `double` |
-| `char` + `char` | `int` |
-
-```c
-int result1 = 7 / 3;      // 2 (정수 나눗셈)
-double result2 = 7 / 3;   // 2.0 (여전히 정수 나눗셈 후 double로 변환)
-double result3 = 7.0 / 3; // 2.333... (실수 나눗셈)
-```
-
-<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
-<strong>⚠️ 정수 나눗셈 주의</strong><br>
-정수끼리 나누면 결과도 정수입니다. 실수 결과를 얻으려면 최소 하나를 실수로 만드세요.
-</div>
-
 ---
 
-## 2. 대입 연산자
+## 5. printf 함수로 출력하기
 
-대입 연산자는 값을 변수에 저장하는 연산자입니다.
+`printf` 함수는 화면에 데이터를 출력하는 함수입니다.
 
-### 기본 대입 연산자
+### 형식 지정자
 
-```c
-int num = 10;   // 변수 num에 10을 대입
-```
+| 지정자 | 의미 |
+|--------|------|
+| `%d` | 정수 (int) |
+| `%ld` | 정수 (long) |
+| `%f` | 실수 (float, double) |
+| `%c` | 문자 (char) |
+| `%s` | 문자열 |
 
-### 복합 대입 연산자
-
-| 연산자 | 사용 예 | 의미 |
-|--------|---------|------|
-| `+=` | `num += 3` | `num = num + 3` |
-| `-=` | `num -= 5` | `num = num - 5` |
-| `*=` | `num *= 7` | `num = num * 7` |
-| `/=` | `num /= 9` | `num = num / 9` |
-| `%=` | `num %= 2` | `num = num % 2` |
-
-### 실습 2
+### 기본 사용법
 
 ```c
 #include <stdio.h>
 
 int main() {
-    int num1 = 10, num2 = 20;
-
-    num1 += 5;   // num1 = num1 + 5;
-    num2 *= 2;   // num2 = num2 * 2;
-
-    printf("num1 = %d\n", num1);  // 15
-    printf("num2 = %d\n", num2);  // 40
-
+    int number1 = 3;
+    int number2 = 5;
+    
+    printf("%d\n%d\n", number1, number2);
+    
     return 0;
 }
 ```
 
----
-
-## 3. 비교 연산자
-
-비교 연산자는 두 값을 비교하여 참(1) 또는 거짓(0)을 반환합니다.
-
-### 비교 연산자 종류
-
-| 연산자 | 의미 | 사용 예 |
-|--------|------|---------|
-| `==` | 같은가? | `a == b` |
-| `!=` | 다른가? | `a != b` |
-| `<` | 작은가? | `a < b` |
-| `>` | 큰가? | `a > b` |
-| `<=` | 작거나 같은가? | `a <= b` |
-| `>=` | 크거나 같은가? | `a >= b` |
-
-<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
-<strong>⚠️ 주의</strong><br>
-대입 연산자 <span class="red-text">=</span>와 비교 연산자 <span class="blue-text">==</span>를 혼동하지 마세요!<br>
-<code>if (num = 5)</code> ❌ 대입<br>
-<code>if (num == 5)</code> ✅ 비교
-</div>
+출력:
+```
+3
+5
+```
 
 ### 실습 3
 
+다음 프로그램의 실행 결과를 확인해보세요:
+
 ```c
 #include <stdio.h>
 
 int main() {
-    int a = 10, b = 20;
-
-    printf("a == b : %d\n", a == b);  // 0 (거짓)
-    printf("a != b : %d\n", a != b);  // 1 (참)
-    printf("a < b  : %d\n", a < b);   // 1 (참)
-    printf("a > b  : %d\n", a > b);   // 0 (거짓)
-
+    int number1 = 8;
+    int number2 = 10;
+    
+    printf("%d", number1 + number2);
+    
     return 0;
 }
 ```
 
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+18
+</pre>
+
+</details>
+
 ---
 
-## 4. 증감 연산자
+## 6. 형 변환 (Type Casting)
 
-증감 연산자는 변수의 값을 1만큼 증가 또는 감소시킵니다.
+### 명시적 형 변환
 
-### 증감 연산자 종류
+자료형을 강제로 변환하는 것을 <span class="blue-text">형 변환(Type Casting)</span>이라고 합니다.
 
-| 연산자 | 의미 | 사용 예 |
-|--------|------|---------|
-| `++` | 1 증가 | `num++`, `++num` |
-| `--` | 1 감소 | `num--`, `--num` |
-
-### 전위와 후위의 차이
-
-**전위(Prefix)**: 먼저 증가/감소 후 사용
 ```c
-int num = 5;
-printf("%d\n", ++num);  // 6 출력 (먼저 증가)
+double number = 10;    // 10.0으로 변환
+int result = 5.4321;   // 5로 변환 (소수점 이하 버림)
+short number = 200;    // 200으로 변환
 ```
 
-**후위(Postfix)**: 먼저 사용 후 증가/감소
-```c
-int num = 5;
-printf("%d\n", num++);  // 5 출력 (나중에 증가)
-printf("%d\n", num);    // 6 출력
-```
+<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
+<strong>⚠️ 주의</strong><br>
+정수를 실수로 변환하면 소수점 이하 손실이 발생합니다.<br>
+자료형 범위를 초과하면 <span class="red-text">오버플로우</span>가 발생합니다.
+</div>
 
 ### 실습 4
 
-<div class="quiz-number">실습 1</div><strong>다음 코드의 실행 결과는?</strong>
+<div class="quiz-number">실습 1</div><strong>다음 C 프로그램에서 sizeof(100)의 결과는 무엇입니까?</strong>
 
-{% capture code_block1 %}
+{% capture code_block4 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int a = 10;
-    int b = ++a;
-    int c = a++;
-
-    printf("%d, %d, %d", a, b, c);
-
-    return 0;
-}</code></pre>
-</div>
-{% endcapture %}
-
-{% capture hint1 %}
-전위는 먼저 증가, 후위는 나중에 증가합니다.
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz1"
-   question=hint1
-   code_html=code_block1
-   answer="12, 11, 11"
-   tags="연산자"
-%}
-
----
-
-## 5. 논리 연산자
-
-논리 연산자는 참(1)과 거짓(0)을 다루는 연산자입니다.
-
-### 논리 연산자 종류
-
-| 연산자 | 의미 | 설명 |
-|--------|------|------|
-| `&&` | AND | 모두 참이면 참 |
-| `||` | OR | 하나라도 참이면 참 |
-| `!` | NOT | 참↔거짓 반전 |
-
-### 진리표
-
-**AND (&&)**
-- `1 && 1` → `1`
-- `1 && 0` → `0`
-- `0 && 0` → `0`
-
-**OR (||)**
-- `1 || 1` → `1`
-- `1 || 0` → `1`
-- `0 || 0` → `0`
-
-**NOT (!)**
-- `!1` → `0`
-- `!0` → `1`
-
-### 실습 5
-
-```c
-#include <stdio.h>
-
-int main() {
-    int age = 20;
-    int score = 85;
-
-    // AND: 나이가 18 이상이고 점수가 80 이상
-    if (age >= 18 && score >= 80) {
-        printf("합격!\n");
-    }
-
-    // OR: 나이가 60 이상이거나 학생
-    if (age >= 60 || score >= 90) {
-        printf("할인 대상\n");
-    }
-
-    // NOT: 성인이 아님
-    if (!(age >= 18)) {
-        printf("미성년자\n");
-    }
-
-    return 0;
-}
-```
-
----
-
-## 6. 삼항 조건 연산자
-
-삼항 조건 연산자는 조건에 따라 다른 값을 반환하는 연산자입니다.
-
-### 기본 형태
-
-```c
-조건 ? 참일_때_값 : 거짓일_때_값
-```
-
-### 사용 예
-
-```c
-int num = 10;
-int result = (num > 5) ? 100 : 200;  // result = 100
-
-// 절댓값 구하기
-int value = -15;
-int absolute = (value >= 0) ? value : -value;  // absolute = 15
-```
-
-### 실습 6
-
-<div class="quiz-number">실습 2</div><strong>다음 코드의 실행 결과는?</strong>
-
-{% capture code_block2 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-
-int main() {
-    int a = 15, b = 20;
-    int max = (a > b) ? a : b;
-
-    printf("최댓값: %d", max);
-
-    return 0;
-}</code></pre>
-</div>
-{% endcapture %}
-
-{% capture hint2 %}
-a(15)가 b(20)보다 크지 않으므로 b가 선택됩니다.
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz2"
-   question=hint2
-   code_html=code_block2
-   answer="최댓값: 20"
-   tags="연산자"
-%}
-
----
-
-## 7. 연산자 우선순위
-
-여러 연산자가 함께 사용될 때는 우선순위에 따라 계산됩니다.
-
-### 주요 연산자 우선순위
-
-| 우선순위 | 연산자 | 의미 | 결합 방향 |
-|---------|--------|------|-----------|
-| 1 | `++`, `--` (전위) | 증감 | → |
-| 2 | `!` | 논리 NOT | → |
-| 3 | `*`, `/`, `%` | 곱셈, 나눗셈 | ← |
-| 4 | `+`, `-` | 덧셈, 뺄셈 | ← |
-| 5 | `<`, `>`, `<=`, `>=` | 비교 | ← |
-| 6 | `==`, `!=` | 동등 | ← |
-| 7 | `&&` | 논리 AND | ← |
-| 8 | `||` | 논리 OR | ← |
-| 9 | `?:` | 삼항 연산자 | → |
-| 10 | `=`, `+=`, `-=` | 대입 | → |
-
-### 연산 순서 예제
-
-```c
-int result = 3 + 4 * 5;  // 23 (곱셈 먼저)
-// 4 * 5 = 20
-// 3 + 20 = 23
-
-int value = 10 > 5 && 20 < 30;  // 1 (참)
-// 10 > 5 = 1 (참)
-// 20 < 30 = 1 (참)
-// 1 && 1 = 1
-```
-
-<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
-<strong>💡 팁</strong><br>
-복잡한 연산식에서는 괄호 <code>()</code>를 사용하면 가독성이 높아지고 의도가 명확해집니다.
-</div>
-
----
-
-## 8. 종합 실습
-
-### 문제 1 - 나머지 연산 (기초)
-
-<div class="quiz-number">문제 1</div><strong>17 % 5의 결과는?</strong>
-
-{% capture hint3 %}
-17을 5로 나눈 나머지를 구하세요.
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz3"
-   question=hint3
-   answer="2"
-   tags="연산자"
-%}
-
----
-
-### 문제 2 - 증감 연산자 (중급)
-
-<div class="quiz-number">문제 2</div><strong>다음 코드의 실행 결과는?</strong>
-
-{% capture code_block3 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-
-int main() {
-    int x = 5;
-    int y = ++x + x++;
-
-    printf("%d, %d", x, y);
-
+    printf("%d, %d", sizeof(100), sizeof(3.14));
+    
     return 0;
 }</code></pre>
 </div>
 {% endcapture %}
 
 {% capture hint4 %}
-전위 ++x는 먼저 증가(6), 그 다음 x++(6 사용 후 7로 증가)
+정수 100은 int형으로 처리되어 4바이트입니다.
 {% endcapture %}
 
 {% include quiz-text.html
-   id="quiz4"
+   id="quiz1"
    question=hint4
-   code_html=code_block3
-   answer="7, 12"
-   tags="연산자"
+   code_html=code_block4
+   answer="4, 8"
+   tags="변수와 자료형"
 %}
 
 ---
 
-### 문제 3 - 논리 연산 (중급)
+## 7. 문자 다루기
 
-<div class="quiz-number">문제 3</div><strong>다음 조건의 결과는 참(1) 또는 거짓(0)?</strong>
+문자는 <span class="blue-text">char</span> 자료형을 사용하며, **작은따옴표**로 표현합니다.
 
 ```c
-int a = 10, b = 20, c = 30;
-(a < b) && (b < c) && (a + b > c)
+char ch1 = 'A';   // 문자 'A' 저장
 ```
 
+### ASCII 코드
+
+모든 문자는 숫자로 표현됩니다. 이를 <span class="blue-text">ASCII 코드</span>라고 합니다.
+
+```c
+char ch1 = 66;     // 숫자 66 저장 (ASCII 코드로 'B')
+char ch2 = 'B';    // 문자 'B' 저장 (내부적으로는 66)
+```
+
+### 실습 5
+
+<div class="quiz-number">실습 2</div><strong>다음 C 프로그램에서 printf("%c\n", ch1)의 실행 결과는 무엇입니까?</strong>
+
+{% capture code_block5 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
+
+int main() {
+    char ch1 = 66;
+    
+    printf("%c", ch1);
+    
+    return 0;
+}</code></pre>
+</div>
+{% endcapture %}
+
 {% capture hint5 %}
-각 조건을 순서대로 확인: (10 < 20) && (20 < 30) && (30 > 30)
+<code>%c</code>는 숫자를 문자로 출력하며, ASCII 코드 66은 'B'입니다.
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz2"
+   question=hint5
+   code_html=code_block5
+   answer="B"
+   tags="변수와 자료형"
+%}
+
+---
+
+## 8. 상수 (Constant)
+
+### 리터럴 상수
+
+코드에 직접 작성한 값을 말합니다.
+
+```c
+int number = 10;   // 10이 리터럴 상수
+```
+
+### 심볼릭 상수 (const)
+
+변경할 수 없는 변수를 만들 때 사용합니다.
+
+```c
+const int LENGTH = 10;
+// LENGTH = 20;  // 에러! const 변수는 변경 불가
+```
+
+<div style="background-color: #e8f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #448F52;">
+<strong>✓ const를 사용하는 이유</strong><br>
+실수로 값을 변경하는 것을 방지하고, 코드의 의도를 명확히 전달할 수 있습니다.
+</div>
+
+### 매크로 상수 (#define)
+
+컴파일 전에 치환되는 상수입니다.
+
+```c
+#define LENGTH 10
+
+int main() {
+    printf("%d", LENGTH);
+    return 0;
+}
+```
+
+### 실습 6
+
+<div class="quiz-number">실습 3</div><strong>다음 C 프로그램에서 NUMBER의 값은 무엇입니까?</strong>
+
+{% capture code_block6 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
+#define LENGTH 10
+
+int main() {
+    int number = 3;
+    const int NUMBER = 5;
+    
+    // 에러가 발생하는 코드는?
+    number = 10;
+    NUMBER = 10;
+    
+    printf("%d, %d, %d", LENGTH, number, NUMBER);
+    
+    return 0;
+}</code></pre>
+</div>
+{% endcapture %}
+
+{% capture hint6 %}
+const로 선언된 변수는 값을 변경할 수 없으므로 초기값인 5가 유지됩니다.
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz3"
+   question=hint6
+   code_html=code_block6
+   answer="10, 10, 5"
+   tags="변수와 자료형"
+%}
+
+---
+
+## 9. 종합 실습
+
+### 문제 1 - sizeof 연산자 (기초)
+
+<div class="quiz-number">문제 1</div><strong>다음 C 프로그램에서 sizeof(char)의 결과는 무엇입니까?</strong>
+
+{% capture code_block7 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
+
+int main() {
+    printf("%d", sizeof(char));
+    
+    return 0;
+}</code></pre>
+</div>
+{% endcapture %}
+
+{% capture hint7 %}
+char 자료형은 1바이트 크기를 가집니다.
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz4"
+   question=hint7
+   code_html=code_block7
+   answer="1"
+   tags="변수와 자료형"
+%}
+
+---
+
+### 문제 2 - 실수형 변환 (기초)
+
+<div class="quiz-number">문제 2</div><strong>3.14는 기본적으로 double형입니다. float 변수 f에 3.14를 저장할 때 컴파일 경고가 발생하지 않도록 하려면 어떻게 작성해야 합니까? (f를 포함하여 작성)</strong>
+
+{% capture hint8 %}
+실수 리터럴 뒤에 특정 접미사를 붙여 float형임을 명시해야 합니다.
 {% endcapture %}
 
 {% include quiz-text.html
    id="quiz5"
-   question=hint5
-   answer="0"
-   tags="연산자"
+   question=hint8
+   answer="3.14f|3.14F|float f = 3.14f;|float f = 3.14F;"
+   tags="변수와 자료형"
+%}
+
+---
+
+### 문제 3 - 문자형 출력 (기초)
+
+<div class="quiz-number">문제 3</div><strong>다음 C 프로그램에서 printf("%d\n", ch2)의 실행 결과는 무엇입니까?</strong>
+
+{% capture code_block9 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
+
+int main() {
+    char ch2 = 'B';
+    
+    printf("%d\n", ch2);
+    
+    return 0;
+}</code></pre>
+</div>
+{% endcapture %}
+
+{% capture hint9 %}
+'B'는 ASCII 코드로 66이며, %d로 출력하면 숫자로 표시됩니다.
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz6"
+   question=hint9
+   code_html=code_block9
+   answer="66"
+   tags="변수와 자료형"
+%}
+
+---
+
+### 문제 4 - 변수 교환 (중급)
+
+<div class="quiz-number">문제 4</div><strong>다음 C 프로그램에서 변수 교환 후 a의 값은 무엇입니까?</strong>
+
+{% capture code_block10 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int a = 10, b = 20;
+    int temp = a;
+    a = b;
+    b = temp;
+    
+    printf("a = %d, b = %d\n", a, b);
+    return 0;
+}</code></pre>
+</div>
+{% endcapture %}
+
+{% capture hint10 %}
+temp 변수를 이용하여 a와 b의 값을 교환합니다. 교환 후 a는 b의 값인 20을 가집니다.
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz7"
+   question=hint10
+   code_html=code_block10
+   answer="a = 20, b = 10"
+   tags="변수와 자료형"
+%}
+
+---
+
+### 문제 5 - 평균 계산 (중급)
+
+<div class="quiz-number">문제 5</div><strong>다음 C 프로그램에서 average의 값을 소수점 둘째 자리까지 작성하세요. (예: 87.67)</strong>
+
+{% capture code_block11 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int korean = 90, english = 85, math = 88;
+    double average = (korean + english + math) / 3.0;
+    
+    printf("평균: %.2f\n", average);
+    
+    return 0;
+}</code></pre>
+</div>
+{% endcapture %}
+
+{% capture hint11 %}
+(90 + 85 + 88) / 3.0 = 263 / 3.0 = 87.666...이며, 소수점 둘째 자리까지 표시하면 87.67입니다.
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz8"
+   question=hint11
+   code_html=code_block11
+   answer="87.67"
+   tags="변수와 자료형"
 %}
 
 ---
@@ -500,31 +614,27 @@ int a = 10, b = 20, c = 30;
 
 <div style="background-color: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #203BB0;">
 
-<strong>1. 산술 연산자</strong><br>
-• <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code><br>
-• 정수 나눗셈은 소수점 이하 버림<br><br>
+<strong>1. 변수</strong><br>
+• 데이터를 저장하는 메모리 공간<br>
+• 선언 시 자료형을 반드시 지정<br><br>
 
-<strong>2. 대입 연산자</strong><br>
-• 기본: <code>=</code><br>
-• 복합: <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>%=</code><br><br>
+<strong>2. 자료형</strong><br>
+• 정수: <code>char</code>, <code>short</code>, <code>int</code>, <code>long</code><br>
+• 실수: <code>float</code>, <code>double</code><br>
+• 문자: <code>char</code> (작은따옴표 사용)<br><br>
 
-<strong>3. 비교 연산자</strong><br>
-• <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code><br>
-• 결과는 참(1) 또는 거짓(0)<br><br>
+<strong>3. printf 형식 지정자</strong><br>
+• <code>%d</code>: 정수, <code>%f</code>: 실수, <code>%c</code>: 문자<br><br>
 
-<strong>4. 증감 연산자</strong><br>
-• 전위(prefix): <code>++num</code> (먼저 증가)<br>
-• 후위(postfix): <code>num++</code> (나중에 증가)<br><br>
+<strong>4. 상수</strong><br>
+• <code>const</code>: 변경 불가능한 변수<br>
+• <code>#define</code>: 매크로 상수 (컴파일 전 치환)<br><br>
 
-<strong>5. 논리 연산자</strong><br>
-• AND(<code>&&</code>): 모두 참<br>
-• OR(<code>||</code>): 하나라도 참<br>
-• NOT(<code>!</code>): 반전<br><br>
-
-<strong>6. 우선순위</strong><br>
-• 산술 → 비교 → 논리 → 대입 순서<br>
-• 괄호로 우선순위 명시 가능
+<strong>5. 형 변환</strong><br>
+• 명시적 변환: <code>(자료형)변수</code><br>
+• 자동 변환: 더 큰 자료형으로 자동 변환
 
 </div>
 
 ---
+

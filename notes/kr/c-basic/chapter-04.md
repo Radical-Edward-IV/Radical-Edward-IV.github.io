@@ -1,14 +1,14 @@
 ---
 layout: article
-title: 4. 조건문
+title: 4. 연산자
 permalink: /notes/kr/c-basic/chapter-04
 key: notes
 sidebar:
   nav: notes-kr
 aside:
   toc: true
-excerpt: C 기초 과정 강의 노트, if문, if-else문, 중첩 if문, switch문을 활용한 조건 분기를 다룹니다.
-keywords: "C언어, 조건문, if문, else문, switch문, 분기문, 제어문"
+excerpt: C 기초 과정 강의 노트, 산술/대입/비교/증감/논리 연산자 및 연산자 우선순위를 다룹니다.
+keywords: "C언어, 연산자, 산술연산자, 비교연산자, 논리연산자, 증감연산자, 삼항연산자"
 ---
 
 <script src="/assets/js/quiz.js"></script>
@@ -49,53 +49,40 @@ keywords: "C언어, 조건문, if문, else문, switch문, 분기문, 제어문"
 
 ---
 
-## 1. 조건문이란?
+## 1. 산술 연산자
 
-프로그램은 기본적으로 위에서 아래로 순차적으로 실행됩니다. 하지만 특정 조건에 따라 실행 흐름을 바꾸고 싶을 때가 있습니다. 이때 사용하는 것이 <span class="blue-text">조건문</span>입니다.
+산술 연산자는 덧셈, 뺄셈, 곱셈, 나눗셈 등 수학적 연산을 수행하는 연산자입니다.
 
-<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
-<strong>조건문 = 실행 흐름을 제어하는 문장</strong><br>
-조건이 참(True)이면 실행하고, 거짓(False)이면 건너뜁니다.
+### 기본 산술 연산자
+
+| 연산자 | 기능 | 사용 예 |
+|--------|------|---------|
+| `+` | 두 값을 더합니다 | `5 + 3` → `8` |
+| `-` | 왼쪽 값에서 오른쪽 값을 뺍니다 | `10 - 4` → `6` |
+| `*` | 두 값을 곱합니다 | `6 * 8` → `48` |
+| `/` | 왼쪽 값을 오른쪽 값으로 나눕니다 | `9 / 3` → `3` |
+| `%` | 나눗셈의 나머지를 구합니다 | `9 % 2` → `1` |
+
+<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
+<strong>💡 나머지 연산자 %</strong><br>
+나머지 연산자는 정수 나눗셈에서만 사용 가능합니다. 홀수/짝수 판별, 배수 확인 등에 유용합니다.
 </div>
 
-**조건문의 종류:**
-- `if`문: 조건이 참일 때만 실행
-- `if-else`문: 조건에 따라 두 갈래로 분기
-- `if-else if-else`문: 여러 조건을 순차적으로 검사
-- `switch`문: 값에 따라 여러 갈래로 분기
-
----
-
-## 2. if문
-
-if문은 가장 기본적인 조건문으로, 조건이 참일 때만 코드를 실행합니다.
-
-### 기본 형태
-
-```c
-if (조건)
-{
-    // 조건이 참일 때 실행할 코드
-}
-```
-
-**조건**이 참(1)이면 중괄호 안의 코드를 실행하고, 거짓(0)이면 건너뜁니다.
-
 ### 실습 1
+
+다음 코드를 실행해보세요:
 
 ```c
 #include <stdio.h>
 
 int main() {
-    int age = 20;
+    int num1 = 7, num2 = 3;
 
-    if (age >= 18) {
-        printf("성인입니다.\n");
-    }
-
-    if (age < 18) {
-        printf("미성년자입니다.\n");
-    }
+    printf("%d + %d = %d\n", num1, num2, num1 + num2);
+    printf("%d - %d = %d\n", num1, num2, num1 - num2);
+    printf("%d * %d = %d\n", num1, num2, num1 * num2);
+    printf("%d / %d = %d\n", num1, num2, num1 / num2);
+    printf("%d %% %d = %d\n", num1, num2, num1 % num2);
 
     return 0;
 }
@@ -105,48 +92,63 @@ int main() {
 <summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-성인입니다.
+7 + 3 = 10
+7 - 3 = 4
+7 * 3 = 21
+7 / 3 = 2
+7 % 3 = 1
 </pre>
 
 <ul style="margin-top: 10px;">
-<li><span class="blue-text">06행:</span> age >= 18이 참이므로 실행됩니다.</li>
-<li><span class="blue-text">10행:</span> age < 18이 거짓이므로 실행되지 않습니다.</li>
+<li><span class="blue-text">정수 나눗셈:</span> 7 / 3 = 2 (소수점 이하 버림)</li>
+<li><span class="blue-text">나머지:</span> 7을 3으로 나눈 나머지는 1</li>
 </ul>
 
 </details>
 
-### 중괄호 생략
+### 연산 결과의 자료형
 
-실행할 문장이 하나뿐이면 중괄호를 생략할 수 있습니다.
+산술 연산의 결과는 두 피연산자의 자료형에 따라 결정됩니다.
+
+| 피연산자 자료형 | 결과 자료형 |
+|----------------|------------|
+| `int` + `int` | `int` |
+| `int` + `float` | `float` |
+| `double` + `int` | `double` |
+| `char` + `char` | `int` |
 
 ```c
-if (score >= 60)
-    printf("합격\n");  // 한 줄이면 중괄호 생략 가능
+int result1 = 7 / 3;      // 2 (정수 나눗셈)
+double result2 = 7 / 3;   // 2.0 (여전히 정수 나눗셈 후 double로 변환)
+double result3 = 7.0 / 3; // 2.333... (실수 나눗셈)
 ```
 
-<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
-<strong>💡 권장사항</strong><br>
-중괄호를 생략할 수 있지만, 가독성과 유지보수를 위해 항상 중괄호를 사용하는 것이 좋습니다.
+<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
+<strong>⚠️ 정수 나눗셈 주의</strong><br>
+정수끼리 나누면 결과도 정수입니다. 실수 결과를 얻으려면 최소 하나를 실수로 만드세요.
 </div>
 
 ---
 
-## 3. if-else문
+## 2. 대입 연산자
 
-if-else문은 조건이 참일 때와 거짓일 때 각각 다른 코드를 실행합니다.
+대입 연산자는 값을 변수에 저장하는 연산자입니다.
 
-### 기본 형태
+### 기본 대입 연산자
 
 ```c
-if (조건)
-{
-    // 조건이 참일 때 실행
-}
-else
-{
-    // 조건이 거짓일 때 실행
-}
+int num = 10;   // 변수 num에 10을 대입
 ```
+
+### 복합 대입 연산자
+
+| 연산자 | 사용 예 | 의미 |
+|--------|---------|------|
+| `+=` | `num += 3` | `num = num + 3` |
+| `-=` | `num -= 5` | `num = num - 5` |
+| `*=` | `num *= 7` | `num = num * 7` |
+| `/=` | `num /= 9` | `num = num / 9` |
+| `%=` | `num %= 2` | `num = num % 2` |
 
 ### 실습 2
 
@@ -154,62 +156,40 @@ else
 #include <stdio.h>
 
 int main() {
-    int number = 7;
+    int num1 = 10, num2 = 20;
 
-    if (number % 2 == 0) {
-        printf("%d는 짝수입니다.\n", number);
-    }
-    else {
-        printf("%d는 홀수입니다.\n", number);
-    }
+    num1 += 5;   // num1 = num1 + 5;
+    num2 *= 2;   // num2 = num2 * 2;
+
+    printf("num1 = %d\n", num1);  // 15
+    printf("num2 = %d\n", num2);  // 40
 
     return 0;
 }
 ```
 
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-7는 홀수입니다.
-</pre>
-
-<p style="margin-top: 10px;">
-7을 2로 나눈 나머지는 1이므로 조건이 거짓입니다. 따라서 else 블록이 실행됩니다.
-</p>
-
-</details>
-
 ---
 
-## 4. if-else if-else문
+## 3. 비교 연산자
 
-여러 조건을 순차적으로 검사할 때 사용합니다.
+비교 연산자는 두 값을 비교하여 참(1) 또는 거짓(0)을 반환합니다.
 
-### 기본 형태
+### 비교 연산자 종류
 
-```c
-if (조건1)
-{
-    // 조건1이 참일 때 실행
-}
-else if (조건2)
-{
-    // 조건1은 거짓, 조건2가 참일 때 실행
-}
-else if (조건3)
-{
-    // 조건1, 2는 거짓, 조건3이 참일 때 실행
-}
-else
-{
-    // 모든 조건이 거짓일 때 실행
-}
-```
+| 연산자 | 의미 | 사용 예 |
+|--------|------|---------|
+| `==` | 같은가? | `a == b` |
+| `!=` | 다른가? | `a != b` |
+| `<` | 작은가? | `a < b` |
+| `>` | 큰가? | `a > b` |
+| `<=` | 작거나 같은가? | `a <= b` |
+| `>=` | 크거나 같은가? | `a >= b` |
 
 <div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
-<strong>⚠️ 중요</strong><br>
-조건을 위에서부터 순차적으로 검사하며, <span class="red-text">첫 번째로 참인 조건만 실행</span>됩니다. 나머지 조건은 검사하지 않습니다.
+<strong>⚠️ 주의</strong><br>
+대입 연산자 <span class="red-text">=</span>와 비교 연산자 <span class="blue-text">==</span>를 혼동하지 마세요!<br>
+<code>if (num = 5)</code> ❌ 대입<br>
+<code>if (num == 5)</code> ✅ 비교
 </div>
 
 ### 실습 3
@@ -218,360 +198,59 @@ else
 #include <stdio.h>
 
 int main() {
-    int score = 85;
+    int a = 10, b = 20;
 
-    if (score >= 90) {
-        printf("학점: A\n");
-    }
-    else if (score >= 80) {
-        printf("학점: B\n");
-    }
-    else if (score >= 70) {
-        printf("학점: C\n");
-    }
-    else if (score >= 60) {
-        printf("학점: D\n");
-    }
-    else {
-        printf("학점: F\n");
-    }
+    printf("a == b : %d\n", a == b);  // 0 (거짓)
+    printf("a != b : %d\n", a != b);  // 1 (참)
+    printf("a < b  : %d\n", a < b);   // 1 (참)
+    printf("a > b  : %d\n", a > b);   // 0 (거짓)
 
     return 0;
 }
 ```
 
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-학점: B
-</pre>
-
-<ul style="margin-top: 10px;">
-<li>score >= 90 → 거짓 → 다음 조건으로</li>
-<li>score >= 80 → 참 → "학점: B" 출력 후 조건문 종료</li>
-<li>나머지 조건은 검사하지 않음</li>
-</ul>
-
-</details>
-
-### else 생략 가능
-
-모든 조건이 거짓일 때 아무것도 실행하지 않으려면 else를 생략할 수 있습니다.
-
-```c
-if (num == 1)
-    printf("일\n");
-else if (num == 2)
-    printf("이\n");
-else if (num == 3)
-    printf("삼\n");
-// else 생략: 1, 2, 3이 아니면 아무것도 출력 안 함
-```
-
 ---
 
-## 5. 중첩 if문
+## 4. 증감 연산자
 
-if문 안에 또 다른 if문을 포함할 수 있습니다. 이를 <span class="blue-text">중첩 if문</span>이라고 합니다.
+증감 연산자는 변수의 값을 1만큼 증가 또는 감소시킵니다.
 
-### 기본 형태
+### 증감 연산자 종류
 
+| 연산자 | 의미 | 사용 예 |
+|--------|------|---------|
+| `++` | 1 증가 | `num++`, `++num` |
+| `--` | 1 감소 | `num--`, `--num` |
+
+### 전위와 후위의 차이
+
+**전위(Prefix)**: 먼저 증가/감소 후 사용
 ```c
-if (조건1)
-{
-    if (조건2)
-    {
-        // 조건1과 조건2가 모두 참일 때 실행
-    }
-}
+int num = 5;
+printf("%d\n", ++num);  // 6 출력 (먼저 증가)
+```
+
+**후위(Postfix)**: 먼저 사용 후 증가/감소
+```c
+int num = 5;
+printf("%d\n", num++);  // 5 출력 (나중에 증가)
+printf("%d\n", num);    // 6 출력
 ```
 
 ### 실습 4
 
-```c
-#include <stdio.h>
-
-int main() {
-    int age = 25;
-    int hasLicense = 1;  // 1: 면허 있음, 0: 면허 없음
-
-    if (age >= 18) {
-        printf("성인입니다.\n");
-
-        if (hasLicense == 1) {
-            printf("운전 가능합니다.\n");
-        }
-        else {
-            printf("면허가 필요합니다.\n");
-        }
-    }
-    else {
-        printf("미성년자는 운전할 수 없습니다.\n");
-    }
-
-    return 0;
-}
-```
-
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-성인입니다.
-운전 가능합니다.
-</pre>
-
-<ul style="margin-top: 10px;">
-<li>첫 번째 if: age >= 18 → 참</li>
-<li>중첩된 if: hasLicense == 1 → 참</li>
-<li>두 조건을 모두 만족하므로 "운전 가능합니다." 출력</li>
-</ul>
-
-</details>
-
-<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
-<strong>💡 팁</strong><br>
-중첩이 깊어질수록 코드가 복잡해집니다. 가능하면 논리 연산자(<code>&&</code>, <code>||</code>)로 조건을 합치는 것이 좋습니다.
-</div>
-
-**논리 연산자로 개선:**
-
-```c
-// 중첩 if문
-if (age >= 18) {
-    if (hasLicense == 1) {
-        printf("운전 가능\n");
-    }
-}
-
-// 논리 연산자 사용 (더 간결)
-if (age >= 18 && hasLicense == 1) {
-    printf("운전 가능\n");
-}
-```
-
----
-
-## 6. switch문
-
-switch문은 하나의 변수나 식의 값에 따라 여러 갈래로 분기할 때 사용합니다.
-
-### 기본 형태
-
-```c
-switch (변수 또는 식)
-{
-    case 값1:
-        // 변수가 값1과 같을 때 실행
-        break;
-
-    case 값2:
-        // 변수가 값2와 같을 때 실행
-        break;
-
-    case 값3:
-        // 변수가 값3과 같을 때 실행
-        break;
-
-    default:
-        // 어떤 case에도 해당하지 않을 때 실행
-        break;
-}
-```
-
-<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
-<strong>switch문의 특징</strong><br>
-• 정수형 값(int, char 등)만 사용 가능<br>
-• 각 case는 <span class="blue-text">break</span>로 구분<br>
-• default는 생략 가능 (선택사항)
-</div>
-
-### 실습 5
-
-```c
-#include <stdio.h>
-
-int main() {
-    int menu;
-
-    printf("메뉴를 선택하세요 (1-3): ");
-    scanf("%d", &menu);
-
-    switch (menu) {
-        case 1:
-            printf("아메리카노를 주문하셨습니다.\n");
-            break;
-
-        case 2:
-            printf("카페라떼를 주문하셨습니다.\n");
-            break;
-
-        case 3:
-            printf("카푸치노를 주문하셨습니다.\n");
-            break;
-
-        default:
-            printf("잘못된 선택입니다.\n");
-            break;
-    }
-
-    return 0;
-}
-```
-
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-메뉴를 선택하세요 (1-3): 2
-카페라떼를 주문하셨습니다.
-</pre>
-
-</details>
-
----
-
-## 7. break의 역할
-
-break는 switch문을 즉시 종료합니다. break가 없으면 다음 case도 계속 실행됩니다.
-
-### break가 있을 때
-
-```c
-int num = 2;
-
-switch (num) {
-    case 1:
-        printf("일\n");
-        break;  // switch 종료
-    case 2:
-        printf("이\n");
-        break;  // switch 종료
-    case 3:
-        printf("삼\n");
-        break;  // switch 종료
-}
-// 출력: 이
-```
-
-### break가 없을 때 (Fall-through)
-
-```c
-int num = 2;
-
-switch (num) {
-    case 1:
-        printf("일\n");
-        // break 없음
-    case 2:
-        printf("이\n");
-        // break 없음
-    case 3:
-        printf("삼\n");
-        // break 없음
-}
-// 출력: 이
-//       삼
-```
-
-<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
-<strong>⚠️ 주의</strong><br>
-break를 빼먹으면 의도하지 않은 동작이 발생합니다. <span class="red-text">각 case 끝에 break를 잊지 마세요!</span>
-</div>
-
-### break 생략을 활용하기
-
-때로는 의도적으로 break를 생략하여 여러 case를 묶을 수 있습니다.
-
-```c
-#include <stdio.h>
-
-int main() {
-    int day;
-
-    printf("요일을 숫자로 입력 (1-7): ");
-    scanf("%d", &day);
-
-    switch (day) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-            printf("평일입니다.\n");
-            break;
-
-        case 6:
-        case 7:
-            printf("주말입니다.\n");
-            break;
-
-        default:
-            printf("잘못된 입력입니다.\n");
-            break;
-    }
-
-    return 0;
-}
-```
-
----
-
-## 8. if문 vs switch문
-
-### 언제 if문을 사용하나요?
-
-- 범위 조건을 검사할 때 (`score >= 90`)
-- 비교 연산자가 필요할 때 (`age < 18`)
-- 복잡한 조건식이 필요할 때 (`age >= 18 && hasLicense`)
-- 실수형 값을 비교할 때
-
-### 언제 switch문을 사용하나요?
-
-- 하나의 변수가 여러 고정된 값과 비교될 때
-- 정수형 또는 문자형 값만 다룰 때
-- 메뉴 선택, 요일 구분 등 명확한 경우의 수가 있을 때
-
-**비교 예시:**
-
-```c
-// if문으로 메뉴 선택
-if (menu == 1)
-    printf("아메리카노\n");
-else if (menu == 2)
-    printf("카페라떼\n");
-else if (menu == 3)
-    printf("카푸치노\n");
-
-// switch문으로 메뉴 선택 (더 깔끔)
-switch (menu) {
-    case 1: printf("아메리카노\n"); break;
-    case 2: printf("카페라떼\n"); break;
-    case 3: printf("카푸치노\n"); break;
-}
-```
-
----
-
-## 9. 종합 실습
-
-### 문제 1 - 절댓값 구하기 (기초)
-
-<div class="quiz-number">문제 1</div><strong>다음 코드의 실행 결과는?</strong>
+<div class="quiz-number">실습 1</div><strong>다음 코드의 실행 결과는?</strong>
 
 {% capture code_block1 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int num = -15;
+    int a = 10;
+    int b = ++a;
+    int c = a++;
 
-    if (num < 0) {
-        num = -num;
-    }
-
-    printf("%d", num);
+    printf("%d, %d, %d", a, b, c);
 
     return 0;
 }</code></pre>
@@ -579,38 +258,111 @@ int main() {
 {% endcapture %}
 
 {% capture hint1 %}
-num이 음수이므로 부호를 반전시킵니다.
+전위는 먼저 증가, 후위는 나중에 증가합니다.
 {% endcapture %}
 
 {% include quiz-text.html
    id="quiz1"
    question=hint1
    code_html=code_block1
-   answer="15"
-   tags="조건문"
+   answer="12, 11, 11"
+   tags="연산자"
 %}
 
 ---
 
-### 문제 2 - 학점 계산 (기초)
+## 5. 논리 연산자
 
-<div class="quiz-number">문제 2</div><strong>점수가 75일 때 출력되는 학점은?</strong>
+논리 연산자는 참(1)과 거짓(0)을 다루는 연산자입니다.
+
+### 논리 연산자 종류
+
+| 연산자 | 의미 | 설명 |
+|--------|------|------|
+| `&&` | AND | 모두 참이면 참 |
+| `||` | OR | 하나라도 참이면 참 |
+| `!` | NOT | 참↔거짓 반전 |
+
+### 진리표
+
+**AND (&&)**
+- `1 && 1` → `1`
+- `1 && 0` → `0`
+- `0 && 0` → `0`
+
+**OR (||)**
+- `1 || 1` → `1`
+- `1 || 0` → `1`
+- `0 || 0` → `0`
+
+**NOT (!)**
+- `!1` → `0`
+- `!0` → `1`
+
+### 실습 5
+
+```c
+#include <stdio.h>
+
+int main() {
+    int age = 20;
+    int score = 85;
+
+    // AND: 나이가 18 이상이고 점수가 80 이상
+    if (age >= 18 && score >= 80) {
+        printf("합격!\n");
+    }
+
+    // OR: 나이가 60 이상이거나 학생
+    if (age >= 60 || score >= 90) {
+        printf("할인 대상\n");
+    }
+
+    // NOT: 성인이 아님
+    if (!(age >= 18)) {
+        printf("미성년자\n");
+    }
+
+    return 0;
+}
+```
+
+---
+
+## 6. 삼항 조건 연산자
+
+삼항 조건 연산자는 조건에 따라 다른 값을 반환하는 연산자입니다.
+
+### 기본 형태
+
+```c
+조건 ? 참일_때_값 : 거짓일_때_값
+```
+
+### 사용 예
+
+```c
+int num = 10;
+int result = (num > 5) ? 100 : 200;  // result = 100
+
+// 절댓값 구하기
+int value = -15;
+int absolute = (value >= 0) ? value : -value;  // absolute = 15
+```
+
+### 실습 6
+
+<div class="quiz-number">실습 2</div><strong>다음 코드의 실행 결과는?</strong>
 
 {% capture code_block2 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int score = 75;
+    int a = 15, b = 20;
+    int max = (a > b) ? a : b;
 
-    if (score >= 90)
-        printf("A");
-    else if (score >= 80)
-        printf("B");
-    else if (score >= 70)
-        printf("C");
-    else
-        printf("D");
+    printf("최댓값: %d", max);
 
     return 0;
 }</code></pre>
@@ -618,83 +370,90 @@ int main() {
 {% endcapture %}
 
 {% capture hint2 %}
-75는 70 이상이므로 세 번째 조건에 해당합니다.
+a(15)가 b(20)보다 크지 않으므로 b가 선택됩니다.
 {% endcapture %}
 
 {% include quiz-text.html
    id="quiz2"
    question=hint2
    code_html=code_block2
-   answer="C"
-   tags="조건문"
+   answer="최댓값: 20"
+   tags="연산자"
 %}
 
 ---
 
-### 문제 3 - switch문 (중급)
+## 7. 연산자 우선순위
 
-<div class="quiz-number">문제 3</div><strong>다음 코드에서 num이 2일 때 출력 결과는?</strong>
+여러 연산자가 함께 사용될 때는 우선순위에 따라 계산됩니다.
+
+### 주요 연산자 우선순위
+
+| 우선순위 | 연산자 | 의미 | 결합 방향 |
+|---------|--------|------|-----------|
+| 1 | `++`, `--` (전위) | 증감 | → |
+| 2 | `!` | 논리 NOT | → |
+| 3 | `*`, `/`, `%` | 곱셈, 나눗셈 | ← |
+| 4 | `+`, `-` | 덧셈, 뺄셈 | ← |
+| 5 | `<`, `>`, `<=`, `>=` | 비교 | ← |
+| 6 | `==`, `!=` | 동등 | ← |
+| 7 | `&&` | 논리 AND | ← |
+| 8 | `||` | 논리 OR | ← |
+| 9 | `?:` | 삼항 연산자 | → |
+| 10 | `=`, `+=`, `-=` | 대입 | → |
+
+### 연산 순서 예제
+
+```c
+int result = 3 + 4 * 5;  // 23 (곱셈 먼저)
+// 4 * 5 = 20
+// 3 + 20 = 23
+
+int value = 10 > 5 && 20 < 30;  // 1 (참)
+// 10 > 5 = 1 (참)
+// 20 < 30 = 1 (참)
+// 1 && 1 = 1
+```
+
+<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
+<strong>💡 팁</strong><br>
+복잡한 연산식에서는 괄호 <code>()</code>를 사용하면 가독성이 높아지고 의도가 명확해집니다.
+</div>
+
+---
+
+## 8. 종합 실습
+
+### 문제 1 - 나머지 연산 (기초)
+
+<div class="quiz-number">문제 1</div><strong>17 % 5의 결과는?</strong>
+
+{% capture hint3 %}
+17을 5로 나눈 나머지를 구하세요.
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz3"
+   question=hint3
+   answer="2"
+   tags="연산자"
+%}
+
+---
+
+### 문제 2 - 증감 연산자 (중급)
+
+<div class="quiz-number">문제 2</div><strong>다음 코드의 실행 결과는?</strong>
 
 {% capture code_block3 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int num = 2;
+    int x = 5;
+    int y = ++x + x++;
 
-    switch (num) {
-        case 1:
-            printf("A");
-        case 2:
-            printf("B");
-        case 3:
-            printf("C");
-            break;
-        default:
-            printf("D");
-    }
-
-    return 0;
-}</code></pre>
-</div>
-{% endcapture %}
-
-{% capture hint3 %}
-case 2에 break가 없으므로 case 3도 실행됩니다.
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz3"
-   question=hint3
-   code_html=code_block3
-   answer="BC"
-   tags="조건문"
-%}
-
----
-
-### 문제 4 - 중첩 if문 (중급)
-
-<div class="quiz-number">문제 4</div><strong>다음 코드의 실행 결과는?</strong>
-
-{% capture code_block4 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-
-int main() {
-    int x = 10, y = 20;
-
-    if (x > 5) {
-        if (y > 15) {
-            printf("A");
-        }
-        else {
-            printf("B");
-        }
-    }
-    else {
-        printf("C");
-    }
+    printf("%d, %d", x, y);
 
     return 0;
 }</code></pre>
@@ -702,47 +461,37 @@ int main() {
 {% endcapture %}
 
 {% capture hint4 %}
-x > 5는 참, y > 15도 참입니다.
+전위 ++x는 먼저 증가(6), 그 다음 x++(6 사용 후 7로 증가)
 {% endcapture %}
 
 {% include quiz-text.html
    id="quiz4"
    question=hint4
-   code_html=code_block4
-   answer="A"
-   tags="조건문"
+   code_html=code_block3
+   answer="7, 12"
+   tags="연산자"
 %}
 
 ---
 
-### 문제 5 - 윤년 판별 (고급)
+### 문제 3 - 논리 연산 (중급)
 
-<div class="quiz-number">문제 5</div><strong>2024년은 윤년인가요? (1: 윤년, 0: 평년)</strong>
+<div class="quiz-number">문제 3</div><strong>다음 조건의 결과는 참(1) 또는 거짓(0)?</strong>
 
 ```c
-// 윤년 조건:
-// 1. 4로 나누어떨어지고
-// 2. 100으로 나누어떨어지지 않거나
-// 3. 400으로 나누어떨어지면 윤년
-
-int year = 2024;
-int isLeap;
-
-if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))
-    isLeap = 1;
-else
-    isLeap = 0;
+int a = 10, b = 20, c = 30;
+(a < b) && (b < c) && (a + b > c)
 ```
 
 {% capture hint5 %}
-2024는 4로 나누어떨어지고, 100으로 나누어떨어지지 않습니다.
+각 조건을 순서대로 확인: (10 < 20) && (20 < 30) && (30 > 30)
 {% endcapture %}
 
 {% include quiz-text.html
    id="quiz5"
    question=hint5
-   answer="1"
-   tags="조건문"
+   answer="0"
+   tags="연산자"
 %}
 
 ---
@@ -751,34 +500,30 @@ else
 
 <div style="background-color: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #203BB0;">
 
-<strong>1. if문</strong><br>
-• 조건이 참일 때만 실행<br>
-• 형태: <code>if (조건) { 실행문 }</code><br><br>
+<strong>1. 산술 연산자</strong><br>
+• <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code><br>
+• 정수 나눗셈은 소수점 이하 버림<br><br>
 
-<strong>2. if-else문</strong><br>
-• 참/거짓에 따라 두 갈래 분기<br>
-• 형태: <code>if (조건) { ... } else { ... }</code><br><br>
+<strong>2. 대입 연산자</strong><br>
+• 기본: <code>=</code><br>
+• 복합: <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>%=</code><br><br>
 
-<strong>3. if-else if-else문</strong><br>
-• 여러 조건을 순차 검사<br>
-• 첫 번째로 참인 조건만 실행<br><br>
+<strong>3. 비교 연산자</strong><br>
+• <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code><br>
+• 결과는 참(1) 또는 거짓(0)<br><br>
 
-<strong>4. 중첩 if문</strong><br>
-• if문 안에 if문 포함<br>
-• 논리 연산자로 대체 가능<br><br>
+<strong>4. 증감 연산자</strong><br>
+• 전위(prefix): <code>++num</code> (먼저 증가)<br>
+• 후위(postfix): <code>num++</code> (나중에 증가)<br><br>
 
-<strong>5. switch문</strong><br>
-• 값에 따라 여러 갈래 분기<br>
-• 정수형/문자형만 사용 가능<br>
-• 각 case 끝에 break 필요<br><br>
+<strong>5. 논리 연산자</strong><br>
+• AND(<code>&&</code>): 모두 참<br>
+• OR(<code>||</code>): 하나라도 참<br>
+• NOT(<code>!</code>): 반전<br><br>
 
-<strong>6. break</strong><br>
-• switch문 즉시 종료<br>
-• 빼먹으면 다음 case도 실행됨<br><br>
-
-<strong>7. if vs switch</strong><br>
-• 범위 비교 → if문<br>
-• 고정된 값 비교 → switch문
+<strong>6. 우선순위</strong><br>
+• 산술 → 비교 → 논리 → 대입 순서<br>
+• 괄호로 우선순위 명시 가능
 
 </div>
 

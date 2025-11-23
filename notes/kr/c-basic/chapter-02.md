@@ -1,14 +1,14 @@
 ---
 layout: article
-title: 2. 변수와 자료형
+title: 2. 데이터 표현 방식
 permalink: /notes/kr/c-basic/chapter-02
 key: notes
 sidebar:
   nav: notes-kr
 aside:
   toc: true
-excerpt: C 기초 과정 강의 노트, 변수의 선언과 초기화, 기본 자료형, 형 변환, printf 함수 활용 방법을 다룹니다.
-keywords: "C언어, 변수, 자료형, int, float, double, char, printf, 형변환"
+excerpt: C 기초 과정 강의 노트, 2진수, 비트와 바이트, 정수와 실수의 표현 방식, unsigned 자료형을 다룹니다.
+keywords: "C언어, 2진수, 비트, 바이트, 정수표현, 실수표현, unsigned, 2의보수, 부동소수점"
 ---
 
 <script src="/assets/js/quiz.js"></script>
@@ -49,97 +49,276 @@ keywords: "C언어, 변수, 자료형, int, float, double, char, printf, 형변�
 
 ---
 
-## 1. 변수란?
+## 1. 2진수의 이해
 
-변수는 데이터를 저장하는 <span class="blue-text">메모리 공간</span>입니다. 값을 담는 상자라고 생각하면 쉽습니다.
+"컴퓨터는 1과 0밖에 모르는 바보다"라는 말을 들어보셨나요? 컴퓨터는 모든 데이터를 <span class="blue-text">2진수</span>로 표현하고 처리합니다.
 
-```c
-int number = 3;  // 정수형 변수 number를 선언하고 3을 저장
-```
+### 10진수와 2진수
+
+**10진수**는 우리가 일상에서 사용하는 수 체계로, 0부터 9까지 열 가지 기호를 사용합니다.
+
+**2진수**는 0과 1, 두 가지 기호만을 사용하여 값을 표현합니다.
+
+### 10진수와 2진수 변환표
+
+| 10진수 | 2진수 | 설명 |
+|--------|-------|------|
+| 0 | 0 | 0은 그대로 0 |
+| 1 | 1 | 1은 그대로 1 |
+| 2 | 10 | 1보다 큰 수부터 자릿수를 올림 |
+| 3 | 11 | |
+| 4 | 100 | |
+| 5 | 101 | |
+| 6 | 110 | |
+| 7 | 111 | |
+| 8 | 1000 | |
+| 9 | 1001 | |
+| 10 | 1010 | |
+| 15 | 1111 | |
+| 16 | 10000 | |
 
 <div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
-<strong>변수 = 값을 저장하는 메모리 공간</strong><br>
-변수를 선언하면 메모리에 공간이 할당되고, 그 공간에 값을 저장할 수 있습니다.
+<strong>2진수의 특징</strong><br>
+2진수에는 0과 1 외의 다른 기호가 없습니다. 10진수에서 9보다 큰 수를 표현할 때 자릿수를 올리듯, 2진수는 1보다 큰 수부터 자릿수를 올립니다.
 </div>
+
+### 2진수 → 10진수 변환
+
+2진수를 10진수로 변환하려면 각 자리의 값에 2의 거듭제곱을 곱합니다.
+
+**예시: 2진수 1011을 10진수로 변환**
+
+```
+1011(2) = 1×2³ + 0×2² + 1×2¹ + 1×2⁰
+        = 1×8 + 0×4 + 1×2 + 1×1
+        = 8 + 0 + 2 + 1
+        = 11(10)
+```
 
 ---
 
-## 2. 변수명 규칙
+## 2. 비트와 바이트
 
-변수명을 지을 때는 다음 규칙을 따라야 합니다:
+컴퓨터 메모리의 기본 단위는 <span class="blue-text">비트(bit)</span>와 <span class="blue-text">바이트(byte)</span>입니다.
 
-- **문자, 숫자, 언더바(_)만** 사용 가능 (특수문자 ✕)
-- **숫자로 시작 불가** (✕ `3number`, ✓ `number3`)
-- **키워드 사용 불가** (✕ `int`, `return`, `if` 등)
-- **대소문자 구분** (`Number`와 `number`는 다른 변수)
+### 비트 (bit)
+
+- 컴퓨터 메모리의 가장 작은 단위
+- 0 또는 1의 값만 저장 가능
+- binary digit의 약자
+
+### 바이트 (byte)
+
+- 비트 8개가 모여 이루어진 단위
+- 1바이트 = 8비트
+- 대부분의 자료형 크기는 바이트 단위로 표현
+
+<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
+<strong>1바이트로 표현 가능한 값의 개수</strong><br>
+8비트 = 2⁸ = 256가지 (0~255 또는 -128~127)
+</div>
+
+### char형 데이터 표현 예시
+
+```c
+char ch = 0;   // 00000000 (8비트 모두 0)
+ch = 1;        // 00000001
+ch = 2;        // 00000010
+ch = 7;        // 00000111
+```
+
+**비트 구조:**
+
+| 비트 위치 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
+|---------|---|---|---|---|---|---|---|---|
+| 값 (ch=7) | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 1 |
+| 설명 | MSB | | | | | | | LSB |
+
+- **MSB** (Most Significant Bit): 가장 왼쪽 비트, 가장 큰 자릿수
+- **LSB** (Least Significant Bit): 가장 오른쪽 비트, 가장 작은 자릿수
+
+---
+
+## 3. 정수의 표현
+
+정수형 데이터는 2진수로 표현되며, 음수 표현을 위해 <span class="blue-text">2의 보수</span> 방식을 사용합니다.
+
+### 정수 표현 구조 (1바이트 기준)
+
+| 비트 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
+|------|---|---|---|---|---|---|---|---|
+| 역할 | 부호 비트 | 값 | 값 | 값 | 값 | 값 | 값 | 값 |
+
+- **부호 비트 (7번 비트)**
+  - 0: 양수
+  - 1: 음수
+
+### 양수 표현
+
+양수는 2진수를 그대로 사용합니다.
+
+| 10진수 | 2진수 (1바이트) | 설명 |
+|--------|----------------|------|
+| 0 | 00000000 | 모든 비트 0 |
+| 1 | 00000001 | |
+| 127 | 01111111 | 1바이트 최댓값 |
 
 <div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
-<strong>💡 좋은 변수명 짓기</strong><br>
-의미있는 이름을 사용하세요: <span class="green-text">age</span>, <span class="green-text">studentCount</span> (✓)<br>
-무의미한 이름은 피하세요: <span class="red-text">a</span>, <span class="red-text">x123</span> (✕)
+<strong>💡 1바이트 signed 정수 범위</strong><br>
+최솟값: -128<br>
+최댓값: +127<br>
+총 256가지 값 표현 가능
 </div>
 
-```c
-// 올바른 변수명
-int age = 25;
-int student_count = 30;
-int number1 = 10;
+### 음수 표현 - 2의 보수
 
-// 잘못된 변수명
-int 3number = 10;    // 숫자로 시작 (에러!)
-int hello boy = 3;   // 공백 포함 (에러!)
-int int = 5;         // 키워드 사용 (에러!)
+음수를 표현하려면 단순히 부호 비트만 바꾸면 안 됩니다. <span class="blue-text">2의 보수</span>를 사용해야 합니다.
+
+**2의 보수 구하는 방법:**
+
+1. 모든 비트를 반전 (0→1, 1→0)
+2. 결과에 1을 더함
+
+**예시: -5를 2진수로 표현**
+
 ```
+1단계: +5의 2진수
+00000101
+
+2단계: 모든 비트 반전
+11111010
+
+3단계: 1을 더함
+11111010
++      1
+--------
+11111011  ← -5의 2진수 표현
+```
+
+### 왜 2의 보수를 사용하나요?
+
+2의 보수를 사용하면 덧셈 연산만으로 뺄셈을 수행할 수 있습니다.
+
+```
+예: 5 + (-5) = 0인지 확인
+
+  00000101  (+5)
++ 11111011  (-5)
+----------
+1 00000000  (캐리는 버려지고 0이 됨)
+```
+
+<div style="background-color: #e8f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #448F52;">
+<strong>✓ 2의 보수의 장점</strong><br>
+• 덧셈 회로만으로 뺄셈 가능<br>
+• 하드웨어 설계가 간단해짐<br>
+• 0의 표현이 하나만 존재 (00000000)
+</div>
 
 ---
 
-## 3. 변수 선언과 초기화
+## 4. 실수의 표현
 
-### 선언
+실수는 정수보다 복잡한 방식으로 표현됩니다. <span class="blue-text">부동소수점(floating point)</span> 방식을 사용합니다.
 
-```c
-int number;        // 변수 선언만 (값 없음)
+### 부동소수점 표현 구조
+
+실수는 다음 세 부분으로 나뉩니다:
+
+| 구성 요소 | 설명 | float (32비트) | double (64비트) |
+|----------|------|----------------|----------------|
+| 부호 비트 (S) | 양수/음수 구분 | 1비트 | 1비트 |
+| 지수부 (E) | 소수점 위치 | 8비트 | 11비트 |
+| 가수부 (M) | 실제 값 | 23비트 | 52비트 |
+
+### 부동소수점 표현 공식
+
+```
+값 = ±(1.M) × 2^(E - 127)
 ```
 
-### 초기화
+- **S**: 부호 (0: 양수, 1: 음수)
+- **M**: 가수부 (소수점 이하 값)
+- **E**: 지수부 (127을 기준으로 한 지수)
 
-```c
-int number = 10;   // 선언과 동시에 초기화
+**예시: 5.75를 표현**
+
 ```
+1. 5.75를 2진수로 변환
+   5.75 = 101.11(2) = 1.0111 × 2²
 
-### 다양한 초기화 방법
+2. 정규화된 형태
+   1.0111 × 2²
 
-```c
-// 한 번에 여러 변수 선언
-int number1, number2;
-
-// 선언과 초기화를 동시에
-int number3 = 3, number4 = 4;
+3. 각 부분 추출
+   부호(S): 0 (양수)
+   지수(E): 2 + 127 = 129 = 10000001(2)
+   가수(M): 0111 (1.0111에서 소수점 이하만)
 ```
 
 <div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
-<strong>⚠️ 초기화하지 않은 변수</strong><br>
-선언만 하고 초기화하지 않으면 <span class="red-text">쓰레기 값(garbage value)</span>이 들어있습니다. 반드시 초기화 후 사용하세요!
+<strong>⚠️ 부동소수점 오차</strong><br>
+실수는 제한된 비트로 표현되므로 <span class="red-text">작은 오차</span>가 발생할 수 있습니다.<br>
+<code>0.1 + 0.2 ≠ 0.3</code> (정확히 0.30000000000000004)
 </div>
 
-### 실습 1
+### float vs double
 
-다음 코드의 실행 결과를 확인해보세요:
+| 자료형 | 크기 | 유효 자릿수 | 범위 |
+|--------|------|------------|------|
+| `float` | 4바이트 (32비트) | 약 7자리 | ±3.4 × 10³⁸ |
+| `double` | 8바이트 (64비트) | 약 15자리 | ±1.7 × 10³⁰⁸ |
+
+---
+
+## 5. unsigned 자료형
+
+`unsigned`는 "부호가 없다"는 의미로, 음수를 표현하지 않고 0 이상의 값만 표현합니다.
+
+### signed vs unsigned
+
+| 자료형 | 크기 | 범위 |
+|--------|------|------|
+| `char` (signed) | 1바이트 | -128 ~ 127 |
+| `unsigned char` | 1바이트 | 0 ~ 255 |
+| `short` (signed) | 2바이트 | -32,768 ~ 32,767 |
+| `unsigned short` | 2바이트 | 0 ~ 65,535 |
+| `int` (signed) | 4바이트 | 약 -21억 ~ 21억 |
+| `unsigned int` | 4바이트 | 0 ~ 약 42억 |
+
+<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
+<strong>unsigned의 특징</strong><br>
+• 부호 비트를 값 표현에 사용<br>
+• 표현 가능한 값의 범위가 2배로 증가<br>
+• 음수 표현 불가능
+</div>
+
+### unsigned 선언 예시
+
+```c
+unsigned char age = 25;       // 0~255
+unsigned short count = 1000;  // 0~65535
+unsigned int population = 5000000;  // 0~약 42억
+unsigned long big_number = 4000000000UL;
+```
+
+### 실습 1
 
 ```c
 #include <stdio.h>
 
 int main() {
-    int number1, number2;
-    number1 = 1;
-    number2 = 2;
-    int number3 = 3, number4 = 4;
-    
-    printf("%d\n", number1);
-    printf("%d\n", number2);
-    printf("%d\n", number3);
-    printf("%d\n", number4);
-    
+    char cnum = 128;           // signed char: -128~127
+    unsigned char u_cnum = 128;
+
+    short snum = 32768;        // signed short: -32768~32767
+    unsigned short u_snum = 32768;
+
+    printf("char: %d\n", cnum);
+    printf("unsigned char: %u\n", u_cnum);
+    printf("short: %d\n", snum);
+    printf("unsigned short: %u\n", u_snum);
+
     return 0;
 }
 ```
@@ -148,464 +327,163 @@ int main() {
 <summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-1
-2
-3
-4
-</pre>
-
-</details>
-
----
-
-## 4. C언어 기본 자료형
-
-| 자료형 | 의미 | 크기 | 값의 범위 |
-|--------|------|------|-----------|
-| `char` | 문자 | 1바이트 | -128 ~ 127 |
-| `short` | 정수 | 2바이트 | -32,768 ~ 32,767 |
-| `int` | 정수 | 4바이트 | 약 -21억 ~ 21억 |
-| `long` | 정수 | 4/8바이트 | 약 -21억 ~ 21억 |
-| `float` | 실수 | 4바이트 | 소수점 7자리 |
-| `double` | 실수 | 8바이트 | 소수점 15자리 |
-
-### 정수형
-
-```c
-int age = 25;
-short temperature = -10;
-long population = 5000000;
-```
-
-### 실수형
-
-```c
-float pi = 3.14f;        // f를 붙여 float 표시
-double e = 2.718281828;
-```
-
-### 문자형
-
-```c
-char grade = 'A';        // 단일 문자는 작은따옴표
-```
-
-### 실습 2
-
-다음 프로그램을 작성하고 실행해보세요:
-
-```c
-#include <stdio.h>
-
-int main() {
-    double number1 = 10;
-    int number2 = 1.2345;
-    short number3 = 70000;
-    
-    printf("%f\n%d\n%d", number1, number2, number3);
-    
-    return 0;
-}
-```
-
-<details>
-<summary><span class="green-text">실행 결과 및 설명 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-10.000000
-1
-4464
+char: -128
+unsigned char: 128
+short: -32768
+unsigned short: 32768
 </pre>
 
 <ul style="margin-top: 10px;">
-<li><span class="blue-text">05번:</span> 정수를 double에 저장하면 실수형으로 변환됩니다.</li>
-<li><span class="blue-text">06번:</span> 실수를 int에 저장하면 소수점 이하가 잘립니다.</li>
-<li><span class="blue-text">07번:</span> short 범위를 초과하면 오버플로우가 발생합니다.</li>
+<li><span class="blue-text">signed char:</span> 128은 범위를 초과하여 오버플로우 발생 → -128</li>
+<li><span class="blue-text">unsigned char:</span> 128은 범위 내 → 그대로 128</li>
+<li><span class="blue-text">short:</span> 32768은 범위 초과 → -32768</li>
+<li><span class="blue-text">unsigned short:</span> 32768은 범위 내 → 그대로 32768</li>
 </ul>
 
 </details>
 
 ---
 
-## 5. printf 함수로 출력하기
+## 6. 리터럴 접미사
 
-`printf` 함수는 화면에 데이터를 출력하는 함수입니다.
+C 언어에서는 숫자 리터럴에 접미사를 붙여 자료형을 명시할 수 있습니다.
 
-### 형식 지정자
+### unsigned 접미사
 
-| 지정자 | 의미 |
-|--------|------|
-| `%d` | 정수 (int) |
-| `%ld` | 정수 (long) |
-| `%f` | 실수 (float, double) |
-| `%c` | 문자 (char) |
-| `%s` | 문자열 |
+| 접미사 | 의미 | 사용 예 |
+|--------|------|---------|
+| `U` 또는 `u` | unsigned int | `1000U` |
+| `UL` 또는 `ul` | unsigned long | `100000UL` |
+| `ULL` 또는 `ull` | unsigned long long | `10000000000ULL` |
 
-### 기본 사용법
+### 실수 접미사
 
-```c
-#include <stdio.h>
+| 접미사 | 의미 | 사용 예 |
+|--------|------|---------|
+| `F` 또는 `f` | float | `3.14F` |
+| 없음 | double (기본) | `3.14` |
+| `L` 또는 `l` | long double | `3.14L` |
 
-int main() {
-    int number1 = 3;
-    int number2 = 5;
-    
-    printf("%d\n%d\n", number1, number2);
-    
-    return 0;
-}
-```
-
-출력:
-```
-3
-5
-```
-
-### 실습 3
-
-다음 프로그램의 실행 결과를 확인해보세요:
+### 사용 예시
 
 ```c
-#include <stdio.h>
+unsigned int a = 1000U;
+unsigned long b = 100000UL;
+unsigned long long c = 10000000000ULL;
 
-int main() {
-    int number1 = 8;
-    int number2 = 10;
-    
-    printf("%d", number1 + number2);
-    
-    return 0;
-}
+float pi = 3.14F;
+double e = 2.718;
+long double big = 3.14159265358979L;
 ```
 
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-18
-</pre>
-
-</details>
+<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
+<strong>💡 접미사를 사용하는 이유</strong><br>
+• 컴파일러에게 명확한 자료형 전달<br>
+• 경고 메시지 방지<br>
+• 의도하지 않은 형변환 방지
+</div>
 
 ---
 
-## 6. 형 변환 (Type Casting)
+## 7. 종합 실습
 
-### 명시적 형 변환
+### 문제 1 - 2진수 변환 (기초)
 
-자료형을 강제로 변환하는 것을 <span class="blue-text">형 변환(Type Casting)</span>이라고 합니다.
+<div class="quiz-number">문제 1</div><strong>10진수 13을 2진수로 변환하면?</strong>
 
-```c
-double number = 10;    // 10.0으로 변환
-int result = 5.4321;   // 5로 변환 (소수점 이하 버림)
-short number = 200;    // 200으로 변환
-```
+{% capture hint1 %}
+13 = 8 + 4 + 1 = 2³ + 2² + 2⁰ = 1101(2)
+{% endcapture %}
 
-<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
-<strong>⚠️ 주의</strong><br>
-정수를 실수로 변환하면 소수점 이하 손실이 발생합니다.<br>
-자료형 범위를 초과하면 <span class="red-text">오버플로우</span>가 발생합니다.
-</div>
+{% include quiz-text.html
+   id="quiz1"
+   question=hint1
+   answer="1101"
+   tags="데이터 표현 방식"
+%}
 
-### 실습 4
+---
 
-<div class="quiz-number">실습 1</div><strong>다음 C 프로그램에서 sizeof(100)의 결과는 무엇입니까?</strong>
+### 문제 2 - 바이트 단위 (기초)
+
+<div class="quiz-number">문제 2</div><strong>1바이트는 몇 비트인가?</strong>
+
+{% capture hint2 %}
+1바이트 = 8비트
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz2"
+   question=hint2
+   answer="8|8비트"
+   tags="데이터 표현 방식"
+%}
+
+---
+
+### 문제 3 - unsigned 범위 (중급)
+
+<div class="quiz-number">문제 3</div><strong>unsigned char의 최댓값은?</strong>
+
+{% capture hint3 %}
+8비트를 모두 값 표현에 사용: 2⁸ - 1 = 255
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz3"
+   question=hint3
+   answer="255"
+   tags="데이터 표현 방식"
+%}
+
+---
+
+### 문제 4 - 2의 보수 (중급)
+
+<div class="quiz-number">문제 4</div><strong>다음 코드의 실행 결과는?</strong>
 
 {% capture code_block4 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    printf("%d, %d", sizeof(100), sizeof(3.14));
-    
+    char num = 127;
+    num = num + 1;
+
+    printf("%d", num);
+
     return 0;
 }</code></pre>
 </div>
 {% endcapture %}
 
 {% capture hint4 %}
-정수 100은 int형으로 처리되어 4바이트입니다.
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz1"
-   question=hint4
-   code_html=code_block4
-   answer="4, 8"
-   tags="변수와 자료형"
-%}
-
----
-
-## 7. 문자 다루기
-
-문자는 <span class="blue-text">char</span> 자료형을 사용하며, **작은따옴표**로 표현합니다.
-
-```c
-char ch1 = 'A';   // 문자 'A' 저장
-```
-
-### ASCII 코드
-
-모든 문자는 숫자로 표현됩니다. 이를 <span class="blue-text">ASCII 코드</span>라고 합니다.
-
-```c
-char ch1 = 66;     // 숫자 66 저장 (ASCII 코드로 'B')
-char ch2 = 'B';    // 문자 'B' 저장 (내부적으로는 66)
-```
-
-### 실습 5
-
-<div class="quiz-number">실습 2</div><strong>다음 C 프로그램에서 printf("%c\n", ch1)의 실행 결과는 무엇입니까?</strong>
-
-{% capture code_block5 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-
-int main() {
-    char ch1 = 66;
-    
-    printf("%c", ch1);
-    
-    return 0;
-}</code></pre>
-</div>
-{% endcapture %}
-
-{% capture hint5 %}
-<code>%c</code>는 숫자를 문자로 출력하며, ASCII 코드 66은 'B'입니다.
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz2"
-   question=hint5
-   code_html=code_block5
-   answer="B"
-   tags="변수와 자료형"
-%}
-
----
-
-## 8. 상수 (Constant)
-
-### 리터럴 상수
-
-코드에 직접 작성한 값을 말합니다.
-
-```c
-int number = 10;   // 10이 리터럴 상수
-```
-
-### 심볼릭 상수 (const)
-
-변경할 수 없는 변수를 만들 때 사용합니다.
-
-```c
-const int LENGTH = 10;
-// LENGTH = 20;  // 에러! const 변수는 변경 불가
-```
-
-<div style="background-color: #e8f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #448F52;">
-<strong>✓ const를 사용하는 이유</strong><br>
-실수로 값을 변경하는 것을 방지하고, 코드의 의도를 명확히 전달할 수 있습니다.
-</div>
-
-### 매크로 상수 (#define)
-
-컴파일 전에 치환되는 상수입니다.
-
-```c
-#define LENGTH 10
-
-int main() {
-    printf("%d", LENGTH);
-    return 0;
-}
-```
-
-### 실습 6
-
-<div class="quiz-number">실습 3</div><strong>다음 C 프로그램에서 NUMBER의 값은 무엇입니까?</strong>
-
-{% capture code_block6 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-#define LENGTH 10
-
-int main() {
-    int number = 3;
-    const int NUMBER = 5;
-    
-    // 에러가 발생하는 코드는?
-    number = 10;
-    NUMBER = 10;
-    
-    printf("%d, %d, %d", LENGTH, number, NUMBER);
-    
-    return 0;
-}</code></pre>
-</div>
-{% endcapture %}
-
-{% capture hint6 %}
-const로 선언된 변수는 값을 변경할 수 없으므로 초기값인 5가 유지됩니다.
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz3"
-   question=hint6
-   code_html=code_block6
-   answer="10, 10, 5"
-   tags="변수와 자료형"
-%}
-
----
-
-## 9. 종합 실습
-
-### 문제 1 - sizeof 연산자 (기초)
-
-<div class="quiz-number">문제 1</div><strong>다음 C 프로그램에서 sizeof(char)의 결과는 무엇입니까?</strong>
-
-{% capture code_block7 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-
-int main() {
-    printf("%d", sizeof(char));
-    
-    return 0;
-}</code></pre>
-</div>
-{% endcapture %}
-
-{% capture hint7 %}
-char 자료형은 1바이트 크기를 가집니다.
+char의 최댓값은 127입니다. 1을 더하면 오버플로우가 발생하여 -128이 됩니다.
 {% endcapture %}
 
 {% include quiz-text.html
    id="quiz4"
-   question=hint7
-   code_html=code_block7
-   answer="1"
-   tags="변수와 자료형"
+   question=hint4
+   code_html=code_block4
+   answer="-128"
+   tags="데이터 표현 방식"
 %}
 
 ---
 
-### 문제 2 - 실수형 변환 (기초)
+### 문제 5 - 접미사 (기초)
 
-<div class="quiz-number">문제 2</div><strong>3.14는 기본적으로 double형입니다. float 변수 f에 3.14를 저장할 때 컴파일 경고가 발생하지 않도록 하려면 어떻게 작성해야 합니까? (f를 포함하여 작성)</strong>
+<div class="quiz-number">문제 5</div><strong>다음 중 올바른 unsigned long 리터럴은?</strong>
 
-{% capture hint8 %}
-실수 리터럴 뒤에 특정 접미사를 붙여 float형임을 명시해야 합니다.
+{% capture hint5 %}
+unsigned long은 UL 또는 ul 접미사를 사용합니다.
 {% endcapture %}
 
 {% include quiz-text.html
    id="quiz5"
-   question=hint8
-   answer="3.14f|3.14F|float f = 3.14f;|float f = 3.14F;"
-   tags="변수와 자료형"
-%}
-
----
-
-### 문제 3 - 문자형 출력 (기초)
-
-<div class="quiz-number">문제 3</div><strong>다음 C 프로그램에서 printf("%d\n", ch2)의 실행 결과는 무엇입니까?</strong>
-
-{% capture code_block9 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-
-int main() {
-    char ch2 = 'B';
-    
-    printf("%d\n", ch2);
-    
-    return 0;
-}</code></pre>
-</div>
-{% endcapture %}
-
-{% capture hint9 %}
-'B'는 ASCII 코드로 66이며, %d로 출력하면 숫자로 표시됩니다.
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz6"
-   question=hint9
-   code_html=code_block9
-   answer="66"
-   tags="변수와 자료형"
-%}
-
----
-
-### 문제 4 - 변수 교환 (중급)
-
-<div class="quiz-number">문제 4</div><strong>다음 C 프로그램에서 변수 교환 후 a의 값은 무엇입니까?</strong>
-
-{% capture code_block10 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-
-int main() {
-    int a = 10, b = 20;
-    int temp = a;
-    a = b;
-    b = temp;
-    
-    printf("a = %d, b = %d\n", a, b);
-    return 0;
-}</code></pre>
-</div>
-{% endcapture %}
-
-{% capture hint10 %}
-temp 변수를 이용하여 a와 b의 값을 교환합니다. 교환 후 a는 b의 값인 20을 가집니다.
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz7"
-   question=hint10
-   code_html=code_block10
-   answer="a = 20, b = 10"
-   tags="변수와 자료형"
-%}
-
----
-
-### 문제 5 - 평균 계산 (중급)
-
-<div class="quiz-number">문제 5</div><strong>다음 C 프로그램에서 average의 값을 소수점 둘째 자리까지 작성하세요. (예: 87.67)</strong>
-
-{% capture code_block11 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-
-int main() {
-    int korean = 90, english = 85, math = 88;
-    double average = (korean + english + math) / 3.0;
-    
-    printf("평균: %.2f\n", average);
-    
-    return 0;
-}</code></pre>
-</div>
-{% endcapture %}
-
-{% capture hint11 %}
-(90 + 85 + 88) / 3.0 = 263 / 3.0 = 87.666...이며, 소수점 둘째 자리까지 표시하면 87.67입니다.
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz8"
-   question=hint11
-   code_html=code_block11
-   answer="87.67"
-   tags="변수와 자료형"
+   question=hint5
+   answer="100000UL|100000ul"
+   tags="데이터 표현 방식"
 %}
 
 ---
@@ -614,27 +492,33 @@ int main() {
 
 <div style="background-color: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #203BB0;">
 
-<strong>1. 변수</strong><br>
-• 데이터를 저장하는 메모리 공간<br>
-• 선언 시 자료형을 반드시 지정<br><br>
+<strong>1. 2진수</strong><br>
+• 0과 1만 사용하여 값을 표현<br>
+• 1보다 큰 수부터 자릿수를 올림<br><br>
 
-<strong>2. 자료형</strong><br>
-• 정수: <code>char</code>, <code>short</code>, <code>int</code>, <code>long</code><br>
-• 실수: <code>float</code>, <code>double</code><br>
-• 문자: <code>char</code> (작은따옴표 사용)<br><br>
+<strong>2. 비트와 바이트</strong><br>
+• 비트(bit): 0 또는 1을 저장하는 최소 단위<br>
+• 바이트(byte): 8비트 = 256가지 값 표현 가능<br><br>
 
-<strong>3. printf 형식 지정자</strong><br>
-• <code>%d</code>: 정수, <code>%f</code>: 실수, <code>%c</code>: 문자<br><br>
+<strong>3. 정수 표현</strong><br>
+• 양수: 2진수 그대로 사용<br>
+• 음수: 2의 보수 방식 사용<br>
+• 2의 보수 = 비트 반전 + 1<br><br>
 
-<strong>4. 상수</strong><br>
-• <code>const</code>: 변경 불가능한 변수<br>
-• <code>#define</code>: 매크로 상수 (컴파일 전 치환)<br><br>
+<strong>4. 실수 표현</strong><br>
+• 부동소수점 방식: 부호 + 지수 + 가수<br>
+• <code>float</code>: 32비트 (정밀도 낮음)<br>
+• <code>double</code>: 64비트 (정밀도 높음)<br><br>
 
-<strong>5. 형 변환</strong><br>
-• 명시적 변환: <code>(자료형)변수</code><br>
-• 자동 변환: 더 큰 자료형으로 자동 변환
+<strong>5. unsigned 자료형</strong><br>
+• 부호 비트를 값 표현에 사용<br>
+• 0 이상의 값만 표현 가능<br>
+• 표현 범위가 2배로 증가<br><br>
+
+<strong>6. 리터럴 접미사</strong><br>
+• unsigned: <code>U</code>, <code>UL</code>, <code>ULL</code><br>
+• 실수: <code>F</code>(float), 기본(double), <code>L</code>(long double)
 
 </div>
 
 ---
-

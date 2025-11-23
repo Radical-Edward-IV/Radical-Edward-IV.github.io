@@ -174,12 +174,14 @@ notes-kr:
     children:
       - title: 1. Orientation & 개발 환경 설정
         url: /notes/kr/c-basic/chapter-01
-      - title: 2. 변수와 자료형
+      - title: 2. 데이터 표현 방식
         url: /notes/kr/c-basic/chapter-02
-      - title: 3. 연산자
+      - title: 3. 변수와 자료형
         url: /notes/kr/c-basic/chapter-03
-      - title: 4. 조건문
+      - title: 4. 연산자
         url: /notes/kr/c-basic/chapter-04
+      - title: 5. 조건문
+        url: /notes/kr/c-basic/chapter-05
 layouts:
   - title: Layouts
     children:
