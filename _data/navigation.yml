@@ -182,6 +182,14 @@ notes-kr:
         url: /notes/kr/c-basic/chapter-04
       - title: 5. 조건문
         url: /notes/kr/c-basic/chapter-05
+      - title: 6. 1차원 배열
+        url: /notes/kr/c-basic/chapter-06
+      - title: 7. 포인터 소개
+        url: /notes/kr/c-basic/chapter-07
+      - title: 8. 포인터와 배열의 관계
+        url: /notes/kr/c-basic/chapter-08
+      - title: 9. 다차원 배열
+        url: /notes/kr/c-basic/chapter-09
 layouts:
   - title: Layouts
     children:
