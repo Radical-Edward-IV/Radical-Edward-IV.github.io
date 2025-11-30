@@ -190,6 +190,8 @@ notes-kr:
         url: /notes/kr/c-basic/chapter-08
       - title: 9. 다차원 배열
         url: /notes/kr/c-basic/chapter-09
+      - title: 10. 문자열과 함수
+        url: /notes/kr/c-basic/chapter-10
 layouts:
   - title: Layouts
     children:
