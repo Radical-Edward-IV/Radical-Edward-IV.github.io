@@ -1,14 +1,14 @@
 ---
 layout: article
-title: 6. 1차원 배열
+title: 6. 반복문
 permalink: /notes/kr/c-basic/chapter-06
 key: notes
 sidebar:
   nav: notes-kr
 aside:
   toc: true
-excerpt: C 기초 과정 강의 노트, 1차원 배열의 선언, 초기화, 접근 방법, 문자 배열과 문자열 처리를 다룹니다.
-keywords: "C언어, 배열, 1차원배열, 문자배열, 문자열, 배열초기화"
+excerpt: C 기초 과정 강의 노트, while문, do-while문, for문을 활용한 반복 제어, break와 continue를 다룹니다.
+keywords: "C언어, 반복문, while문, do-while문, for문, break, continue, 루프, 무한루프"
 ---
 
 <script src="/assets/js/quiz.js"></script>
@@ -49,127 +49,90 @@ keywords: "C언어, 배열, 1차원배열, 문자배열, 문자열, 배열초기
 
 ---
 
-## 1. 배열이란?
+## 1. 반복문이란?
 
-배열은 <span class="blue-text">같은 자료형의 데이터를 여러 개 저장</span>할 수 있는 데이터 구조입니다.
-
-### 배열이 필요한 이유
-
-학생 5명의 점수를 저장하려면 어떻게 해야 할까요?
-
-**배열을 사용하지 않는 경우:**
-
-```c
-int score1 = 85;
-int score2 = 90;
-int score3 = 78;
-int score4 = 92;
-int score5 = 88;
-```
-
-변수가 너무 많아서 관리하기 어렵습니다!
-
-**배열을 사용하는 경우:**
-
-```c
-int scores[5] = {85, 90, 78, 92, 88};
-```
-
-하나의 변수로 여러 개의 값을 관리할 수 있습니다!
+반복문은 특정 코드를 <span class="blue-text">여러 번 반복 실행</span>할 때 사용하는 제어문입니다.
 
 <div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
-<strong>배열 = 같은 자료형 데이터의 집합</strong><br>
-배열을 사용하면 많은 데이터를 효율적으로 관리할 수 있습니다.
+<strong>반복문 = 같은 코드를 여러 번 실행</strong><br>
+반복문을 사용하면 코드의 양을 줄이고 효율적인 프로그램을 작성할 수 있습니다.
 </div>
+
+**반복문의 필요성:**
+
+반복문이 없다면?
+
+```c
+printf("Hello\n");
+printf("Hello\n");
+printf("Hello\n");
+printf("Hello\n");
+printf("Hello\n");
+// 100번 출력하려면...?
+```
+
+반복문을 사용하면?
+
+```c
+int i;
+for (i = 0; i < 100; i++) {
+    printf("Hello\n");
+}
+```
+
+**C 언어의 반복문 종류:**
+
+| 반복문 | 특징 | 주요 용도 |
+|--------|------|-----------|
+| `while` | 조건이 참인 동안 반복 | 반복 횟수가 정해지지 않은 경우 |
+| `do-while` | 최소 1회 실행 후 조건 검사 | 한 번은 반드시 실행해야 하는 경우 |
+| `for` | 반복 횟수가 명확한 경우 | 반복 횟수를 알고 있는 경우 |
 
 ---
 
-## 2. 배열의 선언과 초기화
+## 2. while문
 
-### 배열 선언 방법
+while문은 조건이 참인 동안 코드를 반복 실행합니다.
 
-배열을 선언하려면 세 가지 요소가 필요합니다:
-
-1. **자료형**: 배열에 저장할 데이터의 타입
-2. **배열 이름**: 배열을 식별하는 이름
-3. **배열 크기**: 저장할 수 있는 데이터의 개수
+### 기본 형태
 
 ```c
-자료형 배열이름[배열크기];
+while (조건식)
+{
+    // 조건이 참일 때 반복 실행할 코드
+}
 ```
 
-**예시:**
+**실행 흐름:**
 
-```c
-int numbers[5];     // 정수 5개를 저장할 수 있는 배열
-double values[10];  // 실수 10개를 저장할 수 있는 배열
-char letters[26];   // 문자 26개를 저장할 수 있는 배열
+```
+시작 → 조건 검사 → 참? → 코드 실행 → 조건 검사 반복
+                 ↓ 거짓
+               종료
 ```
 
-### 배열의 메모리 구조
-
-```c
-int arr[3];
-```
-
-위 배열을 선언하면 메모리에는 다음과 같이 공간이 할당됩니다:
-
-| arr[0] | arr[1] | arr[2] |
-|--------|--------|--------|
-| 4바이트 | 4바이트 | 4바이트 |
-
-<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
-<strong>💡 메모리 할당</strong><br>
-int형은 4바이트이므로 <code>int arr[3]</code>은 총 12바이트(4×3)의 메모리를 차지합니다.
-</div>
-
-### 배열 초기화 방법
-
-**방법 1: 선언과 동시에 초기화**
-
-```c
-int arr[5] = {10, 20, 30, 40, 50};
-```
-
-**방법 2: 크기 생략 (컴파일러가 자동으로 크기 결정)**
-
-```c
-int arr[] = {10, 20, 30, 40, 50};  // 크기는 자동으로 5
-```
-
-**방법 3: 일부만 초기화 (나머지는 0으로 자동 초기화)**
-
-```c
-int arr[5] = {10, 20};  // arr[0]=10, arr[1]=20, arr[2]=0, arr[3]=0, arr[4]=0
-```
-
-**방법 4: 모두 0으로 초기화**
-
-```c
-int arr[5] = {0};  // 모든 요소가 0
-```
-
-<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
-<strong>⚠️ 주의</strong><br>
-배열을 선언만 하고 초기화하지 않으면 <span class="red-text">쓰레기 값</span>이 들어있습니다!
+<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
+<strong>while문의 동작 원리</strong><br>
+1. 조건식을 먼저 검사<br>
+2. 조건이 참이면 코드 실행<br>
+3. 다시 조건식으로 돌아가 검사<br>
+4. 조건이 거짓이면 반복 종료
 </div>
 
 ### 실습 1
-
-다음 코드의 실행 결과를 확인해보세요:
 
 ```c
 #include <stdio.h>
 
 int main() {
-    int numbers[5] = {10, 20, 30, 40, 50};
-    int values[] = {1, 2, 3};
-    int zeros[5] = {0};
+    int count = 0;
 
-    printf("numbers 배열의 크기: %d바이트\n", sizeof(numbers));
-    printf("values 배열의 크기: %d바이트\n", sizeof(values));
-    printf("zeros[0] = %d\n", zeros[0]);
-    printf("zeros[4] = %d\n", zeros[4]);
+    while (count < 3) {
+        printf("count = %d\n", count);
+        count++;  // count 증가 (중요!)
+    }
+
+    printf("반복 종료\n");
 
     return 0;
 }
@@ -179,267 +142,239 @@ int main() {
 <summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-numbers 배열의 크기: 20바이트
-values 배열의 크기: 12바이트
-zeros[0] = 0
-zeros[4] = 0
+count = 0
+count = 1
+count = 2
+반복 종료
 </pre>
 
 <ul style="margin-top: 10px;">
-<li><code>numbers</code>: int 5개 × 4바이트 = 20바이트</li>
-<li><code>values</code>: int 3개 × 4바이트 = 12바이트</li>
-<li><code>zeros</code>: {0}으로 초기화하면 모든 요소가 0</li>
+<li>count가 0, 1, 2일 때 조건(count < 3)이 참</li>
+<li>count가 3이 되면 조건이 거짓이므로 반복 종료</li>
+<li><span class="blue-text">count++가 없으면 무한루프 발생!</span></li>
+</ul>
+
+</details>
+
+### 실습 2 - 사용자 입력 반복
+
+```c
+#include <stdio.h>
+
+int main() {
+    int num;
+
+    printf("숫자를 입력하세요 (-1 입력 시 종료)\n");
+
+    num = 0;  // 초기값 설정
+    while (num != -1) {
+        printf("입력: ");
+        scanf("%d", &num);
+
+        if (num == -1) {
+            printf("프로그램을 종료합니다.\n");
+        } else {
+            printf("%d를 입력하셨습니다.\n", num);
+        }
+    }
+
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+숫자를 입력하세요 (-1 입력 시 종료)
+입력: 5
+5를 입력하셨습니다.
+입력: 10
+10를 입력하셨습니다.
+입력: -1
+프로그램을 종료합니다.
+</pre>
+
+</details>
+
+### 무한루프
+
+조건이 항상 참이면 반복문이 <span class="red-text">영원히 실행</span>됩니다.
+
+**의도하지 않은 무한루프 (주의!):**
+
+```c
+int num = 1;
+while (num < 5) {
+    printf("무한 반복!\n");
+    // num이 변하지 않음 → 무한루프!
+}
+```
+
+**의도적인 무한루프:**
+
+```c
+while (1) {  // 1은 항상 참
+    printf("무한 반복 중...\n");
+    // 특정 조건에서 break로 탈출
+}
+```
+
+<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
+<strong>💡 무한루프 탈출 방법</strong><br>
+• 프로그램 강제 종료: <code>Ctrl + C</code><br>
+• 코드 내에서 탈출: <code>break</code> 사용
+</div>
+
+---
+
+## 3. do-while문
+
+do-while문은 <span class="blue-text">최소 한 번은 실행</span>한 후 조건을 검사합니다.
+
+### 기본 형태
+
+```c
+do {
+    // 최소 1회는 실행되는 코드
+} while (조건식);
+```
+
+<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
+<strong>⚠️ while문과의 차이점</strong><br>
+• <span class="blue-text">while문</span>: 조건 검사 → 실행<br>
+• <span class="green-text">do-while문</span>: 실행 → 조건 검사<br>
+• do-while문은 조건이 거짓이어도 <span class="red-text">최소 1회는 실행</span>됩니다!
+</div>
+
+**실행 흐름:**
+
+```
+시작 → 코드 실행 → 조건 검사 → 참? → 코드 실행 반복
+                              ↓ 거짓
+                            종료
+```
+
+### 실습 3
+
+```c
+#include <stdio.h>
+
+int main() {
+    int num;
+
+    do {
+        printf("숫자 입력 (-1 입력 시 종료): ");
+        scanf("%d", &num);
+    } while (num != -1);
+
+    printf("종료되었습니다.\n");
+
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+숫자 입력 (-1 입력 시 종료): 5
+숫자 입력 (-1 입력 시 종료): 10
+숫자 입력 (-1 입력 시 종료): -1
+종료되었습니다.
+</pre>
+
+<p style="margin-top: 10px;">
+do-while문은 입력을 최소 1회는 받아야 하는 경우에 적합합니다.
+</p>
+
+</details>
+
+### 실습 4 - 1부터 10까지의 합
+
+```c
+#include <stdio.h>
+
+int main() {
+    int num = 1;
+    int sum = 0;
+
+    do {
+        sum += num;  // sum = sum + num
+        num++;
+    } while (num <= 10);
+
+    printf("1부터 10까지의 합: %d\n", sum);
+
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+1부터 10까지의 합: 55
+</pre>
+
+<ul style="margin-top: 10px;">
+<li>num이 1부터 10까지 증가하며 sum에 더해짐</li>
+<li>1 + 2 + 3 + ... + 10 = 55</li>
 </ul>
 
 </details>
 
 ---
 
-## 3. 배열 요소 접근하기
+## 4. for문
 
-### 인덱스(Index)
+for문은 <span class="blue-text">반복 횟수가 정해져 있을 때</span> 가장 많이 사용하는 반복문입니다.
 
-배열의 각 요소는 <span class="blue-text">인덱스(색인)</span>를 통해 접근합니다.
-
-**중요:** 인덱스는 <span class="red-text">0부터 시작</span>합니다!
+### 기본 형태
 
 ```c
-int arr[5] = {10, 20, 30, 40, 50};
-```
-
-| 인덱스 | 0 | 1 | 2 | 3 | 4 |
-|--------|---|---|---|---|---|
-| 값 | 10 | 20 | 30 | 40 | 50 |
-
-### 배열 요소 읽기와 쓰기
-
-**읽기:**
-
-```c
-printf("%d\n", arr[0]);  // 10 출력
-printf("%d\n", arr[2]);  // 30 출력
-```
-
-**쓰기:**
-
-```c
-arr[1] = 100;   // 두 번째 요소를 100으로 변경
-arr[4] = 200;   // 다섯 번째 요소를 200으로 변경
-```
-
-<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
-<strong>⚠️ 배열 범위 초과 주의</strong><br>
-크기가 5인 배열의 유효한 인덱스는 0~4입니다.<br>
-<code>arr[5]</code>, <code>arr[10]</code> 같은 접근은 <span class="red-text">오류</span>를 발생시킵니다!
-</div>
-
-### 실습 2
-
-```c
-#include <stdio.h>
-
-int main() {
-    int scores[3];
-
-    // 배열 요소에 값 저장
-    scores[0] = 85;
-    scores[1] = 90;
-    scores[2] = 78;
-
-    // 배열 요소 출력
-    printf("첫 번째 점수: %d\n", scores[0]);
-    printf("두 번째 점수: %d\n", scores[1]);
-    printf("세 번째 점수: %d\n", scores[2]);
-
-    // 평균 계산
-    double average = (scores[0] + scores[1] + scores[2]) / 3.0;
-    printf("평균: %.2f\n", average);
-
-    return 0;
+for (초기식; 조건식; 증감식)
+{
+    // 반복 실행할 코드
 }
 ```
 
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
+**각 요소의 역할:**
 
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-첫 번째 점수: 85
-두 번째 점수: 90
-세 번째 점수: 78
-평균: 84.33
-</pre>
+| 요소 | 역할 | 실행 시점 |
+|------|------|-----------|
+| **초기식** | 반복 변수 초기화 | 딱 한 번만 실행 |
+| **조건식** | 반복 조건 검사 | 매 반복마다 검사 |
+| **증감식** | 반복 변수 변경 | 매 반복 후 실행 |
 
-</details>
+**실행 순서:**
 
----
-
-## 4. 배열과 반복문
-
-배열은 <span class="blue-text">for 반복문</span>과 함께 사용하면 매우 효율적입니다.
-
-### for문으로 배열 순회하기
-
-```c
-#include <stdio.h>
-
-int main() {
-    int numbers[5] = {10, 20, 30, 40, 50};
-    int i;
-
-    // 배열의 모든 요소 출력
-    for (i = 0; i < 5; i++) {
-        printf("numbers[%d] = %d\n", i, numbers[i]);
-    }
-
-    return 0;
-}
 ```
-
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-numbers[0] = 10
-numbers[1] = 20
-numbers[2] = 30
-numbers[3] = 40
-numbers[4] = 50
-</pre>
-
-</details>
-
-### 실습 3 - 배열의 합과 평균 구하기
-
-```c
-#include <stdio.h>
-
-int main() {
-    int scores[5] = {85, 90, 78, 92, 88};
-    int sum = 0;
-    int i;
-
-    // 합계 계산
-    for (i = 0; i < 5; i++) {
-        sum += scores[i];
-    }
-
-    // 평균 계산
-    double average = sum / 5.0;
-
-    printf("총점: %d\n", sum);
-    printf("평균: %.2f\n", average);
-
-    return 0;
-}
+초기식 → 조건식 → 참? → 코드 실행 → 증감식 → 조건식 반복
+                ↓ 거짓
+              종료
 ```
-
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-총점: 433
-평균: 86.60
-</pre>
-
-</details>
-
-<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
-<strong>💡 배열 크기 자동 계산</strong><br>
-배열의 크기를 코드에 직접 쓰지 않고 계산할 수 있습니다:<br>
-<code>int size = sizeof(scores) / sizeof(scores[0]);</code>
-</div>
-
----
-
-## 5. 문자 배열과 문자열
-
-### 문자 배열
-
-문자를 저장하는 배열은 <span class="blue-text">char형 배열</span>을 사용합니다.
-
-```c
-char letters[5] = {'H', 'e', 'l', 'l', 'o'};
-```
-
-### 문자열
-
-C 언어에서 문자열은 <span class="blue-text">널 문자(\0)로 끝나는 문자 배열</span>입니다.
-
-```c
-char greeting[6] = "Hello";  // 자동으로 '\0' 추가
-```
-
-| H | e | l | l | o | \0 |
-|---|---|---|---|---|----|
-| [0] | [1] | [2] | [3] | [4] | [5] |
 
 <div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
-<strong>널 문자(\0)란?</strong><br>
-• 문자열의 끝을 나타내는 특수 문자<br>
-• 문자열을 저장할 때 자동으로 추가됨<br>
-• 실제 문자열보다 <span class="blue-text">1바이트 더 큰 배열</span>이 필요
+<strong>for문의 실행 순서</strong><br>
+1. <span class="blue-text">초기식</span> 실행 (딱 1번)<br>
+2. <span class="blue-text">조건식</span> 검사<br>
+3. 조건이 참이면 <span class="blue-text">코드 실행</span><br>
+4. <span class="blue-text">증감식</span> 실행<br>
+5. 2번으로 돌아가 반복
 </div>
 
-### 문자열 선언과 초기화
-
-**방법 1: 큰따옴표 사용 (권장)**
-
-```c
-char str1[6] = "Hello";  // 널 문자 포함 6바이트
-```
-
-**방법 2: 문자 배열로 초기화**
-
-```c
-char str2[6] = {'H', 'e', 'l', 'l', 'o', '\0'};  // 수동으로 널 문자 추가
-```
-
-**방법 3: 크기 생략**
-
-```c
-char str3[] = "Hello";  // 컴파일러가 자동으로 크기 6으로 설정
-```
-
-### 문자열 입출력
-
-**출력:**
-
-```c
-char name[] = "Kim";
-printf("%s\n", name);  // %s: 문자열 출력
-```
-
-**입력:**
-
-```c
-char name[50];
-scanf("%s", name);  // & 연산자 없이 사용!
-```
-
-<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
-<strong>⚠️ scanf의 문자열 입력 제한</strong><br>
-• <code>scanf("%s", ...)</code>는 <span class="red-text">공백에서 입력이 끝남</span><br>
-• "Hello World" 입력 시 "Hello"만 저장됨<br>
-• 공백 포함 입력은 <code>fgets()</code> 함수 사용
-</div>
-
-### 실습 4
+### 실습 5
 
 ```c
 #include <stdio.h>
 
 int main() {
-    char str1[20] = "Good";
-    char str2[20];
+    int i;
 
-    printf("문자열 입력: ");
-    scanf("%s", str2);
-
-    printf("str1: %s\n", str1);
-    printf("str2: %s\n", str2);
-
-    // 문자열 길이 확인 (널 문자 포함)
-    printf("str1 크기: %d바이트\n", sizeof(str1));
+    for (i = 0; i < 5; i++) {
+        printf("i = %d\n", i);
+    }
 
     return 0;
 }
@@ -449,100 +384,342 @@ int main() {
 <summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-문자열 입력: Morning
-str1: Good
-str2: Morning
-str1 크기: 20바이트
+i = 0
+i = 1
+i = 2
+i = 3
+i = 4
 </pre>
+
+<ul style="margin-top: 10px;">
+<li><code>i = 0</code>: 초기식, i를 0으로 초기화</li>
+<li><code>i < 5</code>: 조건식, i가 5보다 작으면 반복</li>
+<li><code>i++</code>: 증감식, i를 1씩 증가</li>
+<li>총 5회 반복 (i = 0, 1, 2, 3, 4)</li>
+</ul>
+
+</details>
+
+### 실습 6 - 1부터 100까지의 합
+
+```c
+#include <stdio.h>
+
+int main() {
+    int i;
+    int sum = 0;
+
+    for (i = 1; i <= 100; i++) {
+        sum += i;
+    }
+
+    printf("1부터 100까지의 합: %d\n", sum);
+
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+1부터 100까지의 합: 5050
+</pre>
+
+</details>
+
+### for문의 다양한 형태
+
+**증감식 변형:**
+
+```c
+// 2씩 증가
+for (i = 0; i < 10; i += 2)
+    printf("%d ", i);  // 0 2 4 6 8
+
+// 1씩 감소
+for (i = 5; i > 0; i--)
+    printf("%d ", i);  // 5 4 3 2 1
+```
+
+**요소 생략 가능:**
+
+```c
+int i = 0;
+for (; i < 3; i++) {  // 초기식 생략
+    printf("%d ", i);
+}
+```
+
+**무한루프:**
+
+```c
+for (;;) {  // 모든 요소 생략
+    printf("무한 반복!\n");
+    // Ctrl + C로 종료
+}
+```
+
+<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
+<strong>💡 for문 vs while문</strong><br>
+• <span class="blue-text">for문</span>: 반복 횟수가 명확할 때 (카운팅)<br>
+• <span class="green-text">while문</span>: 조건에 따라 반복할 때 (조건 기반)
+</div>
+
+---
+
+## 5. 중첩 반복문
+
+반복문 안에 또 다른 반복문을 넣을 수 있습니다.
+
+### 기본 형태
+
+```c
+for (외부 초기식; 외부 조건식; 외부 증감식)
+{
+    for (내부 초기식; 내부 조건식; 내부 증감식)
+    {
+        // 외부 반복 1회당 내부 반복 전체가 실행됨
+    }
+}
+```
+
+<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
+<strong>중첩 반복문의 실행 횟수</strong><br>
+외부 반복 N회 × 내부 반복 M회 = 총 N × M회 실행
+</div>
+
+### 실습 7 - 구구단 출력
+
+```c
+#include <stdio.h>
+
+int main() {
+    int dan, num;
+
+    printf("=== 구구단 ===\n");
+
+    for (dan = 2; dan <= 9; dan++) {
+        printf("\n[%d단]\n", dan);
+        for (num = 1; num <= 9; num++) {
+            printf("%d × %d = %d\n", dan, num, dan * num);
+        }
+    }
+
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+=== 구구단 ===
+
+[2단]
+2 × 1 = 2
+2 × 2 = 4
+2 × 3 = 6
+...
+2 × 9 = 18
+
+[3단]
+3 × 1 = 3
+3 × 2 = 6
+...
+[9단까지 계속]
+</pre>
+
+<p style="margin-top: 10px;">
+외부 for문(dan)이 1회 실행될 때마다 내부 for문(num)이 9회 실행됩니다.
+</p>
+
+</details>
+
+### 실습 8 - 별 찍기 패턴
+
+```c
+#include <stdio.h>
+
+int main() {
+    int i, j;
+
+    printf("직각삼각형 패턴:\n");
+    for (i = 1; i <= 5; i++) {
+        for (j = 1; j <= i; j++) {
+            printf("*");
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+직각삼각형 패턴:
+*
+**
+***
+****
+*****
+</pre>
+
+<ul style="margin-top: 10px;">
+<li>i = 1일 때: j가 1번 반복 → * 1개</li>
+<li>i = 2일 때: j가 2번 반복 → * 2개</li>
+<li>i = 5일 때: j가 5번 반복 → * 5개</li>
+</ul>
 
 </details>
 
 ---
 
-## 6. 종합 실습
+## 6. break와 continue
 
-### 문제 1 - 배열 크기 (기초)
+반복문의 흐름을 제어하는 두 가지 키워드입니다.
 
-<div class="quiz-number">문제 1</div><strong>int형 배열 arr[10]의 전체 크기는 몇 바이트입니까?</strong>
+### break - 반복문 즉시 종료
 
-{% include quiz-text.html
-   id="quiz1"
-   answer="40"
-   tags="1차원 배열"
-%}
+break는 <span class="blue-text">반복문을 완전히 탈출</span>합니다.
 
----
-
-### 문제 2 - 배열 인덱스 (기초)
-
-<div class="quiz-number">문제 2</div><strong>다음 코드의 실행 결과는?</strong>
-
-{% capture code_block2 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
+```c
+#include <stdio.h>
 
 int main() {
-    int arr[5] = {2, 4, 6, 8, 10};
+    int i;
 
-    printf("%d", arr[2] + arr[4]);
-
-    return 0;
-}</code></pre>
-</div>
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz2"
-   code_html=code_block2
-   answer="16"
-   tags="1차원 배열"
-%}
-
----
-
-### 문제 3 - 배열 초기화 (기초)
-
-<div class="quiz-number">문제 3</div><strong>다음 코드에서 arr[3]의 값은?</strong>
-
-{% capture code_block3 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-
-int main() {
-    int arr[5] = {10, 20};
-
-    printf("%d", arr[3]);
-
-    return 0;
-}</code></pre>
-</div>
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz3"
-   code_html=code_block3
-   answer="0"
-   tags="1차원 배열"
-%}
-
----
-
-### 문제 4 - 배열과 반복문 (중급)
-
-<div class="quiz-number">문제 4</div><strong>다음 코드의 실행 결과는?</strong>
-
-{% capture code_block4 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-
-int main() {
-    int arr[5] = {1, 2, 3, 4, 5};
-    int i, sum = 0;
-
-    for (i = 0; i < 5; i++) {
-        if (arr[i] % 2 == 0) {
-            sum += arr[i];
+    for (i = 1; i <= 10; i++) {
+        if (i == 5) {
+            break;  // i가 5일 때 반복문 종료
         }
+        printf("%d ", i);
+    }
+
+    printf("\n반복문 종료\n");
+
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+1 2 3 4
+반복문 종료
+</pre>
+
+<p style="margin-top: 10px;">
+i가 5가 되면 break가 실행되어 반복문이 즉시 종료됩니다.
+</p>
+
+</details>
+
+### continue - 다음 반복으로 건너뛰기
+
+continue는 <span class="blue-text">현재 반복만 건너뛰고</span> 다음 반복을 계속합니다.
+
+```c
+#include <stdio.h>
+
+int main() {
+    int i;
+
+    for (i = 1; i <= 5; i++) {
+        if (i == 3) {
+            continue;  // i가 3일 때 아래 코드 건너뛰기
+        }
+        printf("%d ", i);
+    }
+
+    printf("\n");
+
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+1 2 4 5
+</pre>
+
+<p style="margin-top: 10px;">
+i가 3일 때 continue가 실행되어 printf를 건너뛰고 다음 반복으로 넘어갑니다.
+</p>
+
+</details>
+
+### 실습 9 - 짝수만 출력하기
+
+```c
+#include <stdio.h>
+
+int main() {
+    int i;
+
+    printf("1부터 10까지 짝수만 출력:\n");
+
+    for (i = 1; i <= 10; i++) {
+        if (i % 2 != 0) {  // 홀수면
+            continue;       // 건너뛰기
+        }
+        printf("%d ", i);
+    }
+
+    printf("\n");
+
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+1부터 10까지 짝수만 출력:
+2 4 6 8 10
+</pre>
+
+</details>
+
+**break vs continue 비교:**
+
+| 키워드 | 동작 | 사용 시점 |
+|--------|------|-----------|
+| `break` | 반복문 즉시 종료 | 더 이상 반복이 필요 없을 때 |
+| `continue` | 현재 반복만 건너뛰기 | 특정 조건에서 일부 코드만 건너뛸 때 |
+
+<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
+<strong>실행 흐름 비교</strong><br>
+• <span class="blue-text">break</span>: 반복문 탈출 → 반복문 다음 코드 실행<br>
+• <span class="green-text">continue</span>: 반복문의 처음(증감식)으로 이동 → 다음 반복 진행
+</div>
+
+---
+
+## 7. 종합 실습
+
+### 문제 1 - while문 (기초)
+
+<div class="quiz-number">문제 1</div><strong>다음 코드의 실행 결과는?</strong>
+
+{% capture code_block1 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int i = 5;
+    int sum = 0;
+
+    while (i > 0) {
+        sum += i;
+        i--;
     }
 
     printf("%d", sum);
@@ -553,27 +730,146 @@ int main() {
 {% endcapture %}
 
 {% include quiz-text.html
-   id="quiz4"
-   code_html=code_block4
-   answer="6"
-   tags="1차원 배열"
+   id="quiz1"
+   code_html=code_block1
+   answer="15"
+   tags="반복문"
 %}
 
 ---
 
-### 문제 5 - 문자열 길이 (중급)
+### 문제 2 - do-while문 (기초)
 
-<div class="quiz-number">문제 5</div><strong>문자열 "C Language"를 저장하려면 최소 몇 바이트의 char 배열이 필요합니까?</strong>
+<div class="quiz-number">문제 2</div><strong>다음 코드는 몇 번 실행됩니까?</strong>
+
+{% capture code_block2 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int num = 10;
+    int count = 0;
+
+    do {
+        count++;
+    } while (num < 5);
+
+    printf("%d", count);
+
+    return 0;
+}</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz2"
+   code_html=code_block2
+   answer="1"
+   tags="반복문"
+%}
+
+---
+
+### 문제 3 - for문 (기초)
+
+<div class="quiz-number">문제 3</div><strong>다음 코드의 실행 결과는?</strong>
+
+{% capture code_block3 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int i;
+
+    for (i = 0; i < 4; i++) {
+        printf("%d ", i * 2);
+    }
+
+    return 0;
+}</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz3"
+   code_html=code_block3
+   answer="0 2 4 6"
+   tags="반복문"
+%}
+
+---
+
+### 문제 4 - break (중급)
+
+<div class="quiz-number">문제 4</div><strong>다음 코드의 실행 결과는?</strong>
+
+{% capture code_block4 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int i;
+    int sum = 0;
+
+    for (i = 1; i <= 10; i++) {
+        sum += i;
+        if (sum > 10) {
+            break;
+        }
+    }
+
+    printf("%d", i);
+
+    return 0;
+}</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz4"
+   code_html=code_block4
+   answer="5"
+   tags="반복문"
+%}
+
+---
+
+### 문제 5 - continue (중급)
+
+<div class="quiz-number">문제 5</div><strong>다음 코드의 실행 결과는?</strong>
+
+{% capture code_block5 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int i;
+    int count = 0;
+
+    for (i = 1; i <= 5; i++) {
+        if (i == 2 || i == 4) {
+            continue;
+        }
+        count++;
+    }
+
+    printf("%d", count);
+
+    return 0;
+}</code></pre>
+</div>
+{% endcapture %}
 
 {% include quiz-text.html
    id="quiz5"
-   answer="11"
-   tags="1차원 배열"
+   code_html=code_block5
+   answer="3"
+   tags="반복문"
 %}
 
 ---
 
-### 문제 6 - 최댓값 찾기 (중급)
+### 문제 6 - 중첩 반복문 (중급)
 
 <div class="quiz-number">문제 6</div><strong>다음 코드의 실행 결과는?</strong>
 
@@ -582,17 +878,16 @@ int main() {
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int arr[5] = {23, 67, 45, 89, 12};
-    int max = arr[0];
-    int i;
+    int i, j;
+    int count = 0;
 
-    for (i = 1; i < 5; i++) {
-        if (arr[i] > max) {
-            max = arr[i];
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 2; j++) {
+            count++;
         }
     }
 
-    printf("%d", max);
+    printf("%d", count);
 
     return 0;
 }</code></pre>
@@ -602,8 +897,61 @@ int main() {
 {% include quiz-text.html
    id="quiz6"
    code_html=code_block6
-   answer="89"
-   tags="1차원 배열"
+   answer="6"
+   tags="반복문"
+%}
+
+---
+
+### 문제 7 - 팩토리얼 (고급)
+
+<div class="quiz-number">문제 7</div><strong>5! (5 팩토리얼)의 값은?</strong>
+
+```c
+// 5! = 5 × 4 × 3 × 2 × 1
+
+int n = 5;
+int result = 1;
+int i;
+
+for (i = 1; i <= n; i++) {
+    result *= i;
+}
+
+printf("%d", result);
+```
+
+{% include quiz-text.html
+   id="quiz7"
+   answer="120"
+   tags="반복문"
+%}
+
+---
+
+### 문제 8 - 무한루프 판별 (고급)
+
+<div class="quiz-number">문제 8</div><strong>다음 중 무한루프가 발생하는 코드는? (여러 개 선택 가능)</strong>
+
+```
+A. while (1) { }
+
+B. for (;;) { }
+
+C. int i = 0;
+   while (i < 5) {
+       printf("%d ", i);
+   }
+
+D. do {
+       printf("Hello");
+   } while (1);
+```
+
+{% include quiz-text.html
+   id="quiz8"
+   answer="A|B|C|D|A, B, C, D|ABCD"
+   tags="반복문"
 %}
 
 ---
@@ -612,30 +960,38 @@ int main() {
 
 <div style="background-color: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #203BB0;">
 
-<strong>1. 배열 기본</strong><br>
-• 같은 자료형의 데이터를 여러 개 저장하는 구조<br>
-• 선언: <code>자료형 배열이름[크기];</code><br>
-• 인덱스는 0부터 시작<br><br>
+<strong>1. while문</strong><br>
+• 조건이 참인 동안 반복<br>
+• 형태: <code>while (조건) { 실행문 }</code><br>
+• 조건을 먼저 검사<br><br>
 
-<strong>2. 배열 초기화</strong><br>
-• <code>int arr[5] = {10, 20, 30, 40, 50};</code><br>
-• 크기 생략 가능: <code>int arr[] = {10, 20, 30};</code><br>
-• 일부만 초기화하면 나머지는 0<br><br>
+<strong>2. do-while문</strong><br>
+• 최소 1회는 실행 후 조건 검사<br>
+• 형태: <code>do { 실행문 } while (조건);</code><br>
+• 한 번은 반드시 실행해야 할 때 사용<br><br>
 
-<strong>3. 배열 접근</strong><br>
-• 읽기: <code>value = arr[0];</code><br>
-• 쓰기: <code>arr[0] = 100;</code><br>
-• 유효 인덱스: 0 ~ (크기-1)<br><br>
+<strong>3. for문</strong><br>
+• 반복 횟수가 정해져 있을 때 사용<br>
+• 형태: <code>for (초기식; 조건식; 증감식) { 실행문 }</code><br>
+• 가장 많이 사용되는 반복문<br><br>
 
-<strong>4. 배열과 반복문</strong><br>
-• for문으로 효율적인 접근<br>
-• <code>for (i = 0; i < 크기; i++)</code><br><br>
+<strong>4. 중첩 반복문</strong><br>
+• 반복문 안에 반복문<br>
+• 외부 N회 × 내부 M회 = 총 N×M회 실행<br>
+• 2차원 패턴, 구구단 등에 활용<br><br>
 
-<strong>5. 문자열</strong><br>
-• char 배열로 표현<br>
-• 널 문자(\0)로 끝남<br>
-• <code>char str[] = "Hello";</code><br>
-• printf: <code>%s</code>, scanf: <code>%s</code> (& 없이)
+<strong>5. break</strong><br>
+• 반복문 즉시 종료<br>
+• 더 이상 반복이 필요 없을 때 사용<br><br>
+
+<strong>6. continue</strong><br>
+• 현재 반복만 건너뛰고 다음 반복 진행<br>
+• 특정 조건의 코드만 건너뛸 때 사용<br><br>
+
+<strong>7. 무한루프</strong><br>
+• <code>while (1)</code> 또는 <code>for (;;)</code><br>
+• 강제 종료: <code>Ctrl + C</code><br>
+• 의도적인 경우: break로 탈출
 
 </div>
 

@@ -1,14 +1,14 @@
 ---
 layout: article
-title: 9. 다차원 배열
+title: 9. 포인터와 배열의 관계
 permalink: /notes/kr/c-basic/chapter-09
 key: notes
 sidebar:
   nav: notes-kr
 aside:
   toc: true
-excerpt: C 기초 과정 강의 노트, 2차원 배열, 3차원 배열의 선언과 초기화, 배열 포인터를 다룹니다.
-keywords: "C언어, 2차원배열, 3차원배열, 다차원배열, 배열포인터"
+excerpt: C 기초 과정 강의 노트, 배열 이름과 포인터의 관계, 포인터 연산, 포인터로 배열 접근하는 방법을 다룹니다.
+keywords: "C언어, 포인터, 배열, 포인터연산, 포인터배열, 배열포인터"
 ---
 
 <script src="/assets/js/quiz.js"></script>
@@ -49,61 +49,26 @@ keywords: "C언어, 2차원배열, 3차원배열, 다차원배열, 배열포인�
 
 ---
 
-## 1. 2차원 배열
+## 1. 배열 이름의 정체
 
-2차원 배열은 <span class="blue-text">행(row)과 열(column)</span>로 구성된 평면 구조의 배열입니다.
+배열과 포인터는 매우 밀접한 관계를 가지고 있습니다. 사실 <span class="blue-text">배열의 이름은 포인터</span>입니다!
 
-### 2차원 배열의 개념
-
-1차원 배열이 선형 구조라면, 2차원 배열은 표(table) 구조입니다.
-
-**실생활 예시:**
-- 교실의 좌석 배치
-- 체스판
-- 엑셀 스프레드시트
+### 배열 이름은 첫 번째 요소의 주소
 
 ```c
-int arr[3][4];  // 3행 4열의 2차원 배열
+int arr[3] = {10, 20, 30};
 ```
 
-**배열 구조 시각화:**
+| arr[0] | arr[1] | arr[2] |
+|--------|--------|--------|
+| 10 | 20 | 30 |
+| 주소: 0x100 | 주소: 0x104 | 주소: 0x108 |
 
-|      | 0열 | 1열 | 2열 | 3열 |
-|------|-----|-----|-----|-----|
-| **0행** | arr[0][0] | arr[0][1] | arr[0][2] | arr[0][3] |
-| **1행** | arr[1][0] | arr[1][1] | arr[1][2] | arr[1][3] |
-| **2행** | arr[2][0] | arr[2][1] | arr[2][2] | arr[2][3] |
-
-<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
-<strong>2차원 배열의 구조</strong><br>
-• 첫 번째 인덱스: 행 번호 (세로)<br>
-• 두 번째 인덱스: 열 번호 (가로)<br>
-• 총 요소 개수 = 행 × 열
-</div>
-
-### 2차원 배열 선언
+배열 이름 `arr`은 배열의 첫 번째 요소 `arr[0]`의 주소를 의미합니다.
 
 ```c
-자료형 배열이름[행크기][열크기];
+arr == &arr[0]  // 참
 ```
-
-**예시:**
-
-```c
-int scores[3][4];    // 3행 4열 (총 12개 요소)
-double data[2][5];   // 2행 5열 (총 10개 요소)
-char table[4][3];    // 4행 3열 (총 12개 요소)
-```
-
-### 2차원 배열의 메모리 크기
-
-```c
-int arr[3][4];
-```
-
-- int형: 4바이트
-- 요소 개수: 3 × 4 = 12개
-- 총 크기: 4 × 12 = **48바이트**
 
 ### 실습 1
 
@@ -111,90 +76,90 @@ int arr[3][4];
 #include <stdio.h>
 
 int main() {
-    int arr[2][3];
+    int arr[3] = {10, 20, 30};
 
-    printf("배열 크기: %d바이트\n", sizeof(arr));
-    printf("행 개수: %d\n", sizeof(arr) / sizeof(arr[0]));
-    printf("열 개수: %d\n", sizeof(arr[0]) / sizeof(arr[0][0]));
+    printf("배열 이름 arr: %p\n", arr);
+    printf("첫 번째 요소의 주소 &arr[0]: %p\n", &arr[0]);
+    printf("두 번째 요소의 주소 &arr[1]: %p\n", &arr[1]);
+    printf("세 번째 요소의 주소 &arr[2]: %p\n", &arr[2]);
 
     return 0;
 }
 ```
 
 <details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
+<summary><span class="green-text">실행 결과 보기 (예시)</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-배열 크기: 24바이트
-행 개수: 2
-열 개수: 3
+배열 이름 arr: 000000D5BCDFF6E8
+첫 번째 요소의 주소 &arr[0]: 000000D5BCDFF6E8
+두 번째 요소의 주소 &arr[1]: 000000D5BCDFF6EC
+세 번째 요소의 주소 &arr[2]: 000000D5BCDFF6F0
 </pre>
 
 <ul style="margin-top: 10px;">
-<li>총 크기: 2행 × 3열 × 4바이트(int) = 24바이트</li>
-<li>행 개수: 전체 크기 / 1행의 크기 = 24 / 12 = 2</li>
-<li>열 개수: 1행의 크기 / 1개 요소 크기 = 12 / 4 = 3</li>
+<li><code>arr</code>과 <code>&arr[0]</code>이 같은 주소</li>
+<li>int형은 4바이트이므로 주소가 4씩 증가</li>
 </ul>
 
 </details>
 
----
+### 배열 이름과 포인터의 차이
 
-## 2. 2차원 배열의 초기화
-
-2차원 배열은 여러 방법으로 초기화할 수 있습니다.
-
-### 방법 1: 중괄호로 행 구분
+배열 이름은 포인터처럼 동작하지만 중요한 차이점이 있습니다:
 
 ```c
-int arr[2][3] = {
-    {1, 2, 3},
-    {4, 5, 6}
-};
-```
+int arr[3] = {10, 20, 30};
+int *ptr = arr;  // 가능
 
-| 0열 | 1열 | 2열 |
-|-----|-----|-----|
-| **0행** 1 | 2 | 3 |
-| **1행** 4 | 5 | 6 |
-
-### 방법 2: 일렬로 나열 (비권장)
-
-```c
-int arr[2][3] = {1, 2, 3, 4, 5, 6};
-```
-
-순서대로 채워집니다. 하지만 가독성이 떨어지므로 방법 1을 권장합니다.
-
-### 방법 3: 일부만 초기화
-
-```c
-int arr[2][3] = {
-    {1, 2},
-    {4}
-};
-```
-
-| 0열 | 1열 | 2열 |
-|-----|-----|-----|
-| **0행** 1 | 2 | 0 |
-| **1행** 4 | 0 | 0 |
-
-나머지는 0으로 자동 초기화됩니다.
-
-### 방법 4: 행 크기 생략
-
-```c
-int arr[][3] = {
-    {1, 2, 3},
-    {4, 5, 6}
-};
+ptr = ptr + 1;   // 가능 (포인터는 값 변경 가능)
+arr = arr + 1;   // 불가능! (배열 이름은 상수)
 ```
 
 <div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
-<strong>⚠️ 중요</strong><br>
-• 행 크기는 생략 가능<br>
-• <span class="red-text">열 크기는 반드시 명시</span>해야 함
+<strong>⚠️ 중요한 차이점</strong><br>
+• <span class="blue-text">포인터 변수</span>: 값을 변경할 수 있음<br>
+• <span class="red-text">배열 이름</span>: 상수 포인터, 값 변경 불가
+</div>
+
+---
+
+## 2. 포인터 연산
+
+포인터는 특별한 방식으로 산술 연산을 수행합니다.
+
+### 포인터 증가 연산
+
+포인터를 1 증가시키면, 가리키는 자료형의 크기만큼 주소가 증가합니다.
+
+```c
+int arr[3] = {10, 20, 30};
+int *ptr = arr;  // ptr은 arr[0]을 가리킴
+```
+
+| 연산 | 가리키는 요소 | 주소 증가량 |
+|------|--------------|------------|
+| `ptr` | arr[0] | - |
+| `ptr + 1` | arr[1] | +4 (int 크기) |
+| `ptr + 2` | arr[2] | +8 (int 크기) |
+
+### 자료형별 포인터 증가
+
+```c
+char *cptr;   // char는 1바이트
+cptr + 1;     // 주소 +1
+
+int *iptr;    // int는 4바이트
+iptr + 1;     // 주소 +4
+
+double *dptr; // double은 8바이트
+dptr + 1;     // 주소 +8
+```
+
+<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
+<strong>포인터 연산의 핵심</strong><br>
+포인터 + 1 = 주소 + (자료형 크기 × 1)<br>
+포인터 + n = 주소 + (자료형 크기 × n)
 </div>
 
 ### 실습 2
@@ -203,339 +168,96 @@ int arr[][3] = {
 #include <stdio.h>
 
 int main() {
-    int arr[3][2] = {
-        {10, 20},
-        {30, 40},
-        {50, 60}
-    };
-    int i, j;
+    int arr[5] = {10, 20, 30, 40, 50};
+    int *ptr = arr;
 
-    printf("=== 2차원 배열 출력 ===\n");
-    for (i = 0; i < 3; i++) {
-        for (j = 0; j < 2; j++) {
-            printf("arr[%d][%d] = %d\n", i, j, arr[i][j]);
-        }
-    }
+    printf("=== 포인터 연산 ===\n");
+    printf("ptr: %p, 값: %d\n", ptr, *ptr);
+    printf("ptr+1: %p, 값: %d\n", ptr+1, *(ptr+1));
+    printf("ptr+2: %p, 값: %d\n", ptr+2, *(ptr+2));
+    printf("ptr+3: %p, 값: %d\n", ptr+3, *(ptr+3));
+    printf("ptr+4: %p, 값: %d\n", ptr+4, *(ptr+4));
 
     return 0;
 }
 ```
 
 <details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
+<summary><span class="green-text">실행 결과 보기 (예시)</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-=== 2차원 배열 출력 ===
-arr[0][0] = 10
-arr[0][1] = 20
-arr[1][0] = 30
-arr[1][1] = 40
-arr[2][0] = 50
-arr[2][1] = 60
-</pre>
-
-</details>
-
----
-
-## 3. 2차원 배열과 반복문
-
-2차원 배열은 <span class="blue-text">중첩 for문</span>을 사용하여 처리합니다.
-
-### 기본 패턴
-
-```c
-for (i = 0; i < 행크기; i++) {
-    for (j = 0; j < 열크기; j++) {
-        // arr[i][j] 처리
-    }
-}
-```
-
-- 외부 루프: 행을 반복
-- 내부 루프: 열을 반복
-
-### 실습 3 - 표 형태로 출력
-
-```c
-#include <stdio.h>
-
-int main() {
-    int scores[3][4] = {
-        {90, 85, 88, 92},
-        {78, 95, 82, 88},
-        {85, 90, 93, 87}
-    };
-    int i, j;
-
-    printf("학생 | 국어 영어 수학 과학\n");
-    printf("------|-------------------\n");
-
-    for (i = 0; i < 3; i++) {
-        printf(" %d번  |", i+1);
-        for (j = 0; j < 4; j++) {
-            printf(" %3d", scores[i][j]);
-        }
-        printf("\n");
-    }
-
-    return 0;
-}
-```
-
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-학생 | 국어 영어 수학 과학
-------|-------------------
- 1번  |  90  85  88  92
- 2번  |  78  95  82  88
- 3번  |  85  90  93  87
-</pre>
-
-</details>
-
-### 실습 4 - 학생별 평균 계산
-
-```c
-#include <stdio.h>
-
-int main() {
-    int scores[3][4] = {
-        {90, 85, 88, 92},
-        {78, 95, 82, 88},
-        {85, 90, 93, 87}
-    };
-    int i, j;
-    double sum, average;
-
-    for (i = 0; i < 3; i++) {
-        sum = 0;
-        for (j = 0; j < 4; j++) {
-            sum += scores[i][j];
-        }
-        average = sum / 4;
-        printf("학생 %d 평균: %.2f\n", i+1, average);
-    }
-
-    return 0;
-}
-```
-
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-학생 1 평균: 88.75
-학생 2 평균: 85.75
-학생 3 평균: 88.75
-</pre>
-
-</details>
-
----
-
-## 4. 3차원 배열
-
-3차원 배열은 <span class="blue-text">높이(depth), 행, 열</span>의 3차원 구조를 가집니다.
-
-### 3차원 배열의 개념
-
-```c
-int arr[2][3][4];
-```
-
-- **높이(depth)**: 2 (2개의 2차원 배열)
-- **행(row)**: 3
-- **열(column)**: 4
-- **총 요소**: 2 × 3 × 4 = 24개
-
-**3차원 배열 시각화:**
-
-```
-[0층]               [1층]
-┌─────────┐        ┌─────────┐
-│ 3 x 4   │        │ 3 x 4   │
-│ 배열    │        │ 배열    │
-└─────────┘        └─────────┘
-```
-
-<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
-<strong>💡 3차원 배열 이해하기</strong><br>
-3차원 배열은 "2차원 배열을 여러 개 쌓아놓은 구조"로 생각하면 쉽습니다.
-</div>
-
-### 3차원 배열 선언과 초기화
-
-```c
-int arr[2][3][4] = {
-    {   // 0층
-        {1, 2, 3, 4},
-        {5, 6, 7, 8},
-        {9, 10, 11, 12}
-    },
-    {   // 1층
-        {13, 14, 15, 16},
-        {17, 18, 19, 20},
-        {21, 22, 23, 24}
-    }
-};
-```
-
-### 3차원 배열 접근
-
-```c
-arr[0][1][2] = 7;   // 0층, 1행, 2열
-arr[1][2][3] = 24;  // 1층, 2행, 3열
-```
-
-### 실습 5
-
-```c
-#include <stdio.h>
-
-int main() {
-    int arr[2][2][3] = {
-        {
-            {1, 2, 3},
-            {4, 5, 6}
-        },
-        {
-            {7, 8, 9},
-            {10, 11, 12}
-        }
-    };
-    int i, j, k;
-
-    printf("=== 3차원 배열 출력 ===\n");
-    for (i = 0; i < 2; i++) {
-        printf("[%d층]\n", i);
-        for (j = 0; j < 2; j++) {
-            for (k = 0; k < 3; k++) {
-                printf("%3d ", arr[i][j][k]);
-            }
-            printf("\n");
-        }
-        printf("\n");
-    }
-
-    return 0;
-}
-```
-
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-=== 3차원 배열 출력 ===
-[0층]
-  1   2   3
-  4   5   6
-
-[1층]
-  7   8   9
- 10  11  12
-</pre>
-
-</details>
-
-### 3차원 배열의 메모리 크기
-
-```c
-#include <stdio.h>
-
-int main() {
-    int arr[2][3][4];
-
-    printf("전체 크기: %d바이트\n", sizeof(arr));
-    printf("층 개수: %d\n", sizeof(arr) / sizeof(arr[0]));
-    printf("행 개수: %d\n", sizeof(arr[0]) / sizeof(arr[0][0]));
-    printf("열 개수: %d\n", sizeof(arr[0][0]) / sizeof(arr[0][0][0]));
-
-    return 0;
-}
-```
-
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-전체 크기: 96바이트
-층 개수: 2
-행 개수: 3
-열 개수: 4
+=== 포인터 연산 ===
+ptr: 000000C8FFDFF700, 값: 10
+ptr+1: 000000C8FFDFF704, 값: 20
+ptr+2: 000000C8FFDFF708, 값: 30
+ptr+3: 000000C8FFDFF70C, 값: 40
+ptr+4: 000000C8FFDFF710, 값: 50
 </pre>
 
 <p style="margin-top: 10px;">
-2 × 3 × 4 × 4바이트(int) = 96바이트
+주소가 4바이트(int 크기)씩 증가합니다.
 </p>
 
 </details>
 
----
-
-## 5. 배열 포인터
-
-배열 포인터는 <span class="blue-text">배열 전체를 가리키는 포인터</span>입니다.
-
-### 포인터 배열 vs 배열 포인터
-
-두 개념을 혼동하지 마세요!
-
-**포인터 배열:**
+### 포인터 증감 연산자
 
 ```c
-int *arr[3];  // int형 포인터 3개를 가지는 배열
+int arr[3] = {10, 20, 30};
+int *ptr = arr;
+
+printf("%d\n", *ptr);    // 10
+ptr++;                    // 다음 요소로 이동
+printf("%d\n", *ptr);    // 20
+ptr++;                    // 다음 요소로 이동
+printf("%d\n", *ptr);    // 30
 ```
 
-**배열 포인터:**
-
-```c
-int (*ptr)[3];  // int형 배열(크기 3)을 가리키는 포인터
-```
-
-<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
-<strong>구분 방법</strong><br>
-• <code>int *arr[3]</code> → 배열이 먼저 (포인터 배열)<br>
-• <code>int (*ptr)[3]</code> → 괄호로 포인터가 먼저 (배열 포인터)
+<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
+<strong>💡 포인터 연산 활용</strong><br>
+• <code>ptr++</code>: 다음 요소로 이동<br>
+• <code>ptr--</code>: 이전 요소로 이동<br>
+• <code>ptr += 2</code>: 2칸 앞으로 이동
 </div>
 
-### 배열 포인터의 사용
+---
 
-배열 포인터는 <span class="blue-text">2차원 배열을 가리킬 때</span> 주로 사용합니다.
+## 3. 포인터로 배열 접근하기
+
+포인터를 사용하면 배열을 두 가지 방법으로 접근할 수 있습니다.
+
+### 배열 표기법 vs 포인터 표기법
 
 ```c
-int arr[2][3] = {
-    {1, 2, 3},
-    {4, 5, 6}
-};
-
-int (*ptr)[3];  // 크기 3인 int 배열을 가리키는 포인터
-ptr = arr;      // arr의 첫 번째 행을 가리킴
+int arr[3] = {10, 20, 30};
+int *ptr = arr;
 ```
 
-### 실습 6
+**같은 의미의 표현들:**
+
+| 의미 | 배열 표기법 | 포인터 표기법 |
+|------|------------|--------------|
+| 첫 번째 요소 값 | `arr[0]` | `*arr` 또는 `*ptr` |
+| 두 번째 요소 값 | `arr[1]` | `*(arr+1)` 또는 `*(ptr+1)` |
+| 세 번째 요소 값 | `arr[2]` | `*(arr+2)` 또는 `*(ptr+2)` |
+
+### 실습 3
 
 ```c
 #include <stdio.h>
 
 int main() {
-    int arr[2][3] = {
-        {10, 20, 30},
-        {40, 50, 60}
-    };
+    int arr[5] = {1, 2, 3, 4, 5};
+    int i;
 
-    int (*ptr)[3];  // 배열 포인터 선언
-    ptr = arr;      // arr의 첫 번째 행을 가리킴
-    int i, j;
+    printf("=== 배열 표기법 ===\n");
+    for (i = 0; i < 5; i++) {
+        printf("arr[%d] = %d\n", i, arr[i]);
+    }
 
-    printf("=== 배열 포인터로 접근 ===\n");
-    for (i = 0; i < 2; i++) {
-        for (j = 0; j < 3; j++) {
-            printf("%d ", ptr[i][j]);
-        }
-        printf("\n");
+    printf("\n=== 포인터 표기법 ===\n");
+    for (i = 0; i < 5; i++) {
+        printf("*(arr+%d) = %d\n", i, *(arr+i));
     }
 
     return 0;
@@ -546,43 +268,195 @@ int main() {
 <summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-=== 배열 포인터로 접근 ===
-10 20 30
-40 50 60
+=== 배열 표기법 ===
+arr[0] = 1
+arr[1] = 2
+arr[2] = 3
+arr[3] = 4
+arr[4] = 5
+
+=== 포인터 표기법 ===
+*(arr+0) = 1
+*(arr+1) = 2
+*(arr+2) = 3
+*(arr+3) = 4
+*(arr+4) = 5
 </pre>
 
 </details>
 
-### 배열 포인터의 연산
+### 포인터로 배열 순회하기
 
 ```c
-int arr[3][4];
-int (*ptr)[4] = arr;
+#include <stdio.h>
 
-ptr;      // arr[0]을 가리킴 (0행)
-ptr + 1;  // arr[1]을 가리킴 (1행)
-ptr + 2;  // arr[2]를 가리킴 (2행)
+int main() {
+    int arr[5] = {10, 20, 30, 40, 50};
+    int *ptr = arr;
+    int i;
+
+    // 방법 1: 인덱스 사용
+    for (i = 0; i < 5; i++) {
+        printf("%d ", ptr[i]);
+    }
+    printf("\n");
+
+    // 방법 2: 포인터 연산
+    for (i = 0; i < 5; i++) {
+        printf("%d ", *(ptr + i));
+    }
+    printf("\n");
+
+    // 방법 3: 포인터 증가
+    ptr = arr;  // 포인터 초기화
+    for (i = 0; i < 5; i++) {
+        printf("%d ", *ptr);
+        ptr++;
+    }
+    printf("\n");
+
+    return 0;
+}
 ```
 
-배열 포인터를 1 증가시키면 <span class="blue-text">다음 행</span>을 가리킵니다.
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+10 20 30 40 50
+10 20 30 40 50
+10 20 30 40 50
+</pre>
+
+</details>
 
 ---
 
-## 6. 종합 실습
+## 4. 포인터 배열
 
-### 문제 1 - 2차원 배열 크기 (기초)
+포인터 배열은 <span class="blue-text">포인터를 요소로 가지는 배열</span>입니다.
 
-<div class="quiz-number">문제 1</div><strong>int arr[4][5]의 전체 크기는 몇 바이트입니까?</strong>
+### 포인터 배열 선언
+
+```c
+int *parr[3];  // int형 포인터 3개를 저장하는 배열
+```
+
+**구조:**
+
+```
+parr[0] → int형 변수의 주소
+parr[1] → int형 변수의 주소
+parr[2] → int형 변수의 주소
+```
+
+### 포인터 배열 사용 예
+
+```c
+#include <stdio.h>
+
+int main() {
+    int a = 10, b = 20, c = 30;
+
+    // 포인터 배열 선언 및 초기화
+    int *parr[3] = {&a, &b, &c};
+
+    // 포인터 배열을 통한 접근
+    printf("첫 번째 값: %d\n", *parr[0]);  // 10
+    printf("두 번째 값: %d\n", *parr[1]);  // 20
+    printf("세 번째 값: %d\n", *parr[2]);  // 30
+
+    // 값 변경
+    *parr[0] = 100;
+    printf("변경된 a: %d\n", a);  // 100
+
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+첫 번째 값: 10
+두 번째 값: 20
+세 번째 값: 30
+변경된 a: 100
+</pre>
+
+</details>
+
+### 문자열 배열
+
+포인터 배열은 여러 문자열을 저장할 때 유용합니다.
+
+```c
+#include <stdio.h>
+
+int main() {
+    char *fruits[3] = {"Apple", "Banana", "Cherry"};
+    int i;
+
+    printf("=== 과일 목록 ===\n");
+    for (i = 0; i < 3; i++) {
+        printf("%d. %s\n", i+1, fruits[i]);
+    }
+
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+=== 과일 목록 ===
+1. Apple
+2. Banana
+3. Cherry
+</pre>
+
+</details>
+
+<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
+<strong>포인터 배열의 활용</strong><br>
+• 여러 변수의 주소를 한 번에 관리<br>
+• 문자열 배열 구현<br>
+• 가변 길이 데이터 처리
+</div>
+
+---
+
+## 5. 종합 실습
+
+### 문제 1 - 배열과 포인터 (기초)
+
+<div class="quiz-number">문제 1</div><strong>다음 코드의 실행 결과는?</strong>
+
+{% capture code_block1 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int arr[3] = {5, 10, 15};
+
+    printf("%d", *arr);
+
+    return 0;
+}</code></pre>
+</div>
+{% endcapture %}
 
 {% include quiz-text.html
    id="quiz1"
-   answer="80"
-   tags="다차원 배열"
+   code_html=code_block1
+   answer="5"
+   tags="포인터와 배열"
 %}
 
 ---
 
-### 문제 2 - 2차원 배열 접근 (기초)
+### 문제 2 - 포인터 연산 (기초)
 
 <div class="quiz-number">문제 2</div><strong>다음 코드의 실행 결과는?</strong>
 
@@ -591,12 +465,9 @@ ptr + 2;  // arr[2]를 가리킴 (2행)
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int arr[2][3] = {
-        {1, 2, 3},
-        {4, 5, 6}
-    };
+    int arr[4] = {2, 4, 6, 8};
 
-    printf("%d", arr[1][2]);
+    printf("%d", *(arr + 2));
 
     return 0;
 }</code></pre>
@@ -607,12 +478,12 @@ int main() {
    id="quiz2"
    code_html=code_block2
    answer="6"
-   tags="다차원 배열"
+   tags="포인터와 배열"
 %}
 
 ---
 
-### 문제 3 - 2차원 배열 초기화 (기초)
+### 문제 3 - 포인터 표기법 (중급)
 
 <div class="quiz-number">문제 3</div><strong>다음 코드의 실행 결과는?</strong>
 
@@ -621,12 +492,10 @@ int main() {
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int arr[2][3] = {
-        {10, 20},
-        {30}
-    };
+    int arr[5] = {10, 20, 30, 40, 50};
+    int *ptr = arr + 2;
 
-    printf("%d", arr[0][2] + arr[1][1]);
+    printf("%d", *ptr + *(ptr + 1));
 
     return 0;
 }</code></pre>
@@ -636,13 +505,13 @@ int main() {
 {% include quiz-text.html
    id="quiz3"
    code_html=code_block3
-   answer="0"
-   tags="다차원 배열"
+   answer="70"
+   tags="포인터와 배열"
 %}
 
 ---
 
-### 문제 4 - 2차원 배열 합계 (중급)
+### 문제 4 - 포인터 증가 (중급)
 
 <div class="quiz-number">문제 4</div><strong>다음 코드의 실행 결과는?</strong>
 
@@ -651,19 +520,13 @@ int main() {
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int arr[2][2] = {
-        {5, 10},
-        {15, 20}
-    };
-    int i, j, sum = 0;
+    int arr[4] = {1, 3, 5, 7};
+    int *ptr = arr;
 
-    for (i = 0; i < 2; i++) {
-        for (j = 0; j < 2; j++) {
-            sum += arr[i][j];
-        }
-    }
+    ptr++;
+    ptr++;
 
-    printf("%d", sum);
+    printf("%d", *ptr);
 
     return 0;
 }</code></pre>
@@ -673,13 +536,13 @@ int main() {
 {% include quiz-text.html
    id="quiz4"
    code_html=code_block4
-   answer="50"
-   tags="다차원 배열"
+   answer="5"
+   tags="포인터와 배열"
 %}
 
 ---
 
-### 문제 5 - 3차원 배열 (중급)
+### 문제 5 - 포인터 배열 (중급)
 
 <div class="quiz-number">문제 5</div><strong>다음 코드의 실행 결과는?</strong>
 
@@ -688,12 +551,12 @@ int main() {
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int arr[2][2][2] = {
-        &#123;&#123;1, 2&#125;, &#123;3, 4&#125;&#125;,
-        &#123;&#123;5, 6&#125;, &#123;7, 8&#125;&#125;
-    };
+    int a = 100, b = 200, c = 300;
+    int *parr[3] = {&a, &b, &c};
 
-    printf("%d", arr[1][0][1] + arr[0][1][1]);
+    *parr[1] = 500;
+
+    printf("%d", b);
 
     return 0;
 }</code></pre>
@@ -703,30 +566,28 @@ int main() {
 {% include quiz-text.html
    id="quiz5"
    code_html=code_block5
-   answer="10"
-   tags="다차원 배열"
+   answer="500"
+   tags="포인터와 배열"
 %}
 
 ---
 
-### 문제 6 - 대각선 합 (고급)
+### 문제 6 - 배열 합계 (고급)
 
-<div class="quiz-number">문제 6</div><strong>다음 코드에서 3×3 배열의 대각선 합은?</strong>
+<div class="quiz-number">문제 6</div><strong>다음 코드의 실행 결과는?</strong>
 
 {% capture code_block6 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int arr[3][3] = {
-        {1, 2, 3},
-        {4, 5, 6},
-        {7, 8, 9}
-    };
-    int i, sum = 0;
+    int arr[5] = {2, 4, 6, 8, 10};
+    int *ptr = arr;
+    int sum = 0;
+    int i;
 
-    for (i = 0; i < 3; i++) {
-        sum += arr[i][i];
+    for (i = 0; i < 5; i++) {
+        sum += *(ptr + i);
     }
 
     printf("%d", sum);
@@ -739,8 +600,8 @@ int main() {
 {% include quiz-text.html
    id="quiz6"
    code_html=code_block6
-   answer="15"
-   tags="다차원 배열"
+   answer="30"
+   tags="포인터와 배열"
 %}
 
 ---
@@ -749,32 +610,30 @@ int main() {
 
 <div style="background-color: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #203BB0;">
 
-<strong>1. 2차원 배열</strong><br>
-• 선언: <code>int arr[행][열];</code><br>
-• 행과 열로 구성된 표 구조<br>
-• 접근: <code>arr[i][j]</code><br>
-• 초기화: 중괄호로 행 구분<br><br>
+<strong>1. 배열 이름과 포인터</strong><br>
+• 배열 이름 = 첫 번째 요소의 주소<br>
+• <code>arr == &arr[0]</code><br>
+• 배열 이름은 상수 포인터 (값 변경 불가)<br><br>
 
-<strong>2. 2차원 배열 순회</strong><br>
-• 중첩 for문 사용<br>
-• 외부 루프: 행 반복<br>
-• 내부 루프: 열 반복<br><br>
+<strong>2. 포인터 연산</strong><br>
+• <code>ptr + 1</code> = 다음 요소의 주소<br>
+• 주소 증가량 = 자료형 크기<br>
+• <code>ptr++</code>, <code>ptr--</code> 사용 가능<br><br>
 
-<strong>3. 3차원 배열</strong><br>
-• 선언: <code>int arr[높이][행][열];</code><br>
-• 2차원 배열을 쌓아놓은 구조<br>
-• 3중 중첩 for문으로 순회<br><br>
+<strong>3. 배열 접근</strong><br>
+• 배열 표기법: <code>arr[i]</code><br>
+• 포인터 표기법: <code>*(arr + i)</code><br>
+• 두 방법은 완전히 동일<br><br>
 
-<strong>4. 배열 포인터</strong><br>
-• 선언: <code>int (*ptr)[열크기];</code><br>
-• 배열 전체를 가리키는 포인터<br>
-• 2차원 배열 접근에 활용<br>
-• 포인터 배열과 구분 필수<br><br>
+<strong>4. 포인터 배열</strong><br>
+• 선언: <code>int *parr[크기];</code><br>
+• 포인터를 요소로 가지는 배열<br>
+• 문자열 배열 구현에 활용<br><br>
 
-<strong>5. 메모리 크기</strong><br>
-• 2차원: 행 × 열 × 자료형 크기<br>
-• 3차원: 높이 × 행 × 열 × 자료형 크기<br>
-• <code>sizeof()</code>로 계산 가능
+<strong>5. 핵심 공식</strong><br>
+• <code>arr[i]</code> = <code>*(arr + i)</code><br>
+• <code>&arr[i]</code> = <code>arr + i</code><br>
+• <code>ptr[i]</code> = <code>*(ptr + i)</code>
 
 </div>
 

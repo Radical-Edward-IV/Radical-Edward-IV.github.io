@@ -1,14 +1,14 @@
 ---
 layout: article
-title: 7. 포인터 소개
+title: 7. 1차원 배열
 permalink: /notes/kr/c-basic/chapter-07
 key: notes
 sidebar:
   nav: notes-kr
 aside:
   toc: true
-excerpt: C 기초 과정 강의 노트, 포인터의 개념, 포인터 변수 선언, 주소 연산자와 간접 참조 연산자를 다룹니다.
-keywords: "C언어, 포인터, 주소, 메모리, 포인터변수, 주소연산자, 간접참조연산자"
+excerpt: C 기초 과정 강의 노트, 1차원 배열의 선언, 초기화, 접근 방법, 문자 배열과 문자열 처리를 다룹니다.
+keywords: "C언어, 배열, 1차원배열, 문자배열, 문자열, 배열초기화"
 ---
 
 <script src="/assets/js/quiz.js"></script>
@@ -49,163 +49,188 @@ keywords: "C언어, 포인터, 주소, 메모리, 포인터변수, 주소연산�
 
 ---
 
-## 1. 포인터란?
+## 1. 배열이란?
 
-포인터는 C 언어의 가장 강력하면서도 어려운 개념입니다. 포인터를 이해하면 메모리를 직접 제어할 수 있습니다.
+배열은 <span class="blue-text">같은 자료형의 데이터를 여러 개 저장</span>할 수 있는 데이터 구조입니다.
 
-### 메모리 주소의 이해
+### 배열이 필요한 이유
 
-변수를 선언하면 메모리 공간이 할당되고, 각 메모리 공간에는 <span class="blue-text">주소(Address)</span>가 있습니다.
+학생 5명의 점수를 저장하려면 어떻게 해야 할까요?
+
+**배열을 사용하지 않는 경우:**
 
 ```c
-int num = 100;
+int score1 = 85;
+int score2 = 90;
+int score3 = 78;
+int score4 = 92;
+int score5 = 88;
 ```
 
-이 변수는 메모리 어딘가에 저장되며, 그 위치를 나타내는 주소값이 있습니다.
+변수가 너무 많아서 관리하기 어렵습니다!
 
-**메모리 구조 예시:**
+**배열을 사용하는 경우:**
 
+```c
+int scores[5] = {85, 90, 78, 92, 88};
 ```
-주소          값
-0x0012FF44   ...
-0x0012FF48   100  ← num이 저장된 위치
-0x0012FF4C   ...
-```
+
+하나의 변수로 여러 개의 값을 관리할 수 있습니다!
 
 <div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
-<strong>포인터 = 메모리 주소를 저장하는 변수</strong><br>
-포인터는 다른 변수의 메모리 주소를 값으로 가지는 특별한 변수입니다.
-</div>
-
-### 포인터가 필요한 이유
-
-1. **동적 메모리 할당**: 프로그램 실행 중 필요한 만큼 메모리를 할당
-2. **함수에서 값 변경**: 함수에서 원본 변수를 직접 수정
-3. **효율적인 데이터 전달**: 큰 데이터를 복사하지 않고 주소만 전달
-4. **배열과 문자열 처리**: 배열을 효율적으로 다룸
-5. **하드웨어 제어**: 임베디드 시스템에서 메모리 직접 접근
-
-<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
-<strong>💡 실생활 비유</strong><br>
-포인터는 '주소록'과 같습니다. 친구의 집에 가려면 주소를 알아야 하듯이, 변수에 접근하려면 메모리 주소를 알아야 합니다.
+<strong>배열 = 같은 자료형 데이터의 집합</strong><br>
+배열을 사용하면 많은 데이터를 효율적으로 관리할 수 있습니다.
 </div>
 
 ---
 
-## 2. 포인터 변수의 선언
+## 2. 배열의 선언과 초기화
 
-포인터 변수는 메모리 주소를 저장하기 위한 특별한 변수입니다.
+### 배열 선언 방법
 
-### 포인터 변수 선언 방법
+배열을 선언하려면 세 가지 요소가 필요합니다:
+
+1. **자료형**: 배열에 저장할 데이터의 타입
+2. **배열 이름**: 배열을 식별하는 이름
+3. **배열 크기**: 저장할 수 있는 데이터의 개수
 
 ```c
-자료형 *포인터이름;
+자료형 배열이름[배열크기];
 ```
 
 **예시:**
 
 ```c
-int *ptr;      // int형 데이터를 가리키는 포인터
-double *dptr;  // double형 데이터를 가리키는 포인터
-char *cptr;    // char형 데이터를 가리키는 포인터
+int numbers[5];     // 정수 5개를 저장할 수 있는 배열
+double values[10];  // 실수 10개를 저장할 수 있는 배열
+char letters[26];   // 문자 26개를 저장할 수 있는 배열
+```
+
+### 배열의 메모리 구조
+
+```c
+int arr[3];
+```
+
+위 배열을 선언하면 메모리에는 다음과 같이 공간이 할당됩니다:
+
+| arr[0] | arr[1] | arr[2] |
+|--------|--------|--------|
+| 4바이트 | 4바이트 | 4바이트 |
+
+<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
+<strong>💡 메모리 할당</strong><br>
+int형은 4바이트이므로 <code>int arr[3]</code>은 총 12바이트(4×3)의 메모리를 차지합니다.
+</div>
+
+### 배열 초기화 방법
+
+**방법 1: 선언과 동시에 초기화**
+
+```c
+int arr[5] = {10, 20, 30, 40, 50};
+```
+
+**방법 2: 크기 생략 (컴파일러가 자동으로 크기 결정)**
+
+```c
+int arr[] = {10, 20, 30, 40, 50};  // 크기는 자동으로 5
+```
+
+**방법 3: 일부만 초기화 (나머지는 0으로 자동 초기화)**
+
+```c
+int arr[5] = {10, 20};  // arr[0]=10, arr[1]=20, arr[2]=0, arr[3]=0, arr[4]=0
+```
+
+**방법 4: 모두 0으로 초기화**
+
+```c
+int arr[5] = {0};  // 모든 요소가 0
 ```
 
 <div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
 <strong>⚠️ 주의</strong><br>
-• 포인터 변수 선언 시 <span class="red-text">*</span> 기호를 붙입니다<br>
-• 자료형은 포인터가 가리킬 데이터의 타입을 의미<br>
-• 포인터 자체의 크기는 시스템에 따라 다름 (32비트: 4바이트, 64비트: 8바이트)
+배열을 선언만 하고 초기화하지 않으면 <span class="red-text">쓰레기 값</span>이 들어있습니다!
 </div>
 
-### 포인터 선언 스타일
-
-C 언어에서는 여러 스타일로 포인터를 선언할 수 있습니다:
-
-```c
-int *ptr1;   // 일반적인 방법 (권장)
-int* ptr2;   // 자료형 강조
-int * ptr3;  // 중간 공백
-```
-
-모두 동일하지만, `int *ptr` 스타일이 가장 많이 사용됩니다.
-
-**여러 포인터 선언 시 주의:**
-
-```c
-int *ptr1, *ptr2;  // ptr1, ptr2 모두 포인터 (정확)
-int* ptr1, ptr2;   // ptr1만 포인터, ptr2는 일반 변수 (혼동 주의!)
-```
-
 ### 실습 1
+
+다음 코드의 실행 결과를 확인해보세요:
 
 ```c
 #include <stdio.h>
 
 int main() {
-    int *iptr;
-    double *dptr;
-    char *cptr;
+    int numbers[5] = {10, 20, 30, 40, 50};
+    int values[] = {1, 2, 3};
+    int zeros[5] = {0};
 
-    printf("int 포인터 크기: %d바이트\n", sizeof(iptr));
-    printf("double 포인터 크기: %d바이트\n", sizeof(dptr));
-    printf("char 포인터 크기: %d바이트\n", sizeof(cptr));
+    printf("numbers 배열의 크기: %d바이트\n", sizeof(numbers));
+    printf("values 배열의 크기: %d바이트\n", sizeof(values));
+    printf("zeros[0] = %d\n", zeros[0]);
+    printf("zeros[4] = %d\n", zeros[4]);
 
     return 0;
 }
 ```
 
 <details>
-<summary><span class="green-text">실행 결과 보기 (64비트 시스템 예시)</span></summary>
+<summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-int 포인터 크기: 8바이트
-double 포인터 크기: 8바이트
-char 포인터 크기: 8바이트
+numbers 배열의 크기: 20바이트
+values 배열의 크기: 12바이트
+zeros[0] = 0
+zeros[4] = 0
 </pre>
 
-<p style="margin-top: 10px;">
-모든 포인터의 크기가 동일합니다. 포인터는 주소를 저장하므로, 가리키는 자료형과 관계없이 크기가 같습니다.
-</p>
+<ul style="margin-top: 10px;">
+<li><code>numbers</code>: int 5개 × 4바이트 = 20바이트</li>
+<li><code>values</code>: int 3개 × 4바이트 = 12바이트</li>
+<li><code>zeros</code>: {0}으로 초기화하면 모든 요소가 0</li>
+</ul>
 
 </details>
 
 ---
 
-## 3. 주소 연산자 (&)
+## 3. 배열 요소 접근하기
 
-주소 연산자 `&`는 변수의 메모리 주소를 알아내는 연산자입니다.
+### 인덱스(Index)
 
-### & 연산자의 사용
+배열의 각 요소는 <span class="blue-text">인덱스(색인)</span>를 통해 접근합니다.
 
-```c
-int num = 10;
-printf("num의 주소: %p\n", &num);  // %p: 주소 출력 형식
-```
-
-### 포인터 변수 초기화
-
-포인터 변수에 주소를 저장하려면 `&` 연산자를 사용합니다.
+**중요:** 인덱스는 <span class="red-text">0부터 시작</span>합니다!
 
 ```c
-int num = 10;
-int *ptr;
-
-ptr = &num;  // num의 주소를 ptr에 저장
+int arr[5] = {10, 20, 30, 40, 50};
 ```
 
-**메모리 구조:**
+| 인덱스 | 0 | 1 | 2 | 3 | 4 |
+|--------|---|---|---|---|---|
+| 값 | 10 | 20 | 30 | 40 | 50 |
 
-```
-변수   주소          값
-num    0x0012FF48   10
-ptr    0x0012FF44   0x0012FF48  (num의 주소)
+### 배열 요소 읽기와 쓰기
+
+**읽기:**
+
+```c
+printf("%d\n", arr[0]);  // 10 출력
+printf("%d\n", arr[2]);  // 30 출력
 ```
 
-<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
-<strong>포인터 초기화 규칙</strong><br>
-• 포인터는 반드시 같은 자료형의 변수 주소를 저장해야 합니다<br>
-• <code>int *ptr = &num;</code> ← num은 int형이어야 함<br>
-• 자료형이 다르면 경고 또는 오류 발생
+**쓰기:**
+
+```c
+arr[1] = 100;   // 두 번째 요소를 100으로 변경
+arr[4] = 200;   // 다섯 번째 요소를 200으로 변경
+```
+
+<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
+<strong>⚠️ 배열 범위 초과 주의</strong><br>
+크기가 5인 배열의 유효한 인덱스는 0~4입니다.<br>
+<code>arr[5]</code>, <code>arr[10]</code> 같은 접근은 <span class="red-text">오류</span>를 발생시킵니다!
 </div>
 
 ### 실습 2
@@ -214,92 +239,57 @@ ptr    0x0012FF44   0x0012FF48  (num의 주소)
 #include <stdio.h>
 
 int main() {
-    int num = 100;
-    double value = 3.14;
-    char ch = 'A';
+    int scores[3];
 
-    printf("=== 변수의 값 ===\n");
-    printf("num = %d\n", num);
-    printf("value = %.2f\n", value);
-    printf("ch = %c\n", ch);
+    // 배열 요소에 값 저장
+    scores[0] = 85;
+    scores[1] = 90;
+    scores[2] = 78;
 
-    printf("\n=== 변수의 주소 ===\n");
-    printf("num의 주소: %p\n", &num);
-    printf("value의 주소: %p\n", &value);
-    printf("ch의 주소: %p\n", &ch);
+    // 배열 요소 출력
+    printf("첫 번째 점수: %d\n", scores[0]);
+    printf("두 번째 점수: %d\n", scores[1]);
+    printf("세 번째 점수: %d\n", scores[2]);
+
+    // 평균 계산
+    double average = (scores[0] + scores[1] + scores[2]) / 3.0;
+    printf("평균: %.2f\n", average);
 
     return 0;
 }
 ```
 
 <details>
-<summary><span class="green-text">실행 결과 보기 (예시)</span></summary>
+<summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-=== 변수의 값 ===
-num = 100
-value = 3.14
-ch = A
-
-=== 변수의 주소 ===
-num의 주소: 0000006DFFDFF754
-value의 주소: 0000006DFFDFF748
-ch의 주소: 0000006DFFDFF747
+첫 번째 점수: 85
+두 번째 점수: 90
+세 번째 점수: 78
+평균: 84.33
 </pre>
 
-<p style="margin-top: 10px;">
-주소값은 실행할 때마다 달라질 수 있습니다.
-</p>
-
 </details>
-
-### & 연산자 사용 시 주의사항
-
-**가능:**
-
-```c
-int num = 10;
-int *ptr = &num;  // OK
-```
-
-**불가능:**
-
-```c
-int *ptr = &100;      // 에러! 상수는 주소가 없음
-int *ptr = &(num+5);  // 에러! 수식은 주소가 없음
-```
 
 ---
 
-## 4. 간접 참조 연산자 (*)
+## 4. 배열과 반복문
 
-간접 참조 연산자 `*`는 포인터가 가리키는 메모리의 값을 읽거나 쓸 때 사용합니다.
+배열은 <span class="blue-text">for 반복문</span>과 함께 사용하면 매우 효율적입니다.
 
-### * 연산자의 역할
-
-```c
-int num = 10;
-int *ptr = &num;
-
-printf("%d\n", *ptr);  // 10 출력 (num의 값)
-```
-
-`*ptr`은 "ptr이 가리키는 곳의 값"을 의미합니다.
-
-### 포인터로 값 읽기
+### for문으로 배열 순회하기
 
 ```c
 #include <stdio.h>
 
 int main() {
-    int num = 100;
-    int *ptr = &num;
+    int numbers[5] = {10, 20, 30, 40, 50};
+    int i;
 
-    printf("num의 값: %d\n", num);
-    printf("*ptr의 값: %d\n", *ptr);  // num과 동일
-
-    printf("num의 주소: %p\n", &num);
-    printf("ptr의 값: %p\n", ptr);    // &num과 동일
+    // 배열의 모든 요소 출력
+    for (i = 0; i < 5; i++) {
+        printf("numbers[%d] = %d\n", i, numbers[i]);
+    }
 
     return 0;
 }
@@ -309,31 +299,35 @@ int main() {
 <summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-num의 값: 100
-*ptr의 값: 100
-num의 주소: 0000006DFFDFF754
-ptr의 값: 0000006DFFDFF754
+numbers[0] = 10
+numbers[1] = 20
+numbers[2] = 30
+numbers[3] = 40
+numbers[4] = 50
 </pre>
 
 </details>
 
-### 포인터로 값 변경하기
-
-포인터를 통해 원본 변수의 값을 직접 수정할 수 있습니다!
+### 실습 3 - 배열의 합과 평균 구하기
 
 ```c
 #include <stdio.h>
 
 int main() {
-    int num = 10;
-    int *ptr = &num;
+    int scores[5] = {85, 90, 78, 92, 88};
+    int sum = 0;
+    int i;
 
-    printf("변경 전 num: %d\n", num);
+    // 합계 계산
+    for (i = 0; i < 5; i++) {
+        sum += scores[i];
+    }
 
-    *ptr = 20;  // 포인터를 통해 num의 값 변경
+    // 평균 계산
+    double average = sum / 5.0;
 
-    printf("변경 후 num: %d\n", num);
-    printf("변경 후 *ptr: %d\n", *ptr);
+    printf("총점: %d\n", sum);
+    printf("평균: %.2f\n", average);
 
     return 0;
 }
@@ -343,77 +337,109 @@ int main() {
 <summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-변경 전 num: 10
-변경 후 num: 20
-변경 후 *ptr: 20
+총점: 433
+평균: 86.60
 </pre>
 
 </details>
 
 <div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
-<strong>💡 핵심 개념</strong><br>
-• <code>ptr</code> = num의 주소<br>
-• <code>*ptr</code> = num의 값<br>
-• <code>*ptr = 20</code> ⇒ num의 값이 20으로 변경됨
+<strong>💡 배열 크기 자동 계산</strong><br>
+배열의 크기를 코드에 직접 쓰지 않고 계산할 수 있습니다:<br>
+<code>int size = sizeof(scores) / sizeof(scores[0]);</code>
 </div>
-
-### 실습 3
-
-```c
-#include <stdio.h>
-
-int main() {
-    int a = 5;
-    int *ptr = &a;
-
-    printf("초기값 a: %d\n", a);
-
-    (*ptr)++;  // a를 1 증가
-    printf("1증가 후 a: %d\n", a);
-
-    *ptr = *ptr * 2;  // a를 2배로
-    printf("2배 후 a: %d\n", a);
-
-    return 0;
-}
-```
-
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-초기값 a: 5
-1증가 후 a: 6
-2배 후 a: 12
-</pre>
-
-</details>
 
 ---
 
-## 5. 포인터의 활용
+## 5. 문자 배열과 문자열
 
-### 두 변수 값 교환하기
+### 문자 배열
 
-포인터를 사용하면 두 변수의 값을 효율적으로 교환할 수 있습니다.
+문자를 저장하는 배열은 <span class="blue-text">char형 배열</span>을 사용합니다.
+
+```c
+char letters[5] = {'H', 'e', 'l', 'l', 'o'};
+```
+
+### 문자열
+
+C 언어에서 문자열은 <span class="blue-text">널 문자(\0)로 끝나는 문자 배열</span>입니다.
+
+```c
+char greeting[6] = "Hello";  // 자동으로 '\0' 추가
+```
+
+| H | e | l | l | o | \0 |
+|---|---|---|---|---|----|
+| [0] | [1] | [2] | [3] | [4] | [5] |
+
+<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
+<strong>널 문자(\0)란?</strong><br>
+• 문자열의 끝을 나타내는 특수 문자<br>
+• 문자열을 저장할 때 자동으로 추가됨<br>
+• 실제 문자열보다 <span class="blue-text">1바이트 더 큰 배열</span>이 필요
+</div>
+
+### 문자열 선언과 초기화
+
+**방법 1: 큰따옴표 사용 (권장)**
+
+```c
+char str1[6] = "Hello";  // 널 문자 포함 6바이트
+```
+
+**방법 2: 문자 배열로 초기화**
+
+```c
+char str2[6] = {'H', 'e', 'l', 'l', 'o', '\0'};  // 수동으로 널 문자 추가
+```
+
+**방법 3: 크기 생략**
+
+```c
+char str3[] = "Hello";  // 컴파일러가 자동으로 크기 6으로 설정
+```
+
+### 문자열 입출력
+
+**출력:**
+
+```c
+char name[] = "Kim";
+printf("%s\n", name);  // %s: 문자열 출력
+```
+
+**입력:**
+
+```c
+char name[50];
+scanf("%s", name);  // & 연산자 없이 사용!
+```
+
+<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
+<strong>⚠️ scanf의 문자열 입력 제한</strong><br>
+• <code>scanf("%s", ...)</code>는 <span class="red-text">공백에서 입력이 끝남</span><br>
+• "Hello World" 입력 시 "Hello"만 저장됨<br>
+• 공백 포함 입력은 <code>fgets()</code> 함수 사용
+</div>
+
+### 실습 4
 
 ```c
 #include <stdio.h>
 
 int main() {
-    int a = 10, b = 20;
-    int *pa = &a;
-    int *pb = &b;
-    int temp;
+    char str1[20] = "Good";
+    char str2[20];
 
-    printf("교환 전: a=%d, b=%d\n", a, b);
+    printf("문자열 입력: ");
+    scanf("%s", str2);
 
-    // 포인터를 이용한 값 교환
-    temp = *pa;
-    *pa = *pb;
-    *pb = temp;
+    printf("str1: %s\n", str1);
+    printf("str2: %s\n", str2);
 
-    printf("교환 후: a=%d, b=%d\n", a, b);
+    // 문자열 길이 확인 (널 문자 포함)
+    printf("str1 크기: %d바이트\n", sizeof(str1));
 
     return 0;
 }
@@ -423,46 +449,10 @@ int main() {
 <summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-교환 전: a=10, b=20
-교환 후: a=20, b=10
-</pre>
-
-</details>
-
-### 포인터 연산
-
-포인터는 여러 연산자와 함께 사용할 수 있습니다.
-
-```c
-#include <stdio.h>
-
-int main() {
-    int num = 100;
-    int *ptr = &num;
-
-    printf("원래 값: %d\n", *ptr);
-
-    *ptr += 50;
-    printf("50 더한 후: %d\n", *ptr);
-
-    *ptr -= 30;
-    printf("30 뺀 후: %d\n", *ptr);
-
-    *ptr *= 2;
-    printf("2배 후: %d\n", *ptr);
-
-    return 0;
-}
-```
-
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-원래 값: 100
-50 더한 후: 150
-30 뺀 후: 120
-2배 후: 240
+문자열 입력: Morning
+str1: Good
+str2: Morning
+str1 크기: 20바이트
 </pre>
 
 </details>
@@ -471,31 +461,30 @@ int main() {
 
 ## 6. 종합 실습
 
-### 문제 1 - 포인터 크기 (기초)
+### 문제 1 - 배열 크기 (기초)
 
-<div class="quiz-number">문제 1</div><strong>64비트 시스템에서 char *ptr의 크기는 몇 바이트입니까?</strong>
+<div class="quiz-number">문제 1</div><strong>int형 배열 arr[10]의 전체 크기는 몇 바이트입니까?</strong>
 
 {% include quiz-text.html
    id="quiz1"
-   answer="8"
-   tags="포인터"
+   answer="40"
+   tags="1차원 배열"
 %}
 
 ---
 
-### 문제 2 - 주소 연산자 (기초)
+### 문제 2 - 배열 인덱스 (기초)
 
-<div class="quiz-number">문제 2</div><strong>다음 코드의 실행 결과로 올바른 것은?</strong>
+<div class="quiz-number">문제 2</div><strong>다음 코드의 실행 결과는?</strong>
 
 {% capture code_block2 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int num = 50;
-    int *ptr = &num;
+    int arr[5] = {2, 4, 6, 8, 10};
 
-    printf("%d", *ptr);
+    printf("%d", arr[2] + arr[4]);
 
     return 0;
 }</code></pre>
@@ -505,28 +494,24 @@ int main() {
 {% include quiz-text.html
    id="quiz2"
    code_html=code_block2
-   answer="50"
-   tags="포인터"
+   answer="16"
+   tags="1차원 배열"
 %}
 
 ---
 
-### 문제 3 - 간접 참조 연산자 (중급)
+### 문제 3 - 배열 초기화 (기초)
 
-<div class="quiz-number">문제 3</div><strong>다음 코드의 실행 결과는?</strong>
+<div class="quiz-number">문제 3</div><strong>다음 코드에서 arr[3]의 값은?</strong>
 
 {% capture code_block3 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int a = 10;
-    int *ptr = &a;
+    int arr[5] = {10, 20};
 
-    *ptr = 30;
-    a += 5;
-
-    printf("%d", *ptr);
+    printf("%d", arr[3]);
 
     return 0;
 }</code></pre>
@@ -536,13 +521,13 @@ int main() {
 {% include quiz-text.html
    id="quiz3"
    code_html=code_block3
-   answer="35"
-   tags="포인터"
+   answer="0"
+   tags="1차원 배열"
 %}
 
 ---
 
-### 문제 4 - 포인터 연산 (중급)
+### 문제 4 - 배열과 반복문 (중급)
 
 <div class="quiz-number">문제 4</div><strong>다음 코드의 실행 결과는?</strong>
 
@@ -551,13 +536,16 @@ int main() {
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int num = 100;
-    int *ptr = &num;
+    int arr[5] = {1, 2, 3, 4, 5};
+    int i, sum = 0;
 
-    (*ptr)++;
-    (*ptr) *= 2;
+    for (i = 0; i < 5; i++) {
+        if (arr[i] % 2 == 0) {
+            sum += arr[i];
+        }
+    }
 
-    printf("%d", num);
+    printf("%d", sum);
 
     return 0;
 }</code></pre>
@@ -567,30 +555,44 @@ int main() {
 {% include quiz-text.html
    id="quiz4"
    code_html=code_block4
-   answer="202"
-   tags="포인터"
+   answer="6"
+   tags="1차원 배열"
 %}
 
 ---
 
-### 문제 5 - 두 변수 교환 (중급)
+### 문제 5 - 문자열 길이 (중급)
 
-<div class="quiz-number">문제 5</div><strong>다음 코드 실행 후 a와 b의 값은? (형식: a, b)</strong>
+<div class="quiz-number">문제 5</div><strong>문자열 "C Language"를 저장하려면 최소 몇 바이트의 char 배열이 필요합니까?</strong>
 
-{% capture code_block5 %}
+{% include quiz-text.html
+   id="quiz5"
+   answer="11"
+   tags="1차원 배열"
+%}
+
+---
+
+### 문제 6 - 최댓값 찾기 (중급)
+
+<div class="quiz-number">문제 6</div><strong>다음 코드의 실행 결과는?</strong>
+
+{% capture code_block6 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    int a = 7, b = 3;
-    int *pa = &a, *pb = &b;
-    int temp;
+    int arr[5] = {23, 67, 45, 89, 12};
+    int max = arr[0];
+    int i;
 
-    temp = *pa;
-    *pa = *pb;
-    *pb = temp;
+    for (i = 1; i < 5; i++) {
+        if (arr[i] > max) {
+            max = arr[i];
+        }
+    }
 
-    printf("%d, %d", a, b);
+    printf("%d", max);
 
     return 0;
 }</code></pre>
@@ -598,39 +600,10 @@ int main() {
 {% endcapture %}
 
 {% include quiz-text.html
-   id="quiz5"
-   code_html=code_block5
-   answer="3, 7"
-   tags="포인터"
-%}
-
----
-
-### 문제 6 - 포인터와 자료형 (고급)
-
-<div class="quiz-number">문제 6</div><strong>다음 중 올바르지 않은 포인터 사용은?</strong>
-
-```c
-int num = 10;
-double value = 3.14;
-
-// A
-int *ptr1 = &num;
-
-// B
-double *ptr2 = &value;
-
-// C
-int *ptr3 = &value;
-
-// D
-double *ptr4 = &num;
-```
-
-{% include quiz-text.html
    id="quiz6"
-   answer="C|D|C, D|C와 D"
-   tags="포인터"
+   code_html=code_block6
+   answer="89"
+   tags="1차원 배열"
 %}
 
 ---
@@ -639,30 +612,30 @@ double *ptr4 = &num;
 
 <div style="background-color: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #203BB0;">
 
-<strong>1. 포인터 기본</strong><br>
-• 메모리 주소를 저장하는 변수<br>
-• 선언: <code>자료형 *포인터이름;</code><br>
-• 포인터 크기는 시스템에 따라 결정<br><br>
+<strong>1. 배열 기본</strong><br>
+• 같은 자료형의 데이터를 여러 개 저장하는 구조<br>
+• 선언: <code>자료형 배열이름[크기];</code><br>
+• 인덱스는 0부터 시작<br><br>
 
-<strong>2. 주소 연산자 (&)</strong><br>
-• 변수의 메모리 주소를 반환<br>
-• <code>ptr = &num;</code><br>
-• 출력 형식: <code>%p</code><br><br>
+<strong>2. 배열 초기화</strong><br>
+• <code>int arr[5] = {10, 20, 30, 40, 50};</code><br>
+• 크기 생략 가능: <code>int arr[] = {10, 20, 30};</code><br>
+• 일부만 초기화하면 나머지는 0<br><br>
 
-<strong>3. 간접 참조 연산자 (*)</strong><br>
-• 포인터가 가리키는 값을 읽거나 쓰기<br>
-• <code>*ptr</code> = ptr이 가리키는 곳의 값<br>
-• <code>*ptr = 20;</code>으로 값 변경 가능<br><br>
+<strong>3. 배열 접근</strong><br>
+• 읽기: <code>value = arr[0];</code><br>
+• 쓰기: <code>arr[0] = 100;</code><br>
+• 유효 인덱스: 0 ~ (크기-1)<br><br>
 
-<strong>4. 포인터와 변수</strong><br>
-• <code>ptr</code> = 주소<br>
-• <code>*ptr</code> = 값<br>
-• <code>&변수</code> = 변수의 주소<br><br>
+<strong>4. 배열과 반복문</strong><br>
+• for문으로 효율적인 접근<br>
+• <code>for (i = 0; i < 크기; i++)</code><br><br>
 
-<strong>5. 자료형 일치</strong><br>
-• 포인터 자료형 = 가리키는 변수 자료형<br>
-• <code>int *ptr = &int변수;</code> (O)<br>
-• <code>int *ptr = &double변수;</code> (X)
+<strong>5. 문자열</strong><br>
+• char 배열로 표현<br>
+• 널 문자(\0)로 끝남<br>
+• <code>char str[] = "Hello";</code><br>
+• printf: <code>%s</code>, scanf: <code>%s</code> (& 없이)
 
 </div>
 

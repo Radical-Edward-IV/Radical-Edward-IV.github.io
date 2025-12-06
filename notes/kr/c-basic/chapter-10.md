@@ -1,14 +1,14 @@
 ---
 layout: article
-title: 10. 문자열과 함수
+title: 10. 다차원 배열
 permalink: /notes/kr/c-basic/chapter-10
 key: notes
 sidebar:
   nav: notes-kr
 aside:
   toc: true
-excerpt: C 기초 과정 강의 노트, 문자열과 포인터, 문자/문자열 입출력 함수, 문자열 처리 함수를 다룹니다.
-keywords: "C언어, 문자열, 포인터, 문자열함수, strlen, strcpy, strcat, strcmp, getchar, putchar, gets, puts"
+excerpt: C 기초 과정 강의 노트, 2차원 배열, 3차원 배열의 선언과 초기화, 배열 포인터를 다룹니다.
+keywords: "C언어, 2차원배열, 3차원배열, 다차원배열, 배열포인터"
 ---
 
 <script src="/assets/js/quiz.js"></script>
@@ -49,183 +49,235 @@ keywords: "C언어, 문자열, 포인터, 문자열함수, strlen, strcpy, strca
 
 ---
 
-## 1. 문자열과 포인터
+## 1. 2차원 배열
 
-### 문자열의 두 가지 표현 방법
+2차원 배열은 <span class="blue-text">행(row)과 열(column)</span>로 구성된 평면 구조의 배열입니다.
 
-C 언어에서 문자열은 <span class="blue-text">널 문자(\0)로 끝나는 문자 배열</span>입니다. 문자열을 선언하는 방법은 크게 두 가지가 있습니다.
+### 2차원 배열의 개념
 
-**방법 1: 배열 기반 문자열**
+1차원 배열이 선형 구조라면, 2차원 배열은 표(table) 구조입니다.
 
-```c
-char str[] = "Hello";
-```
-
-이 방법은 문자 배열을 선언하고 문자열로 초기화합니다. 배열의 크기는 자동으로 6이 됩니다(Hello 5글자 + 널 문자 1개).
-
-| H | e | l | l | o | \0 |
-|---|---|---|---|---|-----|
-| [0] | [1] | [2] | [3] | [4] | [5] |
-
-**방법 2: 포인터 기반 문자열**
+**실생활 예시:**
+- 교실의 좌석 배치
+- 체스판
+- 엑셀 스프레드시트
 
 ```c
-char *str = "Hello";
+int arr[3][4];  // 3행 4열의 2차원 배열
 ```
 
-이 방법은 문자열 상수 "Hello"를 메모리에 저장하고, 그 시작 주소를 포인터 변수 str에 저장합니다.
+**배열 구조 시각화:**
+
+|      | 0열 | 1열 | 2열 | 3열 |
+|------|-----|-----|-----|-----|
+| **0행** | arr[0][0] | arr[0][1] | arr[0][2] | arr[0][3] |
+| **1행** | arr[1][0] | arr[1][1] | arr[1][2] | arr[1][3] |
+| **2행** | arr[2][0] | arr[2][1] | arr[2][2] | arr[2][3] |
 
 <div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
-<strong>두 방법 모두 같은 방식으로 출력 가능</strong><br>
-printf("%s", str); 형태로 문자열을 출력할 수 있습니다.
+<strong>2차원 배열의 구조</strong><br>
+• 첫 번째 인덱스: 행 번호 (세로)<br>
+• 두 번째 인덱스: 열 번호 (가로)<br>
+• 총 요소 개수 = 행 × 열
 </div>
 
-### 배열 기반 vs 포인터 기반 차이점
-
-두 방법은 출력은 동일하지만, **수정 가능 여부**에서 중요한 차이가 있습니다.
-
-| 구분 | 배열 기반 | 포인터 기반 |
-|------|-----------|-------------|
-| **문자 변경** | ✅ 가능 | ❌ 불가능 |
-| **주소 변경** | ❌ 불가능 | ✅ 가능 |
-| **특징** | 변수 형태의 문자열 | 상수 형태의 문자열 |
-
-**배열 기반 문자열:**
+### 2차원 배열 선언
 
 ```c
-char str1[] = "Good";
-str1[0] = 'F';      // ✅ 가능: "Food"로 변경
-str1 = "New";       // ❌ 불가능: 배열 이름은 상수
+자료형 배열이름[행크기][열크기];
 ```
 
-**포인터 기반 문자열:**
+**예시:**
 
 ```c
-char *str2 = "Bad";
-str2[0] = 'S';      // ❌ 불가능: 문자열 상수 영역 (실행 시 오류 가능)
-str2 = "New Bad";   // ✅ 가능: 포인터가 다른 문자열을 가리킴
+int scores[3][4];    // 3행 4열 (총 12개 요소)
+double data[2][5];   // 2행 5열 (총 10개 요소)
+char table[4][3];    // 4행 3열 (총 12개 요소)
+```
+
+### 2차원 배열의 메모리 크기
+
+```c
+int arr[3][4];
+```
+
+- int형: 4바이트
+- 요소 개수: 3 × 4 = 12개
+- 총 크기: 4 × 12 = **48바이트**
+
+### 실습 1
+
+```c
+#include <stdio.h>
+
+int main() {
+    int arr[2][3];
+
+    printf("배열 크기: %d바이트\n", sizeof(arr));
+    printf("행 개수: %d\n", sizeof(arr) / sizeof(arr[0]));
+    printf("열 개수: %d\n", sizeof(arr[0]) / sizeof(arr[0][0]));
+
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+배열 크기: 24바이트
+행 개수: 2
+열 개수: 3
+</pre>
+
+<ul style="margin-top: 10px;">
+<li>총 크기: 2행 × 3열 × 4바이트(int) = 24바이트</li>
+<li>행 개수: 전체 크기 / 1행의 크기 = 24 / 12 = 2</li>
+<li>열 개수: 1행의 크기 / 1개 요소 크기 = 12 / 4 = 3</li>
+</ul>
+
+</details>
+
+---
+
+## 2. 2차원 배열의 초기화
+
+2차원 배열은 여러 방법으로 초기화할 수 있습니다.
+
+### 방법 1: 중괄호로 행 구분
+
+```c
+int arr[2][3] = {
+    {1, 2, 3},
+    {4, 5, 6}
+};
+```
+
+| 0열 | 1열 | 2열 |
+|-----|-----|-----|
+| **0행** 1 | 2 | 3 |
+| **1행** 4 | 5 | 6 |
+
+### 방법 2: 일렬로 나열 (비권장)
+
+```c
+int arr[2][3] = {1, 2, 3, 4, 5, 6};
+```
+
+순서대로 채워집니다. 하지만 가독성이 떨어지므로 방법 1을 권장합니다.
+
+### 방법 3: 일부만 초기화
+
+```c
+int arr[2][3] = {
+    {1, 2},
+    {4}
+};
+```
+
+| 0열 | 1열 | 2열 |
+|-----|-----|-----|
+| **0행** 1 | 2 | 0 |
+| **1행** 4 | 0 | 0 |
+
+나머지는 0으로 자동 초기화됩니다.
+
+### 방법 4: 행 크기 생략
+
+```c
+int arr[][3] = {
+    {1, 2, 3},
+    {4, 5, 6}
+};
 ```
 
 <div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
 <strong>⚠️ 중요</strong><br>
-• 배열 기반: <span class="green-text">문자 변경 O</span>, <span class="red-text">주소 변경 X</span><br>
-• 포인터 기반: <span class="red-text">문자 변경 X</span>, <span class="green-text">주소 변경 O</span>
+• 행 크기는 생략 가능<br>
+• <span class="red-text">열 크기는 반드시 명시</span>해야 함
 </div>
 
-### 실습 1
-
-다음 코드의 실행 결과를 확인해보세요:
+### 실습 2
 
 ```c
 #include <stdio.h>
 
 int main() {
-    char arr[] = "Hello";
-    char *ptr = "World";
+    int arr[3][2] = {
+        {10, 20},
+        {30, 40},
+        {50, 60}
+    };
+    int i, j;
 
-    printf("배열 기반: %s\n", arr);
-    printf("포인터 기반: %s\n", ptr);
-
-    // 배열 기반: 문자 변경 가능
-    arr[0] = 'h';
-    printf("변경 후 배열: %s\n", arr);
-
-    // 포인터 기반: 다른 문자열을 가리킬 수 있음
-    ptr = "New World";
-    printf("변경 후 포인터: %s\n", ptr);
-
-    return 0;
-}
-```
-
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-배열 기반: Hello
-포인터 기반: World
-변경 후 배열: hello
-변경 후 포인터: New World
-</pre>
-
-</details>
-
----
-
-## 2. 문자 단위 입출력 함수
-
-### putchar와 getchar 함수
-
-C 언어는 **한 글자씩** 입출력하는 함수를 제공합니다.
-
-| 함수 | 기능 | 사용 예 |
-|------|------|---------|
-| `putchar(문자)` | 문자 하나 출력 | `putchar('A');` |
-| `getchar()` | 문자 하나 입력 | `ch = getchar();` |
-
-### 기본 사용법
-
-```c
-#include <stdio.h>
-
-int main() {
-    int ch;
-
-    printf("문자 입력: ");
-    ch = getchar();    // 문자 하나 입력
-
-    printf("입력한 문자: ");
-    putchar(ch);       // 문자 하나 출력
-    putchar('\n');
-
-    return 0;
-}
-```
-
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-문자 입력: A
-입력한 문자: A
-</pre>
-
-</details>
-
-<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
-<strong>💡 getchar의 반환 타입</strong><br>
-getchar()는 int형을 반환합니다. 이는 EOF(-1) 값을 구분하기 위함입니다.
-</div>
-
-### EOF (End Of File)
-
-EOF는 <span class="blue-text">파일의 끝</span> 또는 <span class="blue-text">입력 종료</span>를 나타내는 상수입니다.
-
-**EOF가 반환되는 경우:**
-- 읽어 들일 데이터가 더 이상 없을 때
-- Windows: `Ctrl + Z` 입력
-- macOS/Linux: `Ctrl + D` 입력
-
-### 실습 2 - EOF를 이용한 입력 종료
-
-```c
-#include <stdio.h>
-
-int main() {
-    int ch;
-
-    printf("문자를 입력하세요 (종료: Ctrl+Z 또는 Ctrl+D):\n");
-
-    while (1) {
-        ch = getchar();
-
-        if (ch == EOF)  // 입력 종료
-            break;
-
-        putchar(ch);
+    printf("=== 2차원 배열 출력 ===\n");
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 2; j++) {
+            printf("arr[%d][%d] = %d\n", i, j, arr[i][j]);
+        }
     }
 
-    printf("\n입력이 종료되었습니다.\n");
+    return 0;
+}
+```
+
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+=== 2차원 배열 출력 ===
+arr[0][0] = 10
+arr[0][1] = 20
+arr[1][0] = 30
+arr[1][1] = 40
+arr[2][0] = 50
+arr[2][1] = 60
+</pre>
+
+</details>
+
+---
+
+## 3. 2차원 배열과 반복문
+
+2차원 배열은 <span class="blue-text">중첩 for문</span>을 사용하여 처리합니다.
+
+### 기본 패턴
+
+```c
+for (i = 0; i < 행크기; i++) {
+    for (j = 0; j < 열크기; j++) {
+        // arr[i][j] 처리
+    }
+}
+```
+
+- 외부 루프: 행을 반복
+- 내부 루프: 열을 반복
+
+### 실습 3 - 표 형태로 출력
+
+```c
+#include <stdio.h>
+
+int main() {
+    int scores[3][4] = {
+        {90, 85, 88, 92},
+        {78, 95, 82, 88},
+        {85, 90, 93, 87}
+    };
+    int i, j;
+
+    printf("학생 | 국어 영어 수학 과학\n");
+    printf("------|-------------------\n");
+
+    for (i = 0; i < 3; i++) {
+        printf(" %d번  |", i+1);
+        for (j = 0; j < 4; j++) {
+            printf(" %3d", scores[i][j]);
+        }
+        printf("\n");
+    }
 
     return 0;
 }
@@ -235,51 +287,37 @@ int main() {
 <summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-문자를 입력하세요 (종료: Ctrl+Z 또는 Ctrl+D):
-Hello
-Hello
-World
-World
-^Z
-입력이 종료되었습니다.
+학생 | 국어 영어 수학 과학
+------|-------------------
+ 1번  |  90  85  88  92
+ 2번  |  78  95  82  88
+ 3번  |  85  90  93  87
 </pre>
 
 </details>
 
----
-
-## 3. 문자열 단위 입출력 함수
-
-### puts와 gets 함수
-
-<span class="blue-text">문자열 전체</span>를 한 번에 입출력하는 함수입니다.
-
-| 함수 | 기능 | 사용 예 |
-|------|------|---------|
-| `puts(문자열)` | 문자열 출력 후 **자동 줄바꿈** | `puts("Hello");` |
-| `gets(배열)` | 문자열 입력 (공백 포함) | `gets(str);` |
-
-<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
-<strong>⚠️ gets 함수의 위험성</strong><br>
-gets() 함수는 <span class="red-text">버퍼 오버플로우</span> 위험이 있어 최신 컴파일러에서는 사용이 권장되지 않습니다.<br>
-대신 <span class="green-text">fgets()</span> 함수 사용을 권장합니다.
-</div>
-
-### 실습 3
+### 실습 4 - 학생별 평균 계산
 
 ```c
 #include <stdio.h>
 
 int main() {
-    char str[100];
+    int scores[3][4] = {
+        {90, 85, 88, 92},
+        {78, 95, 82, 88},
+        {85, 90, 93, 87}
+    };
+    int i, j;
+    double sum, average;
 
-    printf("문자열 입력: ");
-    gets(str);
-
-    printf("입력한 문자열:\n");
-    puts(str);  // 자동으로 줄바꿈
-
-    printf("이 문장은 다음 줄에 출력됩니다.\n");
+    for (i = 0; i < 3; i++) {
+        sum = 0;
+        for (j = 0; j < 4; j++) {
+            sum += scores[i][j];
+        }
+        average = sum / 4;
+        printf("학생 %d 평균: %.2f\n", i+1, average);
+    }
 
     return 0;
 }
@@ -289,175 +327,98 @@ int main() {
 <summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-문자열 입력: Hello World
-입력한 문자열:
-Hello World
-이 문장은 다음 줄에 출력됩니다.
-</pre>
-
-<p style="margin-top: 10px;">
-<strong>puts vs printf:</strong><br>
-• puts("Hello")는 자동으로 줄바꿈<br>
-• printf("Hello")는 줄바꿈 없음 (명시적으로 \n 필요)
-</p>
-
-</details>
-
----
-
-## 4. 문자열 처리 함수
-
-C 언어는 문자열을 다루기 위한 다양한 표준 함수를 제공합니다. 이 함수들은 <span class="yellow-code">string.h</span> 헤더 파일에 선언되어 있습니다.
-
-```c
-#include <string.h>
-```
-
-### 주요 문자열 함수
-
-| 함수 | 기능 | 반환값 |
-|------|------|--------|
-| `strlen(str)` | 문자열 길이 | 정수 |
-| `strcpy(dest, src)` | 문자열 복사 | dest 주소 |
-| `strncpy(dest, src, n)` | n개 문자 복사 | dest 주소 |
-| `strcat(dest, src)` | 문자열 이어붙이기 | dest 주소 |
-| `strncat(dest, src, n)` | n개 문자 이어붙이기 | dest 주소 |
-| `strcmp(str1, str2)` | 문자열 비교 | 0, 양수, 음수 |
-| `strncmp(str1, str2, n)` | n개 문자 비교 | 0, 양수, 음수 |
-
----
-
-### strlen - 문자열 길이
-
-문자열의 <span class="blue-text">널 문자를 제외한</span> 길이를 반환합니다.
-
-```c
-#include <stdio.h>
-#include <string.h>
-
-int main() {
-    char str1[] = "Hello";
-    char str2[] = "C Programming";
-
-    printf("str1의 길이: %d\n", strlen(str1));  // 5
-    printf("str2의 길이: %d\n", strlen(str2));  // 13
-
-    return 0;
-}
-```
-
-<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
-<strong>strlen vs sizeof</strong><br>
-• <code>strlen("Hello")</code> → 5 (문자 개수)<br>
-• <code>sizeof("Hello")</code> → 6 (널 문자 포함 바이트 수)
-</div>
-
----
-
-### strcpy와 strncpy - 문자열 복사
-
-**strcpy(dest, src)**: 전체 문자열 복사
-
-```c
-char src[] = "Hello";
-char dest[20];
-
-strcpy(dest, src);  // "Hello"가 dest에 복사됨
-```
-
-**strncpy(dest, src, n)**: n개 문자만 복사
-
-```c
-char src[] = "Hello World";
-char dest[20];
-
-strncpy(dest, src, 5);  // "Hello"만 복사
-dest[5] = '\0';         // 수동으로 널 문자 추가 필요!
-```
-
-<div style="background-color: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #D53C41;">
-<strong>⚠️ strncpy 주의사항</strong><br>
-strncpy는 n개 문자만 복사하므로 <span class="red-text">자동으로 널 문자를 추가하지 않을 수 있습니다</span>.<br>
-반드시 수동으로 널 문자를 추가해야 합니다!
-</div>
-
-### 실습 4
-
-```c
-#include <stdio.h>
-#include <string.h>
-
-int main() {
-    char str1[50] = "apple is good";
-    char str2[50] = "berry is good";
-    char str3[50];
-
-    printf("원본 문자열:\n");
-    printf("str1: %s\n", str1);
-    printf("str2: %s\n", str2);
-
-    // str1 전체를 str3에 복사
-    strcpy(str3, str1);
-    printf("\nstrcpy 후 str3: %s\n", str3);
-
-    // str1의 5개 문자를 str2에 복사
-    strncpy(str2, str1, 5);
-    str2[5] = ' ';  // 기존 문자 유지
-    printf("strncpy 후 str2: %s\n", str2);
-
-    return 0;
-}
-```
-
-<details>
-<summary><span class="green-text">실행 결과 보기</span></summary>
-
-<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-원본 문자열:
-str1: apple is good
-str2: berry is good
-
-strcpy 후 str3: apple is good
-strncpy 후 str2: apple is good
+학생 1 평균: 88.75
+학생 2 평균: 85.75
+학생 3 평균: 88.75
 </pre>
 
 </details>
 
 ---
 
-### strcat과 strncat - 문자열 이어붙이기
+## 4. 3차원 배열
 
-**strcat(dest, src)**: src를 dest 뒤에 이어붙이기
+3차원 배열은 <span class="blue-text">높이(depth), 행, 열</span>의 3차원 구조를 가집니다.
+
+### 3차원 배열의 개념
 
 ```c
-char str[50] = "Hello ";
-strcat(str, "World");  // "Hello World"
+int arr[2][3][4];
 ```
 
-**strncat(dest, src, n)**: src의 n개 문자만 이어붙이기
+- **높이(depth)**: 2 (2개의 2차원 배열)
+- **행(row)**: 3
+- **열(column)**: 4
+- **총 요소**: 2 × 3 × 4 = 24개
+
+**3차원 배열 시각화:**
+
+```
+[0층]               [1층]
+┌─────────┐        ┌─────────┐
+│ 3 x 4   │        │ 3 x 4   │
+│ 배열    │        │ 배열    │
+└─────────┘        └─────────┘
+```
+
+<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
+<strong>💡 3차원 배열 이해하기</strong><br>
+3차원 배열은 "2차원 배열을 여러 개 쌓아놓은 구조"로 생각하면 쉽습니다.
+</div>
+
+### 3차원 배열 선언과 초기화
 
 ```c
-char str[50] = "Hello ";
-strncat(str, "World!", 5);  // "Hello World"
+int arr[2][3][4] = {
+    {   // 0층
+        {1, 2, 3, 4},
+        {5, 6, 7, 8},
+        {9, 10, 11, 12}
+    },
+    {   // 1층
+        {13, 14, 15, 16},
+        {17, 18, 19, 20},
+        {21, 22, 23, 24}
+    }
+};
+```
+
+### 3차원 배열 접근
+
+```c
+arr[0][1][2] = 7;   // 0층, 1행, 2열
+arr[1][2][3] = 24;  // 1층, 2행, 3열
 ```
 
 ### 실습 5
 
 ```c
 #include <stdio.h>
-#include <string.h>
 
 int main() {
-    char str1[50] = "Michael ";
-    char str2[50] = "Michael ";
+    int arr[2][2][3] = {
+        {
+            {1, 2, 3},
+            {4, 5, 6}
+        },
+        {
+            {7, 8, 9},
+            {10, 11, 12}
+        }
+    };
+    int i, j, k;
 
-    // str1에 "Bolton" 이어붙이기
-    strcat(str1, "Bolton");
-    printf("strcat 결과: %s\n", str1);
-
-    // str2에 "Jackson Five"의 7글자만 이어붙이기
-    strncat(str2, "Jackson Five", 7);
-    printf("strncat 결과: %s\n", str2);
+    printf("=== 3차원 배열 출력 ===\n");
+    for (i = 0; i < 2; i++) {
+        printf("[%d층]\n", i);
+        for (j = 0; j < 2; j++) {
+            for (k = 0; k < 3; k++) {
+                printf("%3d ", arr[i][j][k]);
+            }
+            printf("\n");
+        }
+        printf("\n");
+    }
 
     return 0;
 }
@@ -467,65 +428,30 @@ int main() {
 <summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-strcat 결과: Michael Bolton
-strncat 결과: Michael Jackson
+=== 3차원 배열 출력 ===
+[0층]
+  1   2   3
+  4   5   6
+
+[1층]
+  7   8   9
+ 10  11  12
 </pre>
 
 </details>
 
----
-
-### strcmp와 strncmp - 문자열 비교
-
-**strcmp(str1, str2)**: 두 문자열 비교
-
-| 조건 | 반환값 |
-|------|--------|
-| str1 == str2 | `0` |
-| str1 < str2 (사전순 앞) | `음수` |
-| str1 > str2 (사전순 뒤) | `양수` |
-
-**strncmp(str1, str2, n)**: 앞 n개 문자만 비교
-
-```c
-strcmp("apple", "apple")    // 0 (같음)
-strcmp("apple", "banana")   // 음수 (apple이 앞)
-strcmp("zebra", "apple")    // 양수 (zebra가 뒤)
-
-strncmp("apple", "application", 3)  // 0 ("app"까지 같음)
-```
-
-<div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #BD8739;">
-<strong>💡 문자열 비교 주의</strong><br>
-<code>==</code> 연산자로는 문자열을 비교할 수 없습니다!<br>
-<code>if (str1 == str2)</code> ❌ 주소 비교<br>
-<code>if (strcmp(str1, str2) == 0)</code> ✅ 내용 비교
-</div>
-
-### 실습 6
+### 3차원 배열의 메모리 크기
 
 ```c
 #include <stdio.h>
-#include <string.h>
 
 int main() {
-    char str1[] = "apple";
-    char str2[] = "banana";
-    char str3[] = "apple";
+    int arr[2][3][4];
 
-    // strcmp 예제
-    printf("strcmp(str1, str2) = %d\n", strcmp(str1, str2));  // 음수
-    printf("strcmp(str1, str3) = %d\n", strcmp(str1, str3));  // 0
-    printf("strcmp(str2, str1) = %d\n", strcmp(str2, str1));  // 양수
-
-    // 문자열 같은지 확인
-    if (strcmp(str1, str3) == 0) {
-        printf("\nstr1과 str3는 같은 문자열입니다.\n");
-    }
-
-    // strncmp 예제
-    printf("\nstrncmp(\"apple\", \"application\", 3) = %d\n",
-           strncmp("apple", "application", 3));  // 0
+    printf("전체 크기: %d바이트\n", sizeof(arr));
+    printf("층 개수: %d\n", sizeof(arr) / sizeof(arr[0]));
+    printf("행 개수: %d\n", sizeof(arr[0]) / sizeof(arr[0][0]));
+    printf("열 개수: %d\n", sizeof(arr[0][0]) / sizeof(arr[0][0][0]));
 
     return 0;
 }
@@ -535,110 +461,172 @@ int main() {
 <summary><span class="green-text">실행 결과 보기</span></summary>
 
 <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
-strcmp(str1, str2) = -1
-strcmp(str1, str3) = 0
-strcmp(str2, str1) = 1
-
-str1과 str3는 같은 문자열입니다.
-
-strncmp("apple", "application", 3) = 0
+전체 크기: 96바이트
+층 개수: 2
+행 개수: 3
+열 개수: 4
 </pre>
 
 <p style="margin-top: 10px;">
-strcmp의 정확한 반환값은 컴파일러마다 다를 수 있지만, 음수/0/양수의 의미는 동일합니다.
+2 × 3 × 4 × 4바이트(int) = 96바이트
 </p>
 
 </details>
 
 ---
 
-## 5. 종합 실습
+## 5. 배열 포인터
 
-### 문제 1 - 문자열 길이 (기초)
+배열 포인터는 <span class="blue-text">배열 전체를 가리키는 포인터</span>입니다.
 
-<div class="quiz-number">문제 1</div><strong>다음 코드의 실행 결과는?</strong>
+### 포인터 배열 vs 배열 포인터
 
-{% capture code_block1 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
+두 개념을 혼동하지 마세요!
+
+**포인터 배열:**
+
+```c
+int *arr[3];  // int형 포인터 3개를 가지는 배열
+```
+
+**배열 포인터:**
+
+```c
+int (*ptr)[3];  // int형 배열(크기 3)을 가리키는 포인터
+```
+
+<div style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #203BB0;">
+<strong>구분 방법</strong><br>
+• <code>int *arr[3]</code> → 배열이 먼저 (포인터 배열)<br>
+• <code>int (*ptr)[3]</code> → 괄호로 포인터가 먼저 (배열 포인터)
+</div>
+
+### 배열 포인터의 사용
+
+배열 포인터는 <span class="blue-text">2차원 배열을 가리킬 때</span> 주로 사용합니다.
+
+```c
+int arr[2][3] = {
+    {1, 2, 3},
+    {4, 5, 6}
+};
+
+int (*ptr)[3];  // 크기 3인 int 배열을 가리키는 포인터
+ptr = arr;      // arr의 첫 번째 행을 가리킴
+```
+
+### 실습 6
+
+```c
+#include <stdio.h>
 
 int main() {
-    char str[] = "C Language";
+    int arr[2][3] = {
+        {10, 20, 30},
+        {40, 50, 60}
+    };
 
-    printf("%d", strlen(str));
+    int (*ptr)[3];  // 배열 포인터 선언
+    ptr = arr;      // arr의 첫 번째 행을 가리킴
+    int i, j;
+
+    printf("=== 배열 포인터로 접근 ===\n");
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 3; j++) {
+            printf("%d ", ptr[i][j]);
+        }
+        printf("\n");
+    }
 
     return 0;
-}</code></pre>
-</div>
-{% endcapture %}
+}
+```
 
-{% capture hint1 %}
-공백도 문자로 계산됩니다. 널 문자는 제외합니다.
-{% endcapture %}
+<details>
+<summary><span class="green-text">실행 결과 보기</span></summary>
+
+<pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px;">
+=== 배열 포인터로 접근 ===
+10 20 30
+40 50 60
+</pre>
+
+</details>
+
+### 배열 포인터의 연산
+
+```c
+int arr[3][4];
+int (*ptr)[4] = arr;
+
+ptr;      // arr[0]을 가리킴 (0행)
+ptr + 1;  // arr[1]을 가리킴 (1행)
+ptr + 2;  // arr[2]를 가리킴 (2행)
+```
+
+배열 포인터를 1 증가시키면 <span class="blue-text">다음 행</span>을 가리킵니다.
+
+---
+
+## 6. 종합 실습
+
+### 문제 1 - 2차원 배열 크기 (기초)
+
+<div class="quiz-number">문제 1</div><strong>int arr[4][5]의 전체 크기는 몇 바이트입니까?</strong>
 
 {% include quiz-text.html
    id="quiz1"
-   question=hint1
-   code_html=code_block1
-   answer="10"
-   tags="문자열과 함수"
+   answer="80"
+   tags="다차원 배열"
 %}
 
 ---
 
-### 문제 2 - 문자열 복사 (기초)
+### 문제 2 - 2차원 배열 접근 (기초)
 
 <div class="quiz-number">문제 2</div><strong>다음 코드의 실행 결과는?</strong>
 
 {% capture code_block2 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
 
 int main() {
-    char src[] = "Hello";
-    char dest[20];
+    int arr[2][3] = {
+        {1, 2, 3},
+        {4, 5, 6}
+    };
 
-    strcpy(dest, src);
-    dest[0] = 'h';
-
-    printf("%s %s", src, dest);
+    printf("%d", arr[1][2]);
 
     return 0;
 }</code></pre>
 </div>
 {% endcapture %}
 
-{% capture hint2 %}
-strcpy는 복사본을 만들므로 dest 변경이 src에 영향을 주지 않습니다.
-{% endcapture %}
-
 {% include quiz-text.html
    id="quiz2"
-   question=hint2
    code_html=code_block2
-   answer="Hello hello"
-   tags="문자열과 함수"
+   answer="6"
+   tags="다차원 배열"
 %}
 
 ---
 
-### 문제 3 - 문자열 이어붙이기 (기초)
+### 문제 3 - 2차원 배열 초기화 (기초)
 
 <div class="quiz-number">문제 3</div><strong>다음 코드의 실행 결과는?</strong>
 
 {% capture code_block3 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
 
 int main() {
-    char str[50] = "Good";
+    int arr[2][3] = {
+        {10, 20},
+        {30}
+    };
 
-    strcat(str, " Morning");
-
-    printf("%s", str);
+    printf("%d", arr[0][2] + arr[1][1]);
 
     return 0;
 }</code></pre>
@@ -648,193 +636,111 @@ int main() {
 {% include quiz-text.html
    id="quiz3"
    code_html=code_block3
-   answer="Good Morning"
-   tags="문자열과 함수"
+   answer="0"
+   tags="다차원 배열"
 %}
 
 ---
 
-### 문제 4 - 문자열 비교 (중급)
+### 문제 4 - 2차원 배열 합계 (중급)
 
-<div class="quiz-number">문제 4</div><strong>다음 코드의 실행 결과는? (0, 양수, 음수 중 하나)</strong>
+<div class="quiz-number">문제 4</div><strong>다음 코드의 실행 결과는?</strong>
 
 {% capture code_block4 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
 
 int main() {
-    char str1[] = "Apple";
-    char str2[] = "Banana";
+    int arr[2][2] = {
+        {5, 10},
+        {15, 20}
+    };
+    int i, j, sum = 0;
 
-    int result = strcmp(str1, str2);
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 2; j++) {
+            sum += arr[i][j];
+        }
+    }
 
-    if (result < 0)
-        printf("음수");
-    else if (result > 0)
-        printf("양수");
-    else
-        printf("0");
+    printf("%d", sum);
 
     return 0;
 }</code></pre>
 </div>
 {% endcapture %}
 
-{% capture hint4 %}
-"Apple"은 "Banana"보다 사전순으로 앞에 있습니다.
-{% endcapture %}
-
 {% include quiz-text.html
    id="quiz4"
-   question=hint4
    code_html=code_block4
-   answer="음수"
-   tags="문자열과 함수"
+   answer="50"
+   tags="다차원 배열"
 %}
 
 ---
 
-### 문제 5 - strncpy (중급)
+### 문제 5 - 3차원 배열 (중급)
 
 <div class="quiz-number">문제 5</div><strong>다음 코드의 실행 결과는?</strong>
 
 {% capture code_block5 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
 
 int main() {
-    char src[] = "Programming";
-    char dest[20] = "XXXXXXXXXXXX";
+    int arr[2][2][2] = {
+        &#123;&#123;1, 2&#125;, &#123;3, 4&#125;&#125;,
+        &#123;&#123;5, 6&#125;, &#123;7, 8&#125;&#125;
+    };
 
-    strncpy(dest, src, 4);
-    dest[4] = '\0';
-
-    printf("%s", dest);
+    printf("%d", arr[1][0][1] + arr[0][1][1]);
 
     return 0;
 }</code></pre>
 </div>
 {% endcapture %}
 
-{% capture hint5 %}
-strncpy는 4개 문자만 복사하고, 수동으로 널 문자를 추가했습니다.
-{% endcapture %}
-
 {% include quiz-text.html
    id="quiz5"
-   question=hint5
    code_html=code_block5
-   answer="Prog"
-   tags="문자열과 함수"
+   answer="10"
+   tags="다차원 배열"
 %}
 
 ---
 
-### 문제 6 - 배열 vs 포인터 (중급)
+### 문제 6 - 대각선 합 (고급)
 
-<div class="quiz-number">문제 6</div><strong>다음 코드에서 컴파일 에러가 발생하는 줄 번호는?</strong>
+<div class="quiz-number">문제 6</div><strong>다음 코드에서 3×3 배열의 대각선 합은?</strong>
 
 {% capture code_block6 %}
 <div class="quiz-code" style="margin-bottom: 15px;">
     <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
 
 int main() {
-    char arr[] = "Hello";
-    char *ptr = "World";
+    int arr[3][3] = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+    int i, sum = 0;
 
-    // 6행
-    arr[0] = 'h';
+    for (i = 0; i < 3; i++) {
+        sum += arr[i][i];
+    }
 
-    // 9행
-    arr = "New Hello";
-
-    // 12행
-    ptr[0] = 'w';
-
-    // 15행
-    ptr = "New World";
+    printf("%d", sum);
 
     return 0;
 }</code></pre>
 </div>
-{% endcapture %}
-
-{% capture hint6 %}
-배열 이름은 상수이므로 다른 주소를 할당할 수 없습니다.
 {% endcapture %}
 
 {% include quiz-text.html
    id="quiz6"
-   question=hint6
    code_html=code_block6
-   answer="9"
-   tags="문자열과 함수"
-%}
-
----
-
-### 문제 7 - EOF (중급)
-
-<div class="quiz-number">문제 7</div><strong>다음 중 EOF에 대한 설명으로 올바른 것은?</strong>
-
-```
-A. EOF는 파일의 끝을 나타내는 상수이다.
-B. getchar()는 EOF를 반환할 수 있다.
-C. Windows에서는 Ctrl+Z로 EOF를 입력한다.
-D. 위의 모든 설명이 맞다.
-```
-
-{% capture hint7 %}
-EOF는 End Of File의 약자로, 입력 종료를 나타냅니다.
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz7"
-   question=hint7
-   answer="D"
-   tags="문자열과 함수"
-%}
-
----
-
-### 문제 8 - 문자열 처리 종합 (고급)
-
-<div class="quiz-number">문제 8</div><strong>다음 코드의 실행 결과는?</strong>
-
-{% capture code_block8 %}
-<div class="quiz-code" style="margin-bottom: 15px;">
-    <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
-
-int main() {
-    char str1[50] = "Hello";
-    char str2[50] = "Hello";
-    char str3[50];
-
-    strcpy(str3, str1);
-    strcat(str3, " World");
-
-    if (strcmp(str1, str2) == 0 && strcmp(str1, str3) != 0) {
-        printf("%d", strlen(str3));
-    }
-
-    return 0;
-}</code></pre>
-</div>
-{% endcapture %}
-
-{% capture hint8 %}
-str3은 "Hello World"가 되며, 공백을 포함한 길이는 11입니다.
-{% endcapture %}
-
-{% include quiz-text.html
-   id="quiz8"
-   question=hint8
-   code_html=code_block8
-   answer="11"
-   tags="문자열과 함수"
+   answer="15"
+   tags="다차원 배열"
 %}
 
 ---
@@ -843,36 +749,32 @@ str3은 "Hello World"가 되며, 공백을 포함한 길이는 11입니다.
 
 <div style="background-color: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #203BB0;">
 
-<strong>1. 문자열과 포인터</strong><br>
-• 배열 기반: <code>char str[] = "Hello";</code> (문자 변경 O, 주소 변경 X)<br>
-• 포인터 기반: <code>char *str = "Hello";</code> (문자 변경 X, 주소 변경 O)<br><br>
+<strong>1. 2차원 배열</strong><br>
+• 선언: <code>int arr[행][열];</code><br>
+• 행과 열로 구성된 표 구조<br>
+• 접근: <code>arr[i][j]</code><br>
+• 초기화: 중괄호로 행 구분<br><br>
 
-<strong>2. 문자 단위 입출력</strong><br>
-• <code>getchar()</code>: 문자 하나 입력<br>
-• <code>putchar(ch)</code>: 문자 하나 출력<br>
-• <code>EOF</code>: 입력 종료 (Ctrl+Z 또는 Ctrl+D)<br><br>
+<strong>2. 2차원 배열 순회</strong><br>
+• 중첩 for문 사용<br>
+• 외부 루프: 행 반복<br>
+• 내부 루프: 열 반복<br><br>
 
-<strong>3. 문자열 단위 입출력</strong><br>
-• <code>gets(str)</code>: 문자열 입력 (위험, fgets 권장)<br>
-• <code>puts(str)</code>: 문자열 출력 (자동 줄바꿈)<br><br>
+<strong>3. 3차원 배열</strong><br>
+• 선언: <code>int arr[높이][행][열];</code><br>
+• 2차원 배열을 쌓아놓은 구조<br>
+• 3중 중첩 for문으로 순회<br><br>
 
-<strong>4. 문자열 처리 함수 (string.h)</strong><br>
-• <code>strlen(str)</code>: 문자열 길이 (널 문자 제외)<br>
-• <code>strcpy(dest, src)</code>: 문자열 복사<br>
-• <code>strncpy(dest, src, n)</code>: n개 문자 복사<br>
-• <code>strcat(dest, src)</code>: 문자열 이어붙이기<br>
-• <code>strncat(dest, src, n)</code>: n개 문자 이어붙이기<br>
-• <code>strcmp(str1, str2)</code>: 문자열 비교 (같으면 0)<br>
-• <code>strncmp(str1, str2, n)</code>: n개 문자 비교<br><br>
+<strong>4. 배열 포인터</strong><br>
+• 선언: <code>int (*ptr)[열크기];</code><br>
+• 배열 전체를 가리키는 포인터<br>
+• 2차원 배열 접근에 활용<br>
+• 포인터 배열과 구분 필수<br><br>
 
-<strong>5. 문자열 비교</strong><br>
-• <code>strcmp</code> 반환값: 0(같음), 음수(str1이 앞), 양수(str1이 뒤)<br>
-• <code>==</code> 연산자는 주소 비교, <code>strcmp</code>로 내용 비교<br><br>
-
-<strong>6. 주의사항</strong><br>
-• <code>strncpy</code>는 널 문자 자동 추가 안 될 수 있음<br>
-• <code>gets</code>는 버퍼 오버플로우 위험 (fgets 권장)<br>
-• 문자열 함수 사용 시 <code>#include &lt;string.h&gt;</code> 필수
+<strong>5. 메모리 크기</strong><br>
+• 2차원: 행 × 열 × 자료형 크기<br>
+• 3차원: 높이 × 행 × 열 × 자료형 크기<br>
+• <code>sizeof()</code>로 계산 가능
 
 </div>
 
