@@ -197,9 +197,15 @@ notes-kr:
   - title: C DeepDive
     children:
       - title: 1. 함수의 정의와 선언
-        url: /notes/kr/c-deepdive/chapter-01
+        url: /notes/kr/c-deep-dive/chapter-01
       - title: 2. 함수 심화
-        url: /notes/kr/c-deepdive/chapter-02
+        url: /notes/kr/c-deep-dive/chapter-02
+      - title: 3. 메모리 구조와 변수의 생명주기
+        url: /notes/kr/c-deep-dive/chapter-03
+      - title: 4. 포인터의 심화
+        url: /notes/kr/c-deep-dive/chapter-04
+      - title: 5. 동적 메모리 할당
+        url: /notes/kr/c-deep-dive/chapter-05
 layouts:
   - title: Layouts
     children:

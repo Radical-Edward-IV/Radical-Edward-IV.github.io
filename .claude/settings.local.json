@@ -3,7 +3,8 @@
     "allow": [
       "Bash(python3 analyze_images.py)",
       "WebFetch(domain:opentutorials.org)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
