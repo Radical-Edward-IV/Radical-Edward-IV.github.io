@@ -206,6 +206,10 @@ notes-kr:
         url: /notes/kr/c-deep-dive/chapter-04
       - title: 5. 동적 메모리 할당
         url: /notes/kr/c-deep-dive/chapter-05
+      - title: 6. 구조체 기본
+        url: /notes/kr/c-deep-dive/chapter-06
+      - title: 7. 구조체 심화
+        url: /notes/kr/c-deep-dive/chapter-07
 layouts:
   - title: Layouts
     children:
