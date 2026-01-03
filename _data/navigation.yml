@@ -210,6 +210,8 @@ notes-kr:
         url: /notes/kr/c-deep-dive/chapter-06
       - title: 7. 구조체 심화
         url: /notes/kr/c-deep-dive/chapter-07
+      - title: 8. 파일 입출력
+        url: /notes/kr/c-deep-dive/chapter-08
 layouts:
   - title: Layouts
     children:
