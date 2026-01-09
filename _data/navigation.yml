@@ -68,7 +68,15 @@ notes-kr:
         url:    /notes/kr/linux-master/level-2-chapter-02
       - title:  3. 기본 명령어
         url:    /notes/kr/linux-master/level-2-chapter-03
-  - title:      정보처리기능사 (프로그래밍기능사)
+  - title:      프로그래밍기능사 (2026 개편)
+    children:
+      - title:  1. 프로그래밍기능사 개편 안내 (2026년)
+        url:    /notes/kr/info-processing-technician/chapter-01
+      - title:  2. 프로그래밍 언어 활용
+        url:    /notes/kr/info-processing-technician/chapter-02
+      # - title:  3. 프로그래밍 언어 응용 - 01
+      #   url:    /notes/kr/info-processing-technician/chapter-03
+  - title:      정보처리기능사 (~2025)
     children:
       - title:  1. 응용 SW 기초 기술 활용
         url:    /notes/kr/info-processing-technician/chapter-01-old

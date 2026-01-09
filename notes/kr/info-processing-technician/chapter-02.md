@@ -1,22 +1,47 @@
 ---
 layout: article
-title: 1. 데이터베이스 기초 활용 
+title: 2. 프로그래밍 언어 활용
 permalink: /notes/kr/info-processing-technician/chapter-02
 key: notes
 sidebar:
   nav: notes-kr
 aside:
   toc: true
-excerpt: 정보처리기능사 실기 강의 노트, 데이터베이스 기초 활용 개념과 활용 방법을 다룹니다.
-keywords: "정보처리기능사, 실기, 데이터베이스 기초 활용, 데이터 처리, 프로그래밍"
+excerpt: 프로그래밍기능사 강의 노트, 프로그래밍 언어 활용 - 라이브러리, 구조적/객체지향/스크립트 프로그래밍 언어의 개념과 특징을 다룹니다.
+keywords: "프로그래밍기능사, 라이브러리, 구조적 프로그래밍, 객체지향, 스크립트 언어, Java, Python"
 ---
+
+<script src="/assets/js/quiz.js"></script>
+
+<style>
+    .quiz-container {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+    .quiz-container:hover {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+    .quiz-number {
+        display: inline-block;
+        background-color: #203BB0;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        margin-right: 10px;
+        font-size: 0.9em;
+    }
+</style>
 
 <style>
     /* 색상 활용 규칙
-      빨강: 주의, 경고, 위험 (덮어쓰기, 에러 등)
-      파랑: 핵심 개념, 주요 기능 (모드, with 구문 등)
-      초록: 안전한 대안, 긍정적 결과 (추가 모드, 정답 보기 등)
-      노랑: 코드 요소 (함수명, 메서드명 등)
+      빨강: 주의, 경고, 위험 (오답, 금지사항 등)
+      파랑: 핵심 개념, 주요 기능 (라이브러리, 객체지향 특징 등)
+      초록: 안전한 대안, 긍정적 결과 (정답, 장점 등)
+      노랑: 코드 요소 (패키지명, 메소드명 등)
     */
     .red-text { color: #D53C41; font-weight: bold; }
     .blue-text { color: #203BB0; font-weight: bold; }
@@ -24,339 +49,1267 @@ keywords: "정보처리기능사, 실기, 데이터베이스 기초 활용, 데�
     .yellow-code { color: #BD8739; font-weight: bold; }
 </style>
 
-![header](https://capsule-render.vercel.app/api?type=waving&height=300&color=gradient&text=%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EA%B8%B0%EB%8A%A5%EC%82%AC&reversal=false&textBg=false)
-
-
-## 1. 데이터베이스의 개념 :star::star::star:
-### 데이터베이스(Database) `통저운공`{:.success}
-* <span class="blue-text">통합된 데이터(Integrated Data)</span>: 중복이 최소화된 데이터의 집합
-* <span class="blue-text">저장된 데이터(Stored Data)</span>: 컴퓨터가 접근할 수 있는 매체에 저장된 데이터
-* <span class="blue-text">운영 데이터(Operational Data)</span>: 현재 운영 중인 데이터
-* <span class="blue-text">공용 데이터(Common Data)</span>: 여러 사용자 또는 응용 시스템들이 공유하는 데이터
-
-### 데이터베이스 설계 `요개논물구`{:.success}
-1. <span class="blue-text">요구</span> 조건 분석: 어떤 데이터가 필요한지, 무엇을 해야 하는지 정리
-2. <span class="blue-text">개념</span>적 설계: 필요한 정보를 그림(도식)으로 쉽게 표현
-3. <span class="blue-text">논리</span>적 설계: 사용할 데이터베이스에 맞게 구조를 구체적으로 설계
-4. <span class="blue-text">물리</span>적 설계: 실제 저장 방식과 성능을 고려해 데이터 저장 방법 결정
-5. <span class="blue-text">구현</span>: 데이터베이스를 실제로 만들고 사용할 수 있게 준비
-
-### 스키마(Schema)
-* __외부__ 스키마(External Schema): 사용자 관점, 각 사용자가 보는 스키마
-* __개념__ 스키마(Conceptual Schema): 통합 관점, 조직 전체의 데이터베이스
-* __내부__ 스키마(Internal Schema): 물리적 관점, 실질적인 데이터의 저장 구조
-
-### 데이터베이스 사용자
-* <span class="blue-text">데이터베이스 관리자(DBA : DataBase Administrator)</span>
-    - 스키마를 정의, 생성, 삭제
-    - 저장 구조 및 접근 방법 정의
-    - 보안 및 접근 권한 정책 관리
-    - 장애 예비 조치와 회복에 대한 전략 수립
-    - 무결성을 위한 제약조건
-    - 데이터 사전 구성
-    - 성능 향상을 위해 데이터베이스 재구성
-* <span class="blue-text">응용 프로그래머(Application Programmer)</span>: 데이터베이스에 접근하여 일반 사용자가 사용할 수 있는 인터페이스 제공
-* <span class="blue-text">일반 사용자(End User)</span>: 터미널을 통해 데이터베이스에 접근하여 자원을 활용
-<br>
-
-<summary>🌟 데이터베이스 3단계 스키마 & 사용자 구분 보기</summary>
-
-| 스키마 종류 | 담당 사용자 | 주요 역할 |
-|------------|------------|---------|
-| **외부 스키마** (External) | **일반 사용자, 응용 프로그램 사용자** | 필요한 **부분 데이터만 조회**<br/>사용자 뷰(View) 제공 |
-| **개념 스키마** (Conceptual) | **DBA (데이터베이스 관리자)** | **전체 DB 통합 구조** 관리<br/>데이터 독립성 확보 |
-| **내부 스키마** (Internal) | **시스템 프로그래머** | **물리적 저장 구조** 관리<br/>인덱스, 파일 구조, 최적화 |
+![header](https://capsule-render.vercel.app/api?type=waving&height=300&color=gradient&text=%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%20%EC%96%B8%EC%96%B4%20%ED%99%9C%EC%9A%A9&reversal=false&textBg=false)
 
 ---
 
-## 2. 데이터 모델 :star::star::star:
-### 데이터 모델의 정의
-데이터 모델은 <span class="blue-text">실제 세계의 정보를 컴퓨터가 표현할 수 있도록 단순화, 추상화, 체계화</span>한 개념적 모델이다.
-
-### 데이터 모델의 구성 요소 `개속관`{:.success}
-* <span class="blue-text">개체(Entity)</span>: 데이터베이스에 표현하려는 대상, 실세계의 객체나 개념
-* <span class="blue-text">속성(Attribute)</span>: 개체의 특성을 나타내는 가장 작은 논리적 단위
-* <span class="blue-text">관계(Relationship)</span>: 개체들 간의 의미 있는 연관성
-
-### 개체(Entity)의 구성 요소
-* <span class="blue-text">개체 타입(Entity Type)</span>: 속성들로만 정의된 개체의 정의
-* <span class="blue-text">개체 인스턴스(Entity Instance)</span>: 각 속성에 값을 가진 개별 개체
-* <span class="blue-text">개체 세트(Entity Set)</span>: 개체 인스턴스들의 집합
-
-### 관계(Relationship)의 형태 `일일다다`{:.success}
-* <span class="blue-text">일대일(1:1)</span>: A의 각 원소가 B의 정확히 하나의 원소와 대응
-* <span class="blue-text">일대다(1:N)</span>: A의 각 원소가 B의 여러 원소와 대응, B의 각 원소는 A의 하나의 원소와 대응
-* <span class="blue-text">다대다(N:M)</span>: A의 각 원소가 B의 여러 원소와 대응, B의 각 원소도 A의 여러 원소와 대응
-
-## 3. ER(Entity Relationship) 모델 :star::star::star:
-### ER 모델의 정의
-<span class="blue-text">Peter Chen</span>이 1976년에 제안한 가장 대표적인 개념적 데이터 모델로, <span class="blue-text">ERD(Entity Relationship Diagram)</span>를 통해 개체, 속성, 관계를 쉽게 표현할 수 있다.
-
-### ER 도형의 종류
-
-<figure>
-<img src="/notes/assets/info-processing-technician/chapter-02-01.png" width="700px;" alt="ER 도형의 종류">
-<figcaption>https://en.wikipedia.org/wiki/Entity-relationship_model</figcaption>
-</figure>
-
-| 도형 | 의미 | 모양 |
-|------|------|:----:|
-| <span class="blue-text">사각형</span> | 개체 타입(Entity Type) | <svg width="48" height="24" viewBox="0 0 48 24"><rect x="4" y="4" width="40" height="16" fill="none" stroke="black" stroke-width="2"/></svg> |
-| <span class="blue-text">마름모</span> | 관계 타입(Relationship Type) | <svg width="48" height="24" viewBox="0 0 48 24"><rect x="16" y="4" width="16" height="16" fill="none" stroke="black" stroke-width="2" transform="rotate(45 24 12)"/></svg> |
-| <span class="blue-text">타원</span> | 속성(Attribute) | <svg width="48" height="24" viewBox="0 0 48 24"><ellipse cx="24" cy="12" rx="18" ry="8" fill="none" stroke="black" stroke-width="2"/></svg> |
-| <span class="blue-text">밑줄 친 타원</span> | 기본키(Primary Key) 속성 | <svg width="60" height="28" viewBox="0 0 60 28"><ellipse cx="30" cy="12" rx="22" ry="9" fill="none" stroke="black" stroke-width="2"/><line x1="12" y1="15" x2="48" y2="15" stroke="black" stroke-width="2"/></svg> |
-| <span class="blue-text">이중 타원</span> | 다중값 속성(Multivalued Attribute) | <svg width="60" height="28" viewBox="0 0 60 28"><ellipse cx="30" cy="14" rx="20" ry="9" fill="none" stroke="black" stroke-width="2"/><ellipse cx="30" cy="14" rx="24" ry="12" fill="none" stroke="black" stroke-width="2"/></svg> |
-| <span class="blue-text">점선 타원</span> | 유도 속성(Derived Attribute) | <svg width="60" height="28" viewBox="0 0 60 28"><ellipse cx="30" cy="14" rx="22" ry="10" fill="none" stroke="black" stroke-width="2" stroke-dasharray="4 4"/></svg> |
-| <span class="blue-text">삼각형(ISA)</span> | ISA 관계 | <svg width="48" height="28" viewBox="0 0 48 28"><polygon points="24,4 40,24 8,24" fill="none" stroke="black" stroke-width="2"/></svg> |
-| <span class="blue-text">선</span> | 개체 타입과 속성 연결 | <svg width="60" height="16" viewBox="0 0 60 16"><line x1="6" y1="8" x2="54" y2="8" stroke="black" stroke-width="2"/></svg> |
-| <span class="blue-text">겹치는 타원</span> | 복합 속성(Composite Attribute) | <svg width="64" height="28" viewBox="0 0 64 28"><ellipse cx="28" cy="14" rx="18" ry="9" fill="none" stroke="black" stroke-width="2"/><ellipse cx="36" cy="14" rx="18" ry="9" fill="none" stroke="black" stroke-width="2"/></svg> |
-
-
-
-
-### ISA 관계
-특정 개체를 여러 하위 개체로 나눌 수 있을 때, 상위 개체와 하위 개체 간의 관계를 나타낸다.
-> 예: 학생 → 재학생, 휴학생, 졸업생
-
-
-## 4. 관계형 데이터베이스의 구조 :star::star::star:
-### 관계형 데이터베이스의 개요
-* 1970년 <span class="blue-text">IBM의 E. F. Codd</span>에 의해 처음 제안
-* 개체와 관계를 모두 <span class="blue-text">릴레이션(Relation)</span>이라는 표로 표현
-* <span class="blue-text">개체 릴레이션</span>과 <span class="blue-text">관계 릴레이션</span>으로 구분
-
-### 릴레이션의 구조
-* <span class="blue-text">릴레이션 스키마</span>: 릴레이션의 구조를 나타냄 (속성들의 집합)
-* <span class="blue-text">릴레이션 인스턴스</span>: 실제 값들 (튜플들의 집합)
-<img src="/notes/assets/info-processing-technician/chapter-02-06.png" width="100%;" alt="릴레이션 구조">
-<figcaption>출처 : https://tragramming.tistory.com/48</figcaption>
-
-### 릴레이션의 구성 요소
-* <span class="blue-text">속성(Attribute)</span>: 릴레이션을 구성하는 가장 작은 논리적 단위
-  - <span class="blue-text">디그리(Degree)</span>: 속성의 개수
-* <span class="blue-text">튜플(Tuple)</span>: 릴레이션을 구성하는 각각의 행
-  - <span class="blue-text">카디널리티(Cardinality)</span>: 튜플의 개수
-<img src="/notes/assets/info-processing-technician/chapter-02-07.PNG" width="80%;" alt="디그리와 카디널리티의 차이">
-<figcaption>출처 : https://tragramming.tistory.com/48</figcaption>
-
-### 릴레이션의 특징 `유순변중원키`{:.success}
-* <span class="blue-text">유일성</span>: 동일한 튜플이 존재할 수 없음
-* <span class="blue-text">순서 무관</span>: 튜플들 간의 순서는 중요하지 않음
-* <span class="blue-text">변화성</span>: 시간에 따라 변함 (삽입, 삭제 등)
-* <span class="blue-text">중복 배제</span>: 속성명은 유일해야 함
-* <span class="blue-text">원자값</span>: 속성값은 더 이상 분할할 수 없는 원자값
-* <span class="blue-text">키 설정</span>: 튜플을 유일하게 식별하기 위한 키 설정
-
-### 도메인(Domain)
-하나의 속성이 취할 수 있는 <span class="blue-text">같은 타입의 원자값들의 집합</span>
-> 예: 성별 속성의 도메인 = {'남', '여'}
-
-## 5. 키(Key)의 개념 및 종류 :star::star::star:
-### 키의 정의
-데이터베이스에서 조건에 만족하는 튜플을 찾거나 순서대로 정렬할 때 <span class="blue-text">기준이 되는 속성</span>
-
-### 키의 종류 `슈후기대외`{:.success}
-
-#### 슈퍼키(Super Key)
-* 릴레이션 내 속성들의 집합으로 구성된 키
-* <span class="blue-text">유일성</span>은 만족하지만 <span class="blue-text">최소성</span>은 만족하지 않음
-> 예: (학번, 주민등록번호), (학번, 주민등록번호, 성명)
-
-#### 후보키(Candidate Key)
-* 튜플을 유일하게 식별하기 위한 속성들의 부분집합
-* <span class="blue-text">유일성</span>과 <span class="blue-text">최소성</span>을 모두 만족
-> 예: 학번, 주민등록번호
-
-#### 기본키(Primary Key)
-* 후보키 중에서 <span class="blue-text">특별히 선택된 키</span>
-* <span class="blue-text">NULL 값을 가질 수 없음</span>
-* <span class="blue-text">중복값을 가질 수 없음</span>
-
-#### 대체키(Alternate Key)
-* 기본키로 선택되지 않은 <span class="blue-text">나머지 후보키</span>
-
-#### 외래키(Foreign Key)
-* <span class="blue-text">다른 릴레이션의 기본키를 참조</span>하는 속성 또는 속성들의 집합
-* 릴레이션 간의 관계를 표현하는 데 사용
-
-### 키의 특성
-* <span class="blue-text">유일성(Uniqueness)</span>: 하나의 키 값으로 단일 튜플을 유일하게 식별
-* <span class="blue-text">최소성(Minimality)</span>: 최소한의 필요 속성으로 구성되어 하나의 속성을 제거하면 유일성을 잃음
-
-## 6. 무결성(Integrity) :star::star::star:
-### 무결성의 정의
-데이터베이스에 저장된 데이터 값과 그것이 표현하는 <span class="blue-text">현실 세계의 실제값이 일치하는 정확성</span>
-
-### 무결성 제약 조건
-데이터베이스에 들어 있는 데이터의 정확성을 보장하기 위해 <span class="blue-text">부정확한 자료가 저장되는 것을 방지</span>하는 제약 조건
-
-### 무결성의 종류 `개도참사NULL고키관`{:.success}
-
-#### 개체 무결성(Entity Integrity)
-* 기본키를 구성하는 어떤 속성도 <span class="blue-text">NULL 값이나 중복값을 가질 수 없음</span>
-> 예: <학생> 릴레이션에서 '학번'이 기본키면 반드시 값을 입력해야 하고 중복 불가
-
-#### 도메인 무결성(Domain Integrity)
-* 주어진 속성 값이 <span class="blue-text">정의된 도메인에 속한 값</span>이어야 함
-> 예: <수강> 릴레이션의 '과목명'이 '영어', '수학', '전산'만 허용되면 이 값들만 입력 가능
-
-#### 참조 무결성(Referential Integrity)
-* 외래키 값은 <span class="blue-text">NULL이거나 참조 릴레이션의 기본키 값과 동일</span>해야 함
-* 외래키와 참조하는 테이블의 기본키는 <span class="blue-text">도메인과 속성 개수가 같아야 함</span>
-
-#### 사용자 정의 무결성(User-Defined Integrity)
-* 속성 값들이 <span class="blue-text">사용자가 정의한 제약조건에 만족</span>해야 함
-
-#### NULL 무결성
-* 릴레이션의 특정 속성 값이 <span class="blue-text">NULL이 될 수 없도록</span> 하는 규정
-
-#### 고유 무결성(Unique Integrity)
-* 릴레이션의 특정 속성에 대해 <span class="blue-text">각 튜플이 갖는 속성값들이 서로 달라야 함</span>
-
-#### 키 무결성(Key Integrity)
-* 하나의 릴레이션에는 <span class="blue-text">적어도 하나의 키가 존재</span>해야 함
-
-#### 관계 무결성(Relationship Integrity)
-* 릴레이션에 튜플의 삽입 가능 여부 또는 릴레이션 간 튜플들의 관계에 대한 <span class="blue-text">적절성 여부</span>를 지정
-
-## 7. 정규화(Normalization) :star::star::star:
-### 정규화의 정의
-<span class="blue-text">함수적 종속성</span> 등의 종속성 이론을 이용하여 잘못 설계된 관계형 스키마를 더 작은 속성의 세트로 쪼개어 <span class="blue-text">바람직한 스키마로 만들어 가는 과정</span>
-
-### 정규화의 목적 `효중삽저무`{:.success}
-* <span class="blue-text">효과적인 검색 알고리즘</span> 생성
-* <span class="blue-text">중복을 배제</span>하여 삽입, 삭제, 갱신 이상의 발생 방지
-* <span class="blue-text">삽입 시 릴레이션 재구성</span> 필요성 감소
-* <span class="blue-text">저장공간 최소화</span> 및 데이터 구조의 안정성 극대화
-* <span class="blue-text">무결성 유지</span> 극대화
-
-### 정규화 단계 `도부이결다조`{:.success}
-1. <span class="blue-text">도</span>메인이 원자값 (1NF)
-2. <span class="blue-text">부</span>분적 함수 종속 제거 (2NF)
-3. <span class="blue-text">이</span>행적 함수 종속 제거 (3NF)
-4. <span class="blue-text">결</span>정자이면서 후보키가 아닌 것 제거 (BCNF)
-5. <span class="blue-text">다</span>치 종속 제거 (4NF)
-6. <span class="blue-text">조</span>인 종속성 이용 (5NF)
-
-<figure>
-<img src="/notes/assets/info-processing-technician/chapter-02-02.png" width="70%;" alt="정규화 단계">
-</figure>
-
-<figure>
-<img src="/notes/assets/info-processing-technician/chapter-02-03.png" width="70%;" alt="정규화 단계">
-<figcaption>1NF</figcaption>
-</figure>
-
-<figure>
-<img src="/notes/assets/info-processing-technician/chapter-02-04.png" width="70%;" alt="정규화 단계">
-<figcaption>2NF</figcaption>
-</figure>
-
-<figure>
-<img src="/notes/assets/info-processing-technician/chapter-02-05.png" width="70%;" alt="정규화 단계">
-<figcaption>3NF</figcaption>
-</figure>
-
-### 이상(Anomaly)의 종류 `삽삭갱`{:.success}
-* <span class="blue-text">삽입 이상(Insertion Anomaly)</span>: 데이터 삽입 시 의도와 상관없이 원하지 않은 값들도 함께 삽입
-* <span class="blue-text">삭제 이상(Deletion Anomaly)</span>: 한 튜플 삭제 시 의도와 상관없는 값들도 함께 삭제
-* <span class="blue-text">갱신 이상(Update Anomaly)</span>: 일부 튜플의 정보만 갱신되어 정보에 모순 발생
-
-### 함수적 종속성(Functional Dependency)
-릴레이션의 어떤 속성의 값이 다른 속성의 값을 <span class="blue-text">고유하게 결정</span>하는 것
-> 표기: X → Y (X가 Y를 함수적으로 결정)
-
-### 다치 종속(Multi Valued Dependency)
-A, B, C 3개의 속성을 가진 릴레이션 R에서 (A, C)에 대응하는 B 값의 집합이 <span class="blue-text">A 값에만 종속되고 C 값에는 무관</span>할 때
-> 표기: A →→ B (B는 A에 다치 종속)
-
-## 8. 고급 데이터베이스 기능 :star::star:
-### 뷰(View)
-* <span class="blue-text">하나 이상의 기본 테이블로부터 유도된 가상 테이블</span>
-* 사용자에게 접근이 허용된 자료만을 제한적으로 보여줌
-* <span class="blue-text">물리적으로 존재하지 않지만</span> 사용자에게는 있는 것처럼 간주
-* <span class="blue-text">논리적 독립성</span> 제공
-
-### 인덱스(Index)
-* 데이터 레코드의 <span class="blue-text">검색 시간을 단축</span>시키기 위한 보조적인 데이터 구조
-* <span class="blue-text">CREATE문</span>을 이용하여 생성
-* <span class="blue-text">TABLE SCAN</span> 방지
-* 삽입/삭제가 빈번한 경우 인덱스 개수 최소화 필요
-
-### 시스템 카탈로그(System Catalog)
-* 시스템 그 자체에 관련이 있는 <span class="blue-text">다양한 객체에 관한 정보를 포함</span>하는 시스템 데이터베이스
-* <span class="blue-text">메타데이터(Meta-Data)</span> 저장
-* <span class="blue-text">데이터 사전(Data Dictionary)</span>에 저장
-
-## 9. 트랜잭션(Transaction) :star::star:
-### 트랜잭션의 정의
-데이터베이스에서 <span class="blue-text">하나의 논리적 기능을 수행하기 위한 작업 단위</span>로, 데이터베이스 관련 연산의 가장 기본적인 단위
-
-### 트랜잭션의 특징
-* 데이터베이스 시스템에서 <span class="blue-text">복구 및 병행 수행 시 처리되는 작업의 논리적 단위</span>
-* 하나의 트랜잭션은 <span class="blue-text">하나의 질의문 또는 여러 질의문</span>으로 구성
-* 일반적으로 <span class="blue-text">Commit 또는 Rollback</span>됨
-
-### ACID 특성 `원일독영`{:.success}
-* <span class="blue-text">원자성(Atomicity)</span>: 트랜잭션의 연산은 모두 반영되거나 전혀 반영되지 않음
-* <span class="blue-text">일관성(Consistency)</span>: 트랜잭션이 성공적으로 완료되면 일관성 있는 데이터베이스 상태로 변환
-* <span class="blue-text">독립성(Isolation)</span>: 동시 실행되는 트랜잭션들이 서로 간섭하지 않음
-* <span class="blue-text">영속성(Durability)</span>: 성공적으로 완료된 트랜잭션의 결과는 영구적으로 반영
-
-### Commit과 Rollback
-* <span class="blue-text">Commit</span>: 명령 수행 결과를 실제 물리적 디스크에 저장하고 정상 완료를 관리자에게 알림
-* <span class="blue-text">Rollback</span>: Commit되지 않은 변경 내용을 취소하고 데이터베이스를 이전 상태로 복원
-
-## 10. DBMS :star::star::star:
-### DBMS의 정의 (Database Management System)
-사용자와 데이터베이스 사이에서 <span class="blue-text">사용자의 요구에 따라 정보를 생성</span>해 주고, <span class="blue-text">데이터베이스를 관리</span>해 주는 소프트웨어
-
-### DBMS의 필수 기능 `정조제`{:.success}
-* <span class="blue-text">정의 기능(Definition)</span>: 데이터 구조, 형, 제약조건 등을 명시
-* <span class="blue-text">조작 기능(Manipulation)</span>: 데이터 검색, 갱신, 삽입, 삭제 등의 인터페이스 제공
-* <span class="blue-text">제어 기능(Control)</span>: 데이터 무결성 유지를 위한 제어
-
-### DBMS의 종류 `계망관`{:.success}
-* <span class="blue-text">계층형 DBMS</span>: 트리 구조, 1:N 관계만 지원 (IMS, System2000)
-* <span class="blue-text">망형 DBMS</span>: 그래프 구조, 1:1, 1:N, N:M 관계 모두 지원 (IDS, TOTAL, IDMS)
-* <span class="blue-text">관계형 DBMS</span>: 2차원 표 구조, 가장 널리 사용 (Oracle, SQL Server, MySQL)
-
-### DBMS의 장단점
-
-#### 장점 `논물공일무보표통최실`{:.success}
-* <span class="blue-text">논리적, 물리적 독립성</span> 보장
-* <span class="blue-text">물리적 중복</span> 피해 기억공간 절약
-* <span class="blue-text">공동 이용</span> 가능
-* <span class="blue-text">일관성</span> 유지
-* <span class="blue-text">무결성</span> 유지
-* <span class="blue-text">보안</span> 유지
-* <span class="blue-text">표준화</span> 가능
-* <span class="blue-text">통합 관리</span> 가능
-* <span class="blue-text">최신 데이터</span> 유지
-* <span class="blue-text">실시간 처리</span> 가능
-
-#### 단점 `전전대백시`{:.success}
-* <span class="blue-text">전문가</span> 부족
-* <span class="blue-text">전산화 비용</span> 증가
-* <span class="blue-text">대용량 디스크</span> 집중적 Access로 과부하 발생
-* <span class="blue-text">백업과 회복</span> 어려움
-* <span class="blue-text">시스템</span> 복잡
-
-### 비관계형 DBMS(NoSQL)
-* 데이터 간의 관계를 정의하지 않고 <span class="blue-text">비구조적 데이터를 저장</span>
-* <span class="blue-text">빅데이터 처리</span>를 위한 시스템으로 각광
-* <span class="blue-text">수평적 확장 및 분산 저장</span> 가능
-* 데이터 구조에 따라 <span class="blue-text">Key-Value, Document, Graph DBMS</span> 등으로 분류
-
-
-<summary><strong>🌟 Key-Value, Document, Graph DBMS ?</strong></summary>
-
-
-| 구분 | Key-Value Store | Document Store | Graph DB |
-|------|----------------|----------------|----------|
-| 데이터 구조 | 키-값 한 쌍 | 문서(JSON/BSON) | 노드 + 관계 |
-| 강점 | 빠른 속도 / 캐시 | 유연한 구조 / 검색 OK | 관계 탐색 최강  |
-| 약점 | 검색·관계 약함 | 복잡한 관계 불리 | 단순조회엔 과함 |
-| 대표 사례 | Redis, DynamoDB | MongoDB, CouchDB | Neo4j, ArangoDB |
-| 사용 예 | 세션/캐시 | 사용자/게시글 | 추천/소셜 |
-
+## SECTION 001. 라이브러리
+
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 1.25rem;">💡</span>
+<strong style="font-size: 1rem; font-weight: 600; color: #111827; letter-spacing: -0.01em;">학습 포인트 (중요도: ★★★★★)</strong>
+</div>
+<p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #4b5563;">
+Java와 Python의 표준 라이브러리를 패키지 단위로 이해하고, 대표적인 라이브러리의 종류와 주요 기능을 숙지해야 합니다. 특히 자주 사용되는 메소드들의 기능을 정확히 암기하세요.
+</p>
+</div>
+
+### 1.1 라이브러리의 개념
+
+<span class="blue-text">라이브러리(Library)</span>는 프로그램 개발 시 자주 필요한 기능들을 미리 구현하여 모아놓은 <span class="blue-text">코드의 집합</span>입니다.
+
+**라이브러리의 특징**
+- 반복적으로 사용되는 함수와 데이터를 재사용 가능한 형태로 제공
+- 개발 시간 단축 및 코드의 신뢰성 향상
+- 필요한 시점에 호출(import)하여 사용
+
+**라이브러리의 구성**
+
+| 용어 | 설명 |
+|------|------|
+| 모듈 | 특정 기능을 수행하는 함수나 클래스들이 하나의 파일로 구현된 형태 |
+| 패키지 | 관련된 여러 모듈을 하나의 디렉터리(폴더)에 모아 놓은 형태 |
+
+**라이브러리의 분류**
+
+- **표준 라이브러리(Standard Library)**
+  - 프로그래밍 언어 설치 시 기본으로 포함되어 제공
+  - 별도의 설치 과정 없이 바로 사용 가능
+
+- **외부 라이브러리(External Library)**
+  - 개발자 커뮤니티에서 제작하여 공유하는 라이브러리
+  - 별도의 다운로드 및 설치 과정 필요
+
+---
+
+### 1.2 Java의 주요 표준 라이브러리
+
+Java에서는 관련 기능을 <span class="blue-text">패키지(Package)</span> 단위로 제공합니다. 각 패키지에는 클래스들이 포함되어 있으며, 클래스 안에 메소드(Method)가 정의되어 있습니다.
+
+**패키지 사용 방법**
+```java
+// 패키지 전체를 import
+import java.util.*;
+
+// 특정 클래스만 import
+import java.util.Date;
+
+// 사용 예시
+Math.abs(-10);  // 클래스명.메소드명()
+```
+
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 1.25rem;">📌</span>
+<strong style="font-size: 1rem; font-weight: 600; color: #111827; letter-spacing: -0.01em;">참고</strong>
+</div>
+<p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #4b5563;">
+Java에서 함수를 메소드(Method)라고 부릅니다. 메소드는 특정 기능을 수행하는 코드 블록입니다.
+</p>
+</div>
+
+**Java 주요 표준 라이브러리**
+
+| 패키지 | 주요 기능 | 대표 클래스 |
+|--------|-----------|-------------|
+| java.lang | Java 프로그래밍의 기본 기능 제공<br>import 없이 사용 가능 | String, Math, System, Integer, Double, Object |
+| java.util | 유틸리티 기능 제공<br>날짜, 시간, 난수, 컬렉션 등 | Date, Calendar, Random, ArrayList, HashMap |
+| java.io | 입출력 관련 기능 제공<br>파일 읽기/쓰기 등 | File, InputStream, OutputStream, BufferedReader |
+| java.net | 네트워크 프로그래밍 기능 제공 | Socket, URL, ServerSocket, InetAddress |
+| java.awt | 그래픽 사용자 인터페이스(GUI) 제공 | Button, Label, TextField, Frame, Panel |
+
+---
+
+### 1.3 Java의 주요 메소드
+
+**String 클래스의 주요 메소드**
+
+| 메소드 | 기능 설명 |
+|--------|-----------|
+|length() | 문자열의 길이를 반환 |
+|charAt(index) | 지정한 인덱스 위치의 문자를 반환 |
+|substring(start) | start 위치부터 끝까지의 문자열 반환 |
+|substring(start, end) | start부터 end-1까지의 문자열 반환 |
+|toUpperCase() | 문자열을 모두 대문자로 변환 |
+|toLowerCase() | 문자열을 모두 소문자로 변환 |
+|trim() | 문자열 앞뒤의 공백 제거 |
+|replace(old, new) | old 문자열을 new 문자열로 치환 |
+|split(delimiter) | delimiter 기준으로 문자열을 분리하여 배열로 반환 |
+|equals(str) | 문자열이 같은지 비교 (대소문자 구분) |
+|equalsIgnoreCase(str) | 문자열이 같은지 비교 (대소문자 구분 안함) |
+|compareTo(str) | 문자열을 사전순으로 비교<br>같으면 0, 이전이면 음수, 이후면 양수 |
+|indexOf(str) | str이 처음 나타나는 위치 반환, 없으면 -1 |
+
+**Math 클래스의 주요 메소드**
+
+| 메소드 | 기능 설명 |
+|--------|-----------|
+|abs(x) | x의 절댓값 반환 |
+|pow(x, y) | x의 y제곱 반환 |
+|sqrt(x) | x의 제곱근 반환 |
+|ceil(x) | x보다 크거나 같은 최소 정수 (올림) |
+|floor(x) | x보다 작거나 같은 최대 정수 (내림) |
+|round(x) | x를 반올림한 정수 |
+|max(x, y) | x와 y 중 큰 값 반환 |
+|min(x, y) | x와 y 중 작은 값 반환 |
+|random() | 0.0 이상 1.0 미만의 난수 반환 |
+
+---
+
+### 1.4 Python의 주요 표준 라이브러리
+
+Python도 Java와 유사하게 모듈과 패키지 형태로 라이브러리를 제공합니다.
+
+**모듈 사용 방법**
+```python
+# 모듈 전체를 import
+import random
+
+# 모듈에서 특정 함수만 import
+from random import choice
+
+# 별칭을 사용하여 import
+import datetime as dt
+
+# 사용 예시
+random.randint(1, 10)  # 모듈명.함수명()
+```
+
+**Python 주요 표준 라이브러리**
+
+| 모듈 | 주요 기능 | 대표 함수/메소드 |
+|------|-----------|------------------|
+|내장 함수 | import 없이 사용 가능한 기본 함수 | print(), len(), type(), int(), str(), input() |
+|math | 수학 연산 관련 기능 | sqrt(), pow(), ceil(), floor(), sin(), cos() |
+|random | 난수 생성 및 무작위 선택 | random(), randint(), choice(), shuffle() |
+|datetime | 날짜와 시간 처리 | now(), today(), strftime(), timedelta() |
+|os | 운영체제와 상호작용 | getcwd(), listdir(), mkdir(), remove() |
+|sys | 시스템 관련 기능 | argv, exit(), path |
+|re | 정규표현식을 이용한 문자열 처리 | search(), findall(), sub(), split() |
+
+---
+
+### 1.5 Python의 주요 메소드
+
+**문자열(String) 관련 메소드**
+
+| 메소드 | 기능 설명 |
+|--------|-----------|
+|upper() | 모든 문자를 대문자로 변환 |
+|lower() | 모든 문자를 소문자로 변환 |
+|capitalize() | 첫 번째 문자만 대문자로 변환 |
+|title() | 각 단어의 첫 글자를 대문자로 변환 |
+|strip() | 양쪽 공백 제거 |
+|replace(old, new) | old를 new로 치환 |
+|split(sep) | sep을 기준으로 문자열 분리 (기본값: 공백) |
+|join(list) | 리스트의 요소들을 연결하여 문자열 생성 |
+|find(sub) | sub가 처음 나타나는 위치 반환, 없으면 -1 |
+|index(sub) | sub가 처음 나타나는 위치 반환, 없으면 오류 발생 |
+|count(sub) | sub가 나타나는 횟수 반환 |
+
+**리스트(List) 관련 메소드**
+
+| 메소드 | 기능 설명 |
+|--------|-----------|
+|append(item) | 리스트 끝에 item 추가 |
+|insert(index, item) | index 위치에 item 삽입 |
+|remove(item) | 첫 번째로 나타나는 item 삭제 |
+|pop() | 마지막 요소를 반환하고 삭제 |
+|pop(index) | index 위치의 요소를 반환하고 삭제 |
+|sort() | 리스트를 오름차순으로 정렬 |
+|sort(reverse=True) | 리스트를 내림차순으로 정렬 |
+|reverse() | 리스트의 순서를 반대로 뒤집기 |
+|count(item) | item이 나타나는 횟수 반환 |
+|index(item) | item이 처음 나타나는 위치 반환 |
+|extend(list) | 다른 리스트의 요소를 추가 |
+|clear() | 모든 요소 삭제 |
+
+---
+
+### 🎯 기출문제 따라잡기
+
+<div class="quiz-number">문제 1</div><strong>라이브러리에 관한 설명 중 올바르지 않은 것은?</strong>
+
+{% capture choices1 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① 자주 사용하는 기능을 미리 구현하여 제공하는 코드 집합이다<br>
+② 모듈과 패키지를 포괄하는 개념이다<br>
+③ 표준 라이브러리는 언어 설치 시 기본으로 제공된다<br>
+④ 외부 라이브러리는 모든 프로그래밍 언어에 기본 포함되어 있다
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz1_lib"
+   code_html=choices1
+   answer="4|④"
+   tags="라이브러리"
+%}
+
+---
+
+<div class="quiz-number">문제 2</div><strong>다음 Java 코드의 출력 결과는?</strong>
+
+{% capture code_block2 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>String text = "Programming";
+System.out.println(text.substring(3, 7));</code></pre>
+</div>
+<div style="margin: 15px 0; line-height: 1.8;">
+① Pro<br>
+② gram<br>
+③ gramm<br>
+④ rammi
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz2_lib"
+   code_html=code_block2
+   answer="2|②|gram"
+   tags="라이브러리"
+%}
+
+---
+
+<div class="quiz-number">문제 3</div><strong>다음 Python 코드의 실행 결과는?</strong>
+
+{% capture code_block3 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>text = "Python Programming"
+print(text.replace("o", "0").count("0"))</code></pre>
+</div>
+<div style="margin: 15px 0; line-height: 1.8;">
+① 1<br>
+② 2<br>
+③ 3<br>
+④ 4
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz3_lib"
+   code_html=code_block3
+   answer="3|③"
+   tags="라이브러리"
+%}
+
+---
+
+<div class="quiz-number">문제 4</div><strong>Java에서 import 없이 사용할 수 있는 패키지는?</strong>
+
+{% capture choices4 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① java.util<br>
+② java.lang<br>
+③ java.io<br>
+④ java.net
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz4_lib"
+   code_html=choices4
+   answer="2|②|java.lang"
+   tags="라이브러리"
+%}
+
+---
+
+<div class="quiz-number">문제 5</div><strong>Python 리스트 메소드 중 리스트의 순서를 반대로 뒤집는 것은?</strong>
+
+{% capture choices5 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① sort()<br>
+② reverse()<br>
+③ remove()<br>
+④ pop()
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz5_lib"
+   code_html=choices5
+   answer="2|②|reverse()|reverse"
+   tags="라이브러리"
+%}
+
+---
+
+## SECTION 002. 구조적 프로그래밍 언어
+
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 1.25rem;">💡</span>
+<strong style="font-size: 1rem; font-weight: 600; color: #111827; letter-spacing: -0.01em;">학습 포인트 (중요도: ★★★★☆)</strong>
+</div>
+<p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #4b5563;">
+구조적 프로그래밍의 핵심은 <span class="red-text">세 가지 기본 구조(순차, 선택, 반복)</span>와 <span class="red-text">GOTO문 사용 금지</span>입니다. 이 두 가지 핵심 개념을 반드시 기억하세요.
+</p>
+</div>
+
+### 2.1 구조적 프로그래밍의 개념
+
+<span class="blue-text">구조적 프로그래밍(Structured Programming)</span>은 네덜란드의 컴퓨터 과학자 <span class="blue-text">에츠허르 데이크스트라(Edsger Dijkstra)</span>가 제안한 프로그래밍 방법론입니다.
+
+**등장 배경**
+- 1960년대 후반, 프로그램의 복잡도 증가로 유지보수가 어려워짐
+- GOTO문의 무분별한 사용으로 프로그램 흐름 파악이 어려워짐
+- 프로그램의 신뢰성과 생산성 향상 필요성 대두
+
+**구조적 프로그래밍의 목적**
+- 프로그램의 복잡도를 낮추어 이해하기 쉽게 만듦
+- 코드의 신뢰성과 품질 향상
+- 유지보수와 디버깅 용이
+- 프로그래밍 표준화를 통한 생산성 증대
+
+---
+
+### 2.2 구조적 프로그래밍의 원칙
+
+**1. 단일 입구와 단일 출구**
+- 각 프로그램 모듈은 하나의 시작점과 하나의 종료점을 가져야 함
+- 프로그램의 흐름을 예측 가능하게 만듦
+
+**2. GOTO문 사용 금지**
+- 무분별한 분기(GOTO)를 사용하지 않음
+- 프로그램의 논리적 흐름을 명확하게 유지
+
+**3. 세 가지 기본 제어 구조만 사용**
+
+<table>
+<tr>
+<th style="width: 25%;">구조</th>
+<th>설명</th>
+<th>예시</th>
+</tr>
+<tr>
+<td><span class="blue-text">순차(Sequence)</span></td>
+<td>명령문이 위에서 아래로 순차적으로 실행되는 구조</td>
+<td>
+<pre>
+int a = 10;
+int b = 20;
+int sum = a + b;
+</pre>
+</td>
+</tr>
+<tr>
+<td><span class="blue-text">선택(Selection)</span></td>
+<td>조건에 따라 실행할 명령을 선택하는 구조<br>(if, if-else, switch 등)</td>
+<td>
+<pre>
+if (score >= 60) {
+    System.out.println("합격");
+} else {
+    System.out.println("불합격");
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td><span class="blue-text">반복(Iteration)</span></td>
+<td>조건이 만족하는 동안 명령을 반복 실행하는 구조<br>(for, while, do-while 등)</td>
+<td>
+<pre>
+for (int i = 1; i <= 5; i++) {
+    System.out.println(i);
+}
+</pre>
+</td>
+</tr>
+</table>
+
+---
+
+### 2.3 구조적 프로그래밍의 장점
+
+| 장점 | 설명 |
+|------|------|
+| **가독성 향상** | 프로그램의 논리적 흐름이 명확하여 읽기 쉬움 |
+| **유지보수 용이** | 구조화된 코드로 수정과 확장이 쉬움 |
+| **디버깅 효율** | 오류 발생 시 원인을 빠르게 파악 가능 |
+| **생산성 증대** | 표준화된 구조로 개발 시간 단축 |
+| **신뢰성 향상** | 논리적 오류 감소로 프로그램 품질 향상 |
+| **재사용성** | 모듈화를 통한 코드 재사용 가능 |
+
+---
+
+### 2.4 구조적 프로그래밍 vs 비구조적 프로그래밍
+
+**비구조적 프로그래밍 (GOTO 사용)**
+```c
+// 나쁜 예: GOTO를 사용한 코드
+int i = 1;
+loop:
+    if (i <= 10) {
+        printf("%d ", i);
+        i++;
+        goto loop;  // GOTO문 사용
+    }
+```
+
+**구조적 프로그래밍 (반복문 사용)**
+```c
+// 좋은 예: 구조적 프로그래밍
+for (int i = 1; i <= 10; i++) {
+    printf("%d ", i);
+}
+```
+
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 1.25rem;">⚠️</span>
+<strong style="font-size: 1rem; font-weight: 600; color: #111827; letter-spacing: -0.01em;">주의</strong>
+</div>
+<p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #4b5563;">
+GOTO문을 사용하면 프로그램의 실행 흐름이 복잡해져 <span class="red-text">"스파게티 코드(Spaghetti Code)"</span>가 됩니다. 이는 유지보수와 디버깅을 매우 어렵게 만듭니다.
+</p>
+</div>
+
+---
+
+### 🎯 기출문제 따라잡기
+
+<div class="quiz-number">문제 1</div><strong>구조적 프로그래밍의 기본 제어 구조가 아닌 것은?</strong>
+
+{% capture choices_struct1 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① 순차(Sequence)<br>
+② 선택(Selection)<br>
+③ 반복(Iteration)<br>
+④ 분기(Branch)
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz1_struct"
+   code_html=choices_struct1
+   answer="4|④|분기"
+   tags="구조적 프로그래밍"
+%}
+
+---
+
+<div class="quiz-number">문제 2</div><strong>구조적 프로그래밍에 관한 설명으로 올바르지 않은 것은?</strong>
+
+{% capture choices_struct2 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① 다익스트라(Dijkstra)가 제안한 프로그래밍 방법론이다<br>
+② 프로그램의 복잡도를 낮추어 이해하기 쉽게 만든다<br>
+③ GOTO문을 적극 활용하여 프로그램 흐름을 자유롭게 제어한다<br>
+④ 순차, 선택, 반복의 세 가지 기본 구조를 사용한다
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz2_struct"
+   code_html=choices_struct2
+   answer="3|③"
+   tags="구조적 프로그래밍"
+%}
+
+---
+
+<div class="quiz-number">문제 3</div><strong>다음 중 구조적 프로그래밍의 장점이 아닌 것은?</strong>
+
+{% capture choices_struct3 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① 프로그램의 가독성이 향상된다<br>
+② 유지보수가 용이하다<br>
+③ 디버깅이 쉬워진다<br>
+④ 프로그램 실행 속도가 항상 빠르다
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz3_struct"
+   code_html=choices_struct3
+   answer="4|④"
+   tags="구조적 프로그래밍"
+%}
+
+---
+
+## SECTION 003. 객체지향 프로그래밍 언어
+
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 1.25rem;">💡</span>
+<strong style="font-size: 1rem; font-weight: 600; color: #111827; letter-spacing: -0.01em;">학습 포인트 (중요도: ★★★★★)</strong>
+</div>
+<p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #4b5563;">
+객체지향 프로그래밍의 핵심 특징인 <span class="blue-text">캡슐화, 상속, 다형성, 추상화</span>를 정확히 이해하고, 객체/클래스/메시지의 개념을 명확히 구분할 수 있어야 합니다.
+</p>
+</div>
+
+### 3.1 객체지향 프로그래밍의 개념
+
+<span class="blue-text">객체지향 프로그래밍(Object-Oriented Programming, OOP)</span>은 현실 세계의 사물(객체)을 프로그래밍에 반영하는 기법으로, 프로그램을 <span class="blue-text">객체들의 집합</span>으로 구성하여 개발하는 방법론입니다.
+
+**객체지향 프로그래밍의 특징**
+- 데이터와 데이터를 처리하는 함수를 하나의 객체로 묶어서 관리
+- 현실 세계를 모델링하기 쉬움
+- 코드의 재사용성이 높음
+- 유지보수와 확장이 용이
+
+**대표적인 객체지향 언어**
+- Java, C++, C#, Python, Ruby, JavaScript 등
+
+---
+
+### 3.2 객체지향 프로그래밍의 구성 요소
+
+<table>
+<tr>
+<th style="width: 20%;">구성 요소</th>
+<th>설명</th>
+<th>예시</th>
+</tr>
+<tr>
+<td><span class="blue-text">객체<br>(Object)</span></td>
+<td>
+• 현실 세계의 사물을 프로그래밍으로 표현한 것<br>
+• 속성(데이터)과 메소드(기능)를 가짐<br>
+• 클래스로부터 생성됨
+</td>
+<td>
+자동차, 학생, 계좌 등<br><br>
+예: '내 차'는 Car 클래스의 객체
+</td>
+</tr>
+<tr>
+<td><span class="blue-text">클래스<br>(Class)</span></td>
+<td>
+• 객체를 생성하기 위한 설계도 또는 틀<br>
+• 공통된 속성과 메소드를 정의<br>
+• 동일한 클래스로 여러 객체 생성 가능
+</td>
+<td>
+Car 클래스:<br>
+- 속성: 색상, 속도, 크기<br>
+- 메소드: 가속(), 정지(), 회전()
+</td>
+</tr>
+<tr>
+<td><span class="blue-text">메시지<br>(Message)</span></td>
+<td>
+• 객체 간 상호작용을 위한 수단<br>
+• 한 객체가 다른 객체의 메소드를 호출하는 것<br>
+• 메시지를 받은 객체는 해당 메소드를 실행
+</td>
+<td>
+myCar.start();<br>
+→ myCar 객체에게 "시동을 걸어라"는 메시지 전달
+</td>
+</tr>
+<tr>
+<td><span class="blue-text">속성<br>(Attribute)</span></td>
+<td>
+• 객체가 가지는 데이터 또는 상태<br>
+• 변수의 형태로 표현<br>
+• 객체의 특징을 나타냄
+</td>
+<td>
+자동차의 색상, 속도, 연료량<br>
+학생의 이름, 학번, 성적
+</td>
+</tr>
+<tr>
+<td><span class="blue-text">메소드<br>(Method)</span></td>
+<td>
+• 객체의 동작 또는 기능<br>
+• 함수의 형태로 표현<br>
+• 속성 값을 변경하거나 특정 작업 수행
+</td>
+<td>
+자동차의 가속(), 감속(), 정지()<br>
+학생의 공부하다(), 시험보다()
+</td>
+</tr>
+</table>
+
+---
+
+### 3.3 객체지향 프로그래밍의 특징
+
+#### 1. 캡슐화 (Encapsulation)
+
+<span class="blue-text">캡슐화</span>는 데이터(속성)와 데이터를 처리하는 함수(메소드)를 하나로 묶고, 외부에서 직접 접근하지 못하도록 <span class="blue-text">정보 은닉(Information Hiding)</span>하는 것입니다.
+
+**캡슐화의 장점**
+- 외부로부터 데이터를 보호
+- 내부 구현을 숨기고 인터페이스만 제공
+- 변경에 따른 오류의 파급 효과 최소화
+- 코드의 재사용성 향상
+
+```java
+// 캡슐화 예시
+public class Account {
+    private int balance;  // private: 외부 접근 차단
+
+    public void deposit(int amount) {  // public 메소드로만 접근 허용
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+}
+```
+
+---
+
+#### 2. 상속 (Inheritance)
+
+<span class="blue-text">상속</span>은 기존 클래스(부모 클래스)의 속성과 메소드를 새로운 클래스(자식 클래스)가 물려받아 사용하는 것입니다.
+
+**상속의 장점**
+- 코드의 재사용성 증대
+- 계층적 분류 및 관리 가능
+- 유지보수 용이
+- 확장성 향상
+
+```java
+// 상속 예시
+class Vehicle {  // 부모 클래스
+    String brand;
+    void start() {
+        System.out.println("시동을 겁니다");
+    }
+}
+
+class Car extends Vehicle {  // 자식 클래스
+    int seats;
+    void drive() {
+        System.out.println("운전합니다");
+    }
+}
+
+// Car 클래스는 Vehicle의 brand와 start()를 물려받음
+```
+
+---
+
+#### 3. 다형성 (Polymorphism)
+
+<span class="blue-text">다형성</span>은 하나의 메시지에 대해 각 객체가 자신만의 방식으로 응답할 수 있는 능력입니다.
+
+**다형성의 구현 방법**
+
+| 방법 | 설명 | 예시 |
+|------|------|------|
+|오버로딩<br>(Overloading) | 같은 이름의 메소드를 매개변수의 개수나 타입을 다르게 하여 여러 개 정의 | add(int a, int b)<br>add(double a, double b) |
+|오버라이딩<br>(Overriding) | 부모 클래스의 메소드를 자식 클래스에서 재정의 | 부모의 start()를<br>자식에서 다르게 재정의 |
+
+```java
+// 오버로딩 예시
+class Calculator {
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    double add(double a, double b) {
+        return a + b;
+    }
+}
+
+// 오버라이딩 예시
+class Animal {
+    void sound() {
+        System.out.println("동물 소리");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    void sound() {  // 메소드 재정의
+        System.out.println("멍멍");
+    }
+}
+```
+
+---
+
+#### 4. 추상화 (Abstraction)
+
+<span class="blue-text">추상화</span>는 복잡한 내부 구현을 숨기고 핵심적인 정보나 기능만을 외부에 제공하는 것입니다.
+
+**추상화의 특징**
+- 불필요한 세부사항을 감춤
+- 공통적인 속성이나 기능을 추출
+- 복잡도를 낮춰 이해하기 쉽게 만듦
+
+```java
+// 추상화 예시
+abstract class Shape {  // 추상 클래스
+    abstract double getArea();  // 추상 메소드 (구현 없음)
+}
+
+class Circle extends Shape {
+    double radius;
+
+    @Override
+    double getArea() {  // 구체적인 구현
+        return 3.14 * radius * radius;
+    }
+}
+```
+
+---
+
+### 3.4 객체지향 프로그래밍의 장단점
+
+**장점**
+
+| 장점 | 설명 |
+|------|------|
+| **재사용성** | 상속과 모듈화를 통해 코드 재사용이 용이 |
+| **확장성** | 새로운 기능 추가가 쉬움 |
+| **유지보수성** | 모듈화로 인해 수정과 관리가 편리 |
+| **직관성** | 현실 세계를 모델링하여 이해하기 쉬움 |
+| **생산성** | 라이브러리 활용으로 개발 시간 단축 |
+
+**단점**
+
+| 단점 | 설명 |
+|------|------|
+| **학습 곡선** | 개념 이해와 설계가 복잡함 |
+| **실행 속도** | 절차지향에 비해 상대적으로 느림 |
+| **설계 시간** | 초기 설계에 많은 시간 소요 |
+
+---
+
+### 🎯 기출문제 따라잡기
+
+<div class="quiz-number">문제 1</div><strong>객체지향 프로그래밍의 구성 요소가 아닌 것은?</strong>
+
+{% capture choices_oop1 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① 객체(Object)<br>
+② 클래스(Class)<br>
+③ 메시지(Message)<br>
+④ 반복문(Loop)
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz1_oop"
+   code_html=choices_oop1
+   answer="4|④|반복문"
+   tags="객체지향"
+%}
+
+---
+
+<div class="quiz-number">문제 2</div><strong>부모 클래스의 속성과 메소드를 자식 클래스가 물려받는 것은?</strong>
+
+{% capture choices_oop2 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① 캡슐화<br>
+② 상속<br>
+③ 다형성<br>
+④ 추상화
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz2_oop"
+   code_html=choices_oop2
+   answer="2|②|상속"
+   tags="객체지향"
+%}
+
+---
+
+<div class="quiz-number">문제 3</div><strong>객체지향의 특징 설명 중 올바르지 않은 것은?</strong>
+
+{% capture choices_oop3 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① 캡슐화는 데이터와 메소드를 하나로 묶는 것이다<br>
+② 상속은 하나의 메시지에 여러 형태로 응답하는 것이다<br>
+③ 다형성은 오버로딩과 오버라이딩으로 구현된다<br>
+④ 추상화는 핵심적인 정보만을 외부에 제공하는 것이다
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz3_oop"
+   code_html=choices_oop3
+   answer="2|②"
+   tags="객체지향"
+%}
+
+---
+
+<div class="quiz-number">문제 4</div><strong>같은 이름의 메소드를 매개변수를 다르게 하여 여러 개 정의하는 것은?</strong>
+
+{% capture choices_oop4 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① 오버라이딩<br>
+② 오버로딩<br>
+③ 캡슐화<br>
+④ 상속
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz4_oop"
+   code_html=choices_oop4
+   answer="2|②|오버로딩"
+   tags="객체지향"
+%}
+
+---
+
+<div class="quiz-number">문제 5</div><strong>객체의 동작이나 기능을 정의한 것은?</strong>
+
+{% capture choices_oop5 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① 속성(Attribute)<br>
+② 메소드(Method)<br>
+③ 클래스(Class)<br>
+④ 메시지(Message)
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz5_oop"
+   code_html=choices_oop5
+   answer="2|②|메소드"
+   tags="객체지향"
+%}
+
+---
+
+<div class="quiz-number">문제 6</div><strong>여러 유사한 객체들을 묶어 공통 특성을 표현한 것은?</strong>
+
+{% capture choices_oop6 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① 객체<br>
+② 클래스<br>
+③ 메시지<br>
+④ 메소드
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz6_oop"
+   code_html=choices_oop6
+   answer="2|②|클래스"
+   tags="객체지향"
+%}
+
+---
+
+## SECTION 004. 스크립트 언어
+
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 1.25rem;">💡</span>
+<strong style="font-size: 1rem; font-weight: 600; color: #111827; letter-spacing: -0.01em;">학습 포인트 (중요도: ★★★★☆)</strong>
+</div>
+<p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #4b5563;">
+스크립트 언어를 <span class="blue-text">서버용</span>과 <span class="blue-text">클라이언트용</span>으로 구분하여 정리하고, 각 언어의 특징과 실행 환경을 명확히 이해해야 합니다.
+</p>
+</div>
+
+### 4.1 스크립트 언어의 개념
+
+<span class="blue-text">스크립트 언어(Script Language)</span>는 프로그램을 <span class="blue-text">컴파일 과정 없이</span> 인터프리터를 통해 한 줄씩 해석하여 즉시 실행하는 프로그래밍 언어입니다.
+
+**스크립트 언어의 특징**
+- HTML 문서 내에 직접 삽입하여 사용 가능
+- 컴파일 없이 바로 실행 (인터프리터 방식)
+- 간결한 문법으로 배우기 쉬움
+- 빠른 개발과 프로토타이핑에 유리
+
+**주요 사용 분야**
+- 웹 프로그래밍 (동적 웹 페이지 생성)
+- 시스템 관리 및 자동화
+- 데이터 처리 및 분석
+- 게임 스크립팅
+
+---
+
+### 4.2 스크립트 언어의 분류
+
+<table>
+<tr>
+<th style="width: 25%;">분류</th>
+<th>실행 위치</th>
+<th>대표 언어</th>
+</tr>
+<tr>
+<td><span class="blue-text">서버 사이드<br>스크립트</span></td>
+<td>
+• 서버에서 실행<br>
+• 실행 결과만 클라이언트로 전송<br>
+• 소스 코드가 노출되지 않음<br>
+• 데이터베이스 연동 가능
+</td>
+<td>
+<span class="yellow-code">JSP</span><br>
+<span class="yellow-code">ASP</span><br>
+<span class="yellow-code">PHP</span><br>
+<span class="yellow-code">Python</span>
+</td>
+</tr>
+<tr>
+<td><span class="blue-text">클라이언트 사이드<br>스크립트</span></td>
+<td>
+• 클라이언트(웹 브라우저)에서 실행<br>
+• 소스 코드가 노출됨<br>
+• 서버 부하 감소<br>
+• 빠른 응답 속도
+</td>
+<td>
+<span class="yellow-code">JavaScript</span><br>
+<span class="yellow-code">VBScript</span>
+</td>
+</tr>
+</table>
+
+---
+
+### 4.3 스크립트 언어의 장단점
+
+**장점**
+
+| 장점 | 설명 |
+|------|------|
+| **빠른 개발** | 컴파일 없이 바로 실행하여 결과 확인 |
+| **간단한 문법** | 배우기 쉽고 코딩이 간편 |
+| **빠른 수정** | 소스 수정 후 즉시 반영 가능 |
+| **프로토타이핑** | 아이디어를 빠르게 구현하고 테스트 |
+
+**단점**
+
+| 단점 | 설명 |
+|------|------|
+| **실행 속도** | 인터프리터 방식으로 컴파일 언어보다 느림 |
+| **런타임 오류** | 실행 중에 오류 발견 (컴파일 타임 체크 없음) |
+| **보안** | 클라이언트 스크립트는 소스 코드 노출 |
+
+---
+
+### 4.4 주요 스크립트 언어
+
+#### 1. JavaScript
+
+<span class="blue-text">JavaScript</span>는 웹 페이지에 동적인 기능을 추가하기 위한 <span class="blue-text">클라이언트 사이드 스크립트 언어</span>입니다.
+
+**JavaScript의 특징**
+- 웹 브라우저에서 실행
+- HTML/CSS와 함께 웹 개발의 핵심 기술
+- 이벤트 기반 프로그래밍
+- 객체 기반 언어 (프로토타입 기반)
+- Node.js를 통해 서버 사이드 개발도 가능
+
+**JavaScript 활용 예시**
+```javascript
+// 버튼 클릭 이벤트 처리
+document.getElementById("myButton").onclick = function() {
+    alert("버튼이 클릭되었습니다!");
+};
+
+// 폼 유효성 검사
+function validateForm() {
+    let name = document.forms["myForm"]["name"].value;
+    if (name == "") {
+        alert("이름을 입력하세요");
+        return false;
+    }
+}
+```
+
+---
+
+#### 2. JSP (Java Server Pages)
+
+<span class="blue-text">JSP</span>는 Java 기반의 <span class="blue-text">서버 사이드 스크립트 언어</span>로, 동적 웹 페이지를 생성합니다.
+
+**JSP의 특징**
+- 서버에서 실행되는 Java 코드
+- 다양한 운영체제에서 실행 가능 (플랫폼 독립적)
+- Java의 강력한 기능 활용 가능
+- 데이터베이스 연동 용이
+
+---
+
+#### 3. ASP (Active Server Pages)
+
+<span class="blue-text">ASP</span>는 마이크로소프트에서 개발한 <span class="blue-text">서버 사이드 스크립트 언어</span>입니다.
+
+**ASP의 특징**
+- Windows 서버 환경에서 주로 사용
+- IIS (Internet Information Services)에서 실행
+- VBScript 또는 JScript 사용
+- .NET 기반의 ASP.NET으로 발전
+
+---
+
+#### 4. PHP
+
+<span class="blue-text">PHP (Hypertext Preprocessor)</span>는 웹 개발에 특화된 <span class="blue-text">서버 사이드 스크립트 언어</span>입니다.
+
+**PHP의 특징**
+- Linux, Unix, Windows 등 다양한 OS 지원
+- C, Java와 유사한 문법으로 배우기 쉬움
+- 웹 호스팅 업체들이 널리 지원
+- WordPress, Laravel 등 유명 프레임워크 존재
+- MySQL 등 데이터베이스와의 연동이 용이
+
+**PHP 활용 예시**
+```php
+<?php
+    // 변수 선언 및 출력
+    $name = "홍길동";
+    echo "안녕하세요, " . $name . "님!";
+
+    // 데이터베이스 연결
+    $conn = mysqli_connect("localhost", "user", "password", "database");
+?>
+```
+
+---
+
+#### 5. Python
+
+<span class="blue-text">Python</span>은 귀도 반 로섬(Guido van Rossum)이 개발한 <span class="blue-text">고수준 프로그래밍 언어</span>로, 스크립트 언어로도 널리 사용됩니다.
+
+**Python의 특징**
+- 간결하고 읽기 쉬운 문법
+- 들여쓰기로 코드 블록 구분
+- 객체지향, 함수형, 절차지향 모두 지원
+- 다양한 분야에서 활용 (웹, 데이터 분석, AI 등)
+- 풍부한 라이브러리와 프레임워크
+- 플랫폼 독립적
+
+**Python 활용 분야**
+- 웹 개발 (Django, Flask)
+- 데이터 분석 및 시각화
+- 인공지능 및 머신러닝
+- 자동화 스크립트
+- 과학 및 수학 연산
+
+---
+
+#### 6. Shell Script
+
+<span class="blue-text">쉘 스크립트(Shell Script)</span>는 Unix/Linux 시스템에서 사용되는 <span class="blue-text">명령어 기반 스크립트</span>입니다.
+
+**Shell Script의 특징**
+- 운영체제 명령어를 조합하여 작성
+- 파일 확장자: `.sh`
+- 시스템 관리 및 자동화에 유용
+- 컴파일 불필요로 실행 속도 빠름
+
+**주요 Shell 종류**
+- Bash Shell (가장 널리 사용)
+- Bourne Shell
+- C Shell
+- Korn Shell
+
+**Shell Script의 제어문**
+
+| 분류 | 제어문 |
+|------|--------|
+| <span class="blue-text">선택형 | if, case |
+| <span class="blue-text">반복형 | for, while, until |
+
+---
+
+#### 7. VBScript
+
+<span class="blue-text">VBScript</span>는 마이크로소프트에서 개발한 <span class="blue-text">클라이언트 사이드 스크립트 언어</span>입니다.
+
+**VBScript의 특징**
+- Visual Basic을 기반으로 함
+- Internet Explorer에서만 지원 (현재는 거의 사용 안 함)
+- Active X 컨트롤 사용 가능
+- JavaScript에 비해 사용 빈도 낮음
+
+---
+
+### 🎯 기출문제 따라잡기
+
+<div class="quiz-number">문제 1</div><strong>다음 중 스크립트 언어가 아닌 것은?</strong>
+
+{% capture choices_script1 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① PHP<br>
+② Python<br>
+③ JavaScript<br>
+④ FORTRAN
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz1_script"
+   code_html=choices_script1
+   answer="4|④|FORTRAN"
+   tags="스크립트 언어"
+%}
+
+---
+
+<div class="quiz-number">문제 2</div><strong>서버 사이드 스크립트 언어가 아닌 것은?</strong>
+
+{% capture choices_script2 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① JSP<br>
+② ASP<br>
+③ PHP<br>
+④ JavaScript
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz2_script"
+   code_html=choices_script2
+   answer="4|④|JavaScript"
+   tags="스크립트 언어"
+%}
+
+---
+
+<div class="quiz-number">문제 3</div><strong>귀도 반 로섬이 개발한 언어로, 간결한 문법과 높은 가독성을 특징으로 하는 스크립트 언어는?</strong>
+
+{% capture choices_script3 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① Java<br>
+② C++<br>
+③ Python<br>
+④ Ruby
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz3_script"
+   code_html=choices_script3
+   answer="3|③|Python"
+   tags="스크립트 언어"
+%}
+
+---
+
+<div class="quiz-number">문제 4</div><strong>Shell Script에서 사용할 수 없는 제어문은?</strong>
+
+{% capture choices_script4 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① if<br>
+② for<br>
+③ while<br>
+④ switch
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz4_script"
+   code_html=choices_script4
+   answer="4|④|switch"
+   tags="스크립트 언어"
+%}
+
+---
+
+<div class="quiz-number">문제 5</div><strong>스크립트 언어의 특징으로 올바르지 않은 것은?</strong>
+
+{% capture choices_script5 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+① 컴파일 없이 바로 실행 가능하다<br>
+② 실행 속도가 컴파일 언어보다 항상 빠르다<br>
+③ 소스 코드 수정 후 즉시 반영된다<br>
+④ 문법이 간결하여 배우기 쉽다
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz5_script"
+   code_html=choices_script5
+   answer="2|②"
+   tags="스크립트 언어"
+%}
+
+---
+
+## 📝 1장 핵심 요약
+
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+
+<h3 style="margin-top: 0; margin-bottom: 16px; font-size: 1.1rem; font-weight: 600; color: #111827;">001. 라이브러리</h3>
+<ul style="margin: 0 0 24px 0; padding-left: 20px; color: #4b5563;">
+<li><strong>개념</strong>: 자주 사용하는 함수와 데이터를 모아놓은 코드 집합</li>
+<li><strong>분류</strong>: 표준 라이브러리(기본 제공) / 외부 라이브러리(별도 설치)</li>
+<li><strong>구성</strong>: 모듈(파일 단위) / 패키지(디렉터리 단위)</li>
+<li><strong>Java 주요 패키지</strong>: java.lang, java.util, java.io, java.net, java.awt</li>
+<li><strong>Python 주요 모듈</strong>: math, random, datetime, os, sys, re</li>
+</ul>
+
+<h3 style="margin-bottom: 16px; font-size: 1.1rem; font-weight: 600; color: #111827;">002. 구조적 프로그래밍 언어</h3>
+<ul style="margin: 0 0 24px 0; padding-left: 20px; color: #4b5563;">
+<li><strong>제안자</strong>: 에츠허르 데이크스트라(Edsger Dijkstra)</li>
+<li><strong>핵심 원칙</strong>: GOTO문 사용 금지</li>
+<li><strong>3가지 기본 구조</strong>: 순차(Sequence), 선택(Selection), 반복(Iteration)</li>
+<li><strong>목적</strong>: 코드 복잡도 감소, 가독성 향상, 유지보수 용이</li>
+</ul>
+
+<h3 style="margin-bottom: 16px; font-size: 1.1rem; font-weight: 600; color: #111827;">003. 객체지향 프로그래밍 언어</h3>
+<ul style="margin: 0 0 24px 0; padding-left: 20px; color: #4b5563;">
+<li><strong>구성 요소</strong>: 객체(Object), 클래스(Class), 메시지(Message)</li>
+<li><strong>4대 특징</strong>: 캡슐화, 상속, 다형성, 추상화</li>
+<li><strong>다형성 구현</strong>: 오버로딩(매개변수 다르게), 오버라이딩(메소드 재정의)</li>
+<li><strong>대표 언어</strong>: Java, C++, C#, Python</li>
+</ul>
+
+<h3 style="margin-bottom: 16px; font-size: 1.1rem; font-weight: 600; color: #111827;">004. 스크립트 언어</h3>
+<ul style="margin: 0; padding-left: 20px; color: #4b5563;">
+<li><strong>특징</strong>: 컴파일 없이 인터프리터로 실행</li>
+<li><strong>서버 사이드</strong>: JSP, ASP, PHP, Python</li>
+<li><strong>클라이언트 사이드</strong>: JavaScript, VBScript</li>
+<li><strong>장점</strong>: 빠른 개발, 간단한 문법, 즉시 실행</li>
+<li><strong>단점</strong>: 느린 실행 속도, 런타임 오류 발생</li>
+</ul>
+
+</div>
+
+---
+
+## 📚 다음 학습 내용
+
+<p>다음 장에서는 <span class="blue-text">프로그래밍 언어 응용</span>에 대해 학습합니다.</p>
+
+<ul>
+<li><strong>Section 005</strong>: 데이터 타입</li>
+<li><strong>Section 006</strong>: 변수</li>
+<li><strong>Section 007</strong>: 연산자</li>
+<li><strong>Section 008</strong>: 데이터 입·출력</li>
+<li><strong>Section 009</strong>: 제어문</li>
+<li><strong>Section 010</strong>: 반복문</li>
+</ul>
+
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 1.25rem;">💪</span>
+<strong style="font-size: 1rem; font-weight: 600; color: #111827; letter-spacing: -0.01em;">학습 TIP</strong>
+</div>
+<p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #4b5563;">
+이번 장에서 학습한 내용은 프로그래밍의 기본 개념입니다. 각 언어의 특징과 차이점을 명확히 이해하고, 실제 코드 예제를 통해 개념을 확실히 익히세요!
+</p>
+</div>
+
+---
