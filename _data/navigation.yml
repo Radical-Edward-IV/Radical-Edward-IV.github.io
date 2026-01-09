@@ -68,14 +68,14 @@ notes-kr:
         url:    /notes/kr/linux-master/level-2-chapter-02
       - title:  3. 기본 명령어
         url:    /notes/kr/linux-master/level-2-chapter-03
-  - title:      정보처리기능사
+  - title:      정보처리기능사 (프로그래밍기능사)
     children:
       - title:  1. 응용 SW 기초 기술 활용
-        url:    /notes/kr/info-processing-technician/chapter-01
+        url:    /notes/kr/info-processing-technician/chapter-01-old
       - title:  2. 데이터베이스 기초 활용
-        url:    /notes/kr/info-processing-technician/chapter-02
+        url:    /notes/kr/info-processing-technician/chapter-02-old
       - title:  3. 네트워크 기초 활용
-        url:    /notes/kr/info-processing-technician/chapter-03
+        url:    /notes/kr/info-processing-technician/chapter-03-old
       - title:  4. 프로그래밍 언어의 종류
         url:    /notes/kr/info-processing-technician/chapter-04
       - title:  5. C 언어
@@ -152,6 +152,12 @@ notes-kr:
         url:   /notes/kr/python-deep-dive/chapter-04
       - title: 5. 웹 크롤링
         url:   /notes/kr/python-deep-dive/chapter-05
+  - title: Java Basic
+    children:
+      - title: 1. Orientation & 개발 환경 설정
+        url: /notes/kr/java-basic/chapter-01
+      - title: 2. 변수와 자료형, 연산자
+        url: /notes/kr/java-basic/chapter-02
   - title: Java DeepDive
     children:
       - title: 1. 다형성과 타입 캐스팅
