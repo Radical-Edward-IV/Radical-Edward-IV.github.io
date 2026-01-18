@@ -4,7 +4,8 @@
       "Bash(python3 analyze_images.py)",
       "WebFetch(domain:opentutorials.org)",
       "Bash(ls:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(python3:*)"
     ],
     "deny": [],
     "ask": []

@@ -166,6 +166,8 @@ notes-kr:
         url: /notes/kr/java-basic/chapter-01
       - title: 2. 변수와 자료형, 연산자
         url: /notes/kr/java-basic/chapter-02
+      - title: 3. 조건문과 제어 흐름
+        url: /notes/kr/java-basic/chapter-03
   - title: Java DeepDive
     children:
       - title: 1. 다형성과 타입 캐스팅
