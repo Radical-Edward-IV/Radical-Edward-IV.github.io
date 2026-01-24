@@ -1,7 +1,7 @@
 ---
 layout: article
 title: 1. 프로그래밍기능사 개편 안내 (2026년)
-permalink: /notes/kr/info-processing-technician/chapter-01
+permalink: /notes/kr/info-processing-technician/chapter-01-written
 key: notes
 sidebar:
   nav: notes-kr

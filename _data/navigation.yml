@@ -68,42 +68,14 @@ notes-kr:
         url:    /notes/kr/linux-master/level-2-chapter-02
       - title:  3. 기본 명령어
         url:    /notes/kr/linux-master/level-2-chapter-03
-  - title:      프로그래밍기능사 (2026 개편)
+  - title:      프로그래밍기능사
     children:
-      - title:  1. 프로그래밍기능사 개편 안내 (2026년)
-        url:    /notes/kr/info-processing-technician/chapter-01
-      - title:  2. 프로그래밍 언어 활용
+      - title:  프로그래밍 기능사 개편 안내
+        url:    /notes/kr/info-processing-technician/chapter-01-written
+      - title:  1. 라이브러리 및 객체지향
         url:    /notes/kr/info-processing-technician/chapter-02
-      - title:  3. 프로그래밍 언어 응용 - 01
+      - title:  2. 스크립트 언어와 쉘 명령어
         url:    /notes/kr/info-processing-technician/chapter-03
-  - title:      정보처리기능사 (~2025)
-    children:
-      - title:  1. 응용 SW 기초 기술 활용
-        url:    /notes/kr/info-processing-technician/chapter-01-old
-      - title:  2. 데이터베이스 기초 활용
-        url:    /notes/kr/info-processing-technician/chapter-02-old
-      - title:  3. 네트워크 기초 활용
-        url:    /notes/kr/info-processing-technician/chapter-03-old
-      - title:  4. 프로그래밍 언어의 종류
-        url:    /notes/kr/info-processing-technician/chapter-04
-      - title:  5. C 언어
-        url:    /notes/kr/info-processing-technician/chapter-05
-      - title:  6. Java, Python 프로그래밍 언어
-        url:    /notes/kr/info-processing-technician/chapter-06
-      - title:  7. 애플리케이션 테스트 수행 (1)
-        url:    /notes/kr/info-processing-technician/chapter-07
-      - title:  8. 애플리케이션 테스트 수행 (2)
-        url:    /notes/kr/info-processing-technician/chapter-08
-      - title:  9. 애플리케이션 결함 조치
-        url:    /notes/kr/info-processing-technician/chapter-09
-      - title:  10. 기본 SQL 작성하기
-        url:    /notes/kr/info-processing-technician/chapter-10
-      - title:  실전 문제 연습
-        url:    /notes/kr/info-processing-technician/quiz-practice
-      - title:  모의고사 1
-        url:    /notes/kr/info-processing-technician/mock-exam-01
-      - title:  모의고사 2
-        url:    /notes/kr/info-processing-technician/mock-exam-02
   - title:      정보처리기사
     children:
       - title:  1. 요구사항 분석
@@ -168,6 +140,8 @@ notes-kr:
         url: /notes/kr/java-basic/chapter-02
       - title: 3. 조건문과 제어 흐름
         url: /notes/kr/java-basic/chapter-03
+      - title: 4. 반복문
+        url: /notes/kr/java-basic/chapter-04
   - title: Java DeepDive
     children:
       - title: 1. 다형성과 타입 캐스팅
