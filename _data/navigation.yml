@@ -142,6 +142,8 @@ notes-kr:
         url: /notes/kr/java-basic/chapter-03
       - title: 4. 반복문
         url: /notes/kr/java-basic/chapter-04
+      - title: 5. 배열
+        url: /notes/kr/java-basic/chapter-05
   - title: Java DeepDive
     children:
       - title: 1. 다형성과 타입 캐스팅
