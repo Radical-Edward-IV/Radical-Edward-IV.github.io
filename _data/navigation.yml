@@ -76,6 +76,8 @@ notes-kr:
         url:    /notes/kr/info-processing-technician/chapter-02
       - title:  2. 스크립트 언어와 쉘 명령어
         url:    /notes/kr/info-processing-technician/chapter-03
+      - title:  3. Java 프로그래밍
+        url:    /notes/kr/info-processing-technician/chapter-04
   - title:      정보처리기사
     children:
       - title:  1. 요구사항 분석
@@ -144,6 +146,8 @@ notes-kr:
         url: /notes/kr/java-basic/chapter-04
       - title: 5. 배열
         url: /notes/kr/java-basic/chapter-05
+      - title: 6. 클래스와 객체
+        url: /notes/kr/java-basic/chapter-06
   - title: Java DeepDive
     children:
       - title: 1. 다형성과 타입 캐스팅
