@@ -78,6 +78,10 @@ notes-kr:
         url:    /notes/kr/info-processing-technician/chapter-03
       - title:  3. Java 프로그래밍
         url:    /notes/kr/info-processing-technician/chapter-04
+      - title:  4. Python과 예외처리
+        url:    /notes/kr/info-processing-technician/chapter-05
+      - title:  5. 예상문제은행
+        url:    /notes/kr/info-processing-technician/chapter-06
   - title:      정보처리기사
     children:
       - title:  1. 요구사항 분석
