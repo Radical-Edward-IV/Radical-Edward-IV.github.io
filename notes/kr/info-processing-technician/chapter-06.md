@@ -1,6 +1,6 @@
 ---
 layout: article
-title: 5. 예상문제은행
+title: 5. 예상문제은행 (프로그래밍)
 permalink: /notes/kr/info-processing-technician/chapter-06
 key: notes
 sidebar:
@@ -49,7 +49,7 @@ keywords: "프로그래밍기능사, Java, Python, 예상문제, 실기"
 <div class="quiz-code" style="margin-bottom: 15px;">
 <pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>public class Test {
     public static void main(String[] args) {
-        int x = 15, y = 6, z = 3, w = 2;
+        int x = 15, y = 7, z = 3, w = 2;
         x /= y++ - z * w;
         System.out.printf("%d", x);
     }
@@ -256,7 +256,7 @@ for m in range(5):
 {% include quiz-text.html
    id="quiz8_bank"
    code_html=code_block8
-   answer="25 15 10 5 5"
+   answer="40 20 10 5 5"
    tags="Python, 리스트"
 %}
 

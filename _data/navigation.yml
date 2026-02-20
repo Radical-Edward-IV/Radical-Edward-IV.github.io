@@ -80,8 +80,12 @@ notes-kr:
         url:    /notes/kr/info-processing-technician/chapter-04
       - title:  4. Python과 예외처리
         url:    /notes/kr/info-processing-technician/chapter-05
-      - title:  5. 예상문제은행
+      - title:  5. 예상문제은행 (프로그래밍)
         url:    /notes/kr/info-processing-technician/chapter-06
+      - title:  6. SQL의 기본
+        url:    /notes/kr/info-processing-technician/chapter-07
+      - title:  7. 예상문제은행 (SQL)
+        url:    /notes/kr/info-processing-technician/chapter-08
   - title:      정보처리기사
     children:
       - title:  1. 요구사항 분석
