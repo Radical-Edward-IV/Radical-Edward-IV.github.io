@@ -1,374 +1,1103 @@
 ---
 layout: article
-title: 9. 애플리케이션 결함 조치
+title: 8. DML - SELECT와 JOIN
 permalink: /notes/kr/info-processing-technician/chapter-09
 key: notes
 sidebar:
   nav: notes-kr
 aside:
   toc: true
-excerpt: 정보처리기능사 실기 강의 노트, 애플리케이션 결함 관리 프로세스, 결함 조치 우선순위 결정, 코드 인스펙션 및 형상 관리 방법을 다룹니다.
-keywords: "정보처리기능사, 실기, 결함 관리, 결함 추적, 우선순위, 코드 인스펙션, 형상 관리, 버전 제어"
+excerpt: 프로그래밍기능사 실기 대비 - SELECT문의 기본 구조와 조건 검색, 정렬, 그룹 함수, 하위 질의, JOIN(INNER/OUTER)을 학습합니다.
+keywords: "프로그래밍기능사, SQL, SELECT, JOIN, INNER JOIN, OUTER JOIN, GROUP BY, HAVING, ORDER BY, 하위 질의"
 ---
 
+<script src="/assets/js/quiz.js"></script>
+
 <style>
-    /* 색상 활용 규칙
-      빨강: 주의, 경고, 위험 (결함, 오류 등)
-      파랑: 핵심 개념, 주요 기능 (관리 프로세스, 상태 등)
-      초록: 안전한 대안, 긍정적 결과 (수정 완료, 종료 등)
-      노랑: 코드 요소 (도구명, 기법명 등)
-    */
+    .quiz-container {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+    .quiz-number {
+        display: inline-block;
+        background-color: #203BB0;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        margin-right: 10px;
+        font-size: 0.9em;
+    }
     .red-text { color: #D53C41; font-weight: bold; }
     .blue-text { color: #203BB0; font-weight: bold; }
     .green-text { color: #448F52; font-weight: bold; }
     .yellow-code { color: #BD8739; font-weight: bold; }
 </style>
 
-![header](https://capsule-render.vercel.app/api?type=waving&height=300&color=gradient&text=%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EA%B8%B0%EB%8A%A5%EC%82%AC&reversal=false&textBg=false)
-
-결함을 발견하는 것만큼이나 <span class="blue-text">체계적으로 관리</span>하는 것이 중요합니다!
-결함 관리 프로세스, 우선순위 결정 방법, 코드 인스펙션을 통한 결함 제거, 형상 관리를 통한 버전 관리 등을 이해하고 실무에 적용할 수 있어야 합니다.
-
-## 1. 결함 관리 :star::star:
-
-> 💡 **전문가의 조언**: 결함 관리는 단순히 버그를 찾는 것이 아니라, 발견된 결함을 기록하고 원인을 분석하여 해결한 후 재발을 방지하는 전체 프로세스입니다. 결함 상태와 관리 도구를 명확히 이해해야 합니다.
-
-### 결함(Fault)의 정의
-
-결함은 <span class="red-text">소프트웨어가 개발자가 설계한 것과 다르게 동작</span>하거나 다른 결과가 발생되는 것을 의미합니다.
-
-#### 결함의 특징
-
-- 소프트웨어 개발자가 의도한 것과 다르게 동작하거나 다른 결과 발생
-- <span class="red-text">오류 발생</span>, <span class="red-text">작동 실패</span> 등이 결함에 해당
-- 기능 명세서와의 불일치를 통해 판단
-
-#### 일반적인 결함 판단 기준
-
-| 판단 기준 | 설명 |
-|----------|------|
-| **기능 미수행** | 기능 명세서의 기능이 제대로 수행되지 않는 경우 |
-| **묵시적 기능 미수행** | 명세되어 있지는 않지만 묵시적으로 필요한 기능이 수행되지 않는 경우 |
-| **테스트 관점 문제** | 테스트 시각에서 보았을 때 문제라고 판단하는 경우 |
-
-### 결함 관리 프로세스
-
-```
-1. 결함 관리 계획
-   ↓
-2. 결함 기록
-   ↓
-3. 결함 검토
-   ↓
-4. 결함 수정
-   ↓
-5. 결함 재확인
-   ↓
-6. 결함 상태 추적 및 모니터링
-   ↓
-7. 최종 결함 분석 및 보고서 작성
-```
-
-#### 결함 관리 프로세스 상세
-
-| 단계 | 주요 활동 | 담당자 |
-|------|----------|--------|
-| <span class="blue-text">1. 결함 관리 계획</span> | 전체 프로세스에 대한 일정, 인력, 업무 프로세스 확보 및 계획 수립 | 프로젝트 관리자 |
-| <span class="blue-text">2. 결함 기록</span> | 발견된 결함을 결함 관리 DB에 등록 | 테스터 |
-| <span class="blue-text">3. 결함 검토</span> | 등록된 결함 검토 및 개발자 배정 | 테스터, 프로그램 리더, QA 담당자 |
-| <span class="blue-text">4. 결함 수정</span> | 전달받은 결함 수정 | 개발자 |
-| <span class="blue-text">5. 결함 재확인</span> | 수정 내용 확인 및 재테스트 수행 | 테스터 |
-| <span class="blue-text">6. 결함 상태 추적</span> | 결함 유형 발생률 등을 대시보드/게시판으로 제공 | QA 담당자 |
-| <span class="blue-text">7. 최종 분석 및 보고</span> | 결함 정보와 이해관계자 의견이 반영된 보고서 작성 | QA 담당자, 프로젝트 관리자 |
-
-### 결함 상태 추적
-
-#### 결함 관리 측정 지표
-
-| 구분 | 설명 |
-|------|------|
-| <span class="yellow-code">결함 분포</span> | 모듈 또는 컴포넌트의 특정 속성에 해당하는 결함 수 측정 |
-| <span class="yellow-code">결함 추세</span> | 테스트 진행 시간에 따른 결함 수의 추이 분석 |
-| <span class="yellow-code">결함 에이징</span> | 특정 결함 상태로 지속되는 시간 측정 |
-
-#### 결함 상태 (Defect Status)
-
-| 결함 상태 | 내용 |
-|----------|------|
-| <span class="blue-text">Open</span> | 결함이 보고만 되고 <span class="red-text">분석되지 않은 상태</span> |
-| <span class="blue-text">Assigned</span> | 결함의 영향 분석 및 수정을 위해 <span class="blue-text">개발자에게 전달된 상태</span> |
-| <span class="blue-text">Fixed</span> | 개발자에 의해 <span class="green-text">결함 수정이 완료된 상태</span> |
-| <span class="blue-text">Closed</span> | 수정된 결함에 대해 재테스트 시 <span class="green-text">결함이 발견되지 않은 상태</span> |
-| <span class="blue-text">Deferred</span> | 결함 수정이 <span class="red-text">연기된 상태</span> |
-| <span class="blue-text">Classified</span> | 보고된 결함이 <span class="green-text">결함이 아니라고 확인된 상태</span> |
-
-### 결함 추적 순서
-
-```
-Open (결함 등록)
-   ↓
-Reviewed (결함 검토)
-   ↓
-Assigned (결함 할당)
-   ↓
-Resolved (결함 수정)
-   ↓ (필요시)
-Deferred (결함 조치 보류)
-   ↓
-Closed (결함 종료)
-   또는
-Clarified (결함 해제)
-```
-
-#### 결함 추적 단계별 설명
-
-| 단계 | 설명 | 상태 |
-|------|------|------|
-| **결함 등록** | 테스터와 QA 담당자에 의해 발견된 결함 등록 | Open |
-| **결함 검토** | 테스터, QA 담당자, 프로그램 리더, 담당 모듈 개발자에 의해 검토 | Reviewed |
-| **결함 할당** | 결함 수정을 위해 개발자와 문제 해결 담당자에게 할당 | Assigned |
-| **결함 수정** | 개발자가 결함 수정 완료 | Resolved |
-| **결함 조치 보류** | 결함 수정 불가능으로 연기, 우선순위와 일정에 따라 재조율 준비 | Deferred |
-| **결함 종료** | 결함이 해결되어 테스터와 QA 담당자가 종료 승인 | Closed |
-| **결함 해제** | 검토 결과 결함이 아니라고 판명 | Clarified |
-
-### 결함 분류
-
-| 결함 유형 | 설명 | 주요 원인 |
-|----------|------|----------|
-| <span class="red-text">시스템 결함</span> | • 시스템 다운, 애플리케이션 작동 정지/종료<br/>• 응답 시간 지연, 데이터베이스 오류 | 애플리케이션 환경이나 데이터베이스 처리 |
-| <span class="red-text">기능 결함</span> | • 사용자 요구사항의 잘못된 구현<br/>• 비즈니스 프로세스, 스크립트 오류, 계산 오류 | 기획, 설계, 업무 시나리오 단계에서 유입 |
-| <span class="red-text">GUI 결함</span> | • UI 비일관성, 데이터 타입 표시 오류<br/>• 부정확한 커서/메시지 오류 | 사용자 화면 표시 관련 |
-| <span class="red-text">문서 결함</span> | • 요구사항과 기능 요구사항의 불일치<br/>• 온라인/오프라인 매뉴얼의 불일치 | 기획자, 사용자, 개발자 간 의사소통 부족 |
-
-### 결함 관리 도구
-
-| 도구 | 특징 |
-|------|------|
-| <span class="yellow-code">Mantis</span> | • 결함 및 이슈 관리 도구<br/>• 소프트웨어 설계 시 단위별 작업 내용 기록<br/>• 결함 추적 가능 |
-| <span class="yellow-code">Trac</span> | • 결함 추적<br/>• 결함 통합 관리 가능 |
-| <span class="yellow-code">Redmine</span> | • 프로젝트 관리<br/>• 결함 추적 기능 제공 |
-| <span class="yellow-code">Bugzilla</span> | • 결함 신고, 확인, 처리 등 지속적 관리<br/>• <span class="blue-text">결함 심각도와 우선순위 지정</span> 가능 |
-
-> 💡 **팁**: 결함 관리 도구는 프로젝트 규모와 팀 특성에 맞게 선택해야 합니다. 오픈소스 도구들은 대부분 무료로 사용할 수 있어 소규모 프로젝트에 적합합니다.
-
-## 2. 결함 조치 우선순위
-
-### 결함 조치 우선순위의 개요
-
-결함 조치의 우선순위는 <span class="blue-text">발견된 결함 처리에 대한 신속성을 나타내는 척도</span>로, 단위 업무의 가중치와 결함 심각도 등에 따라 결정됩니다.
-
-#### 우선순위 결정 기준
-
-- **우선순위 등급**: <span class="red-text">긴급</span>, <span class="yellow-code">보통</span>, <span class="green-text">낮음</span>
-- 우선순위에 따라 <span class="blue-text">인력 투입 순서를 결정</span>하고 일정 조정
-- 일반적으로 결함 심각도가 높으면 우선순위도 높음
-- 단위 업무의 중요도나 특성에 따라 예외 가능
-
-> 💡 **참고**: 결함 심각도(Severity)와 우선순위(Priority)는 다른 개념입니다. 심각도는 기술적 영향도이고, 우선순위는 비즈니스적 중요도를 반영합니다.
-
-### 가중치 (Weight)
-
-가중치는 <span class="blue-text">애플리케이션의 평가 항목이나 각 단위 업무가 차지하는 중요도</span>를 의미합니다.
-
-#### 평가 항목의 가중치
-
-- 단위 업무에 대한 애플리케이션의 영향을 평가할 수 있는 항목 선정
-- 각 항목별 중요도에 따라 비율 설정
-
-#### 단위 업무의 가중치 산정 방법
-
-1. 단위 업무별로 각 평가 항목에 대해 **1~5점의 등급** 산정
-2. 등급에 **평가 항목의 가중치 비율** 적용
-3. 모든 항목의 값을 합산하여 산출
-
-#### 가중치 산정 예시
-
-| 단위 업무 | 평가 등급(1~5) |  |  |  | 가중치 |
-|----------|--------------|--|--|--|--------|
-|  | 업무/서비스<br/>(30%) | 시스템 의존도<br/>(20%) | 사용자 범위<br/>(30%) | 월 이용자 수<br/>(20%) |  |
-| **도서관리** | 5 | 3 | 5 | 4 | **4.4** |
-| **회원관리** | 3 | 4 | 5 | 2 | **3.1** |
-
-**도서관리 가중치 계산**:
-```
-5 × 0.3 + 3 × 0.2 + 5 × 0.3 + 4 × 0.2
-= 1.5 + 0.6 + 1.5 + 0.8
-= 4.4
-```
-
-### 결함 심각도 (Severity)
-
-| 심각도 | 설명 | 표시 | 가중치 측정 구간 |
-|--------|------|------|-----------------|
-| <span class="red-text">High</span> | • 단위 업무 프로세스가 비정상적으로 수행<br/>• 다른 단위 기능 및 시스템 전체에 영향 | H | **4 이상** |
-| <span class="yellow-code">Medium</span> | • 일반 사용자 환경에서 정상적으로 수행되지 않음 | M | **3 이상 ~ 4 미만** |
-| <span class="green-text">Low</span> | • 일반 사용자 환경에서는 정상 수행<br/>• 특정 사용자에게만 제한적으로 영향 | L | **3 미만** |
-
-### 결함 조치 우선순위의 결정 순서
-
-```
-1단계: 테스트 결함 목록과 개선 방안 확인
-   ↓
-2단계: 테스트별 결함 원인 분류
-   ↓
-3단계: 결함의 개선 범위, 개선 효과 정의
-   ↓
-4단계: 업무별 중요도 파악을 위한 가중치 부여
-   ↓
-5단계: 가중치와 결함 업무를 연결하여 심각도 계산
-   ↓
-6단계: 정량적·정성적 평가를 통한 우선순위 결정
-```
-
-#### 우선순위 결정 시 고려사항
-
-| 고려사항 | 설명 |
-|----------|------|
-| <span class="yellow-code">정량적 평가</span> | 가중치 기반으로 계산된 결함 심각도 활용 |
-| <span class="yellow-code">정성적 평가</span> | 업무별 담당자와 팀별 회의를 통한 종합적 판단 |
-| <span class="yellow-code">비즈니스 영향도</span> | 업무의 중요도, 사용 빈도, 사용자 범위 고려 |
-| <span class="yellow-code">기술적 난이도</span> | 수정 복잡도, 소요 시간, 파급 효과 고려 |
-
-## 3. 결함 조치 관리 :star::star:
-
-> 💡 **전문가의 조언**: 결함 조치 관리는 단순히 버그를 고치는 것이 아니라, 코드 인스펙션을 통해 체계적으로 결함을 제거하고, 형상 관리를 통해 변경 이력을 관리하는 전체 프로세스입니다.
-
-### 결함 조치 관리의 개요
-
-결함 조치 관리는 <span class="blue-text">결함이 발생한 코드에서 결함을 제거</span>하고 <span class="blue-text">변경된 코드의 버전과 이력을 관리</span>하는 것을 의미합니다.
-
-#### 결함 조치 관리의 구성
-
-- **결함 제거**: <span class="yellow-code">코드 인스펙션</span>을 통해 수행
-- **버전 및 이력 관리**: <span class="yellow-code">형상 관리</span>를 통해 수행
-
-### 코드 인스펙션 (Code Inspection)
-
-코드 인스펙션은 <span class="blue-text">코드의 결함을 파악하고 제거</span>하기 위해 <span class="blue-text">개발 가이드의 준수 여부를 확인</span>하는 것입니다.
-
-#### 코드 인스펙션의 특징
-
-- <span class="green-text">기능으로 이상이 없는 코드</span>를 대상으로 수행
-- 적절히 수행할 경우 **코드에 포함된 에러의 90%까지 발견** 가능
-- 프로젝트 수행 단계 전체에 걸친 <span class="green-text">리스크 절감 및 비용 감소</span>
-- <span class="green-text">품질 향상</span> 기대
-- 다른 개발자의 기술 습득 및 학습 기회 제공
-- <span class="blue-text">재공학(Re-Engineering)</span> 가능 영역 식별에 도움
-
-#### 코드 인스펙션 방법
-
-| 방법 | 설명 | 적용 시점 |
-|------|------|----------|
-| <span class="blue-text">자동 인스펙션</span> | • 애플리케이션에 적합한 코드 인스펙션 도구 활용<br/>• 자동화된 검토 수행 | 기본적으로 모든 코드에 적용 |
-| <span class="blue-text">수동 인스펙션</span> | • 코드를 추출하여 직접 검토<br/>• 전문가의 경험과 판단 활용 | • 자동 인스펙션 결과 에러가 많은 경우<br/>• 복잡한 처리 로직이 있는 경우<br/>• 신규 개발자의 코드 |
-
-### 코드 인스펙션의 수행 절차
-
-| 단계 | 주요 활동 |
-|------|----------|
-| <span class="blue-text">1. 용량 계획</span><br/>(Capacity Plan) | 인스펙션할 코드의 선정 기준과 범위 결정 |
-| <span class="blue-text">2. 시작</span><br/>(Overview) | 자동 인스펙션 또는 수동 인스펙션 수행 |
-| <span class="blue-text">3. 준비</span><br/>(Preparation) | • 계획서 및 체크리스트 작성<br/>• 관련자에게 일정 공지<br/>• 산출물 준비 |
-| <span class="blue-text">4. 인스펙션 회의</span><br/>(Inspection Meeting) | • 사전 검토 실시<br/>• 회의 진행<br/>• 결과 보고서 작성 |
-| <span class="blue-text">5. 재작업</span><br/>(Rework) | • 코드 작성자가 직접 시정 조치<br/>• 인스펙션 진행자가 결과 확인 |
-| <span class="blue-text">6. 후속 처리</span><br/>(Follow-up) | • 결과 분석서 작성<br/>• 보고 |
-
-### 코드 인스펙션 vs 워크스루
-
-| 구분 | 코드 인스펙션<br/>(Code Inspection) | 워크스루<br/>(Walkthrough) |
-|------|-----------------------------------|----------------------------|
-| **수행 목적** | <span class="red-text">결함 파악 및 제거</span> | <span class="blue-text">산출물 평가 및 개선</span> |
-| **수행 조건** | 완성도가 기준 이상일 때 | 팀이나 관리자 필요 시 |
-| **결함 수정 여부** | <span class="green-text">모든 결함을 제거</span> | 코드 작성자가 결함 수정 여부 결정 |
-| **참여자** | 동료 | 기술 전문가 및 동료 |
-| **발표자** | 검토 대상에 대한 의존도가 높은 사람<br/>(주 사용자) | 코드 작성자 |
-| **체크리스트** | <span class="blue-text">사용</span> | 사용하지 않음 |
-
-> 💡 **팁**: 코드 인스펙션은 공식적이고 체계적인 검토 방법이며, 워크스루는 비공식적이고 유연한 검토 방법입니다. 프로젝트 상황에 맞게 선택하여 활용하세요.
-
-### 형상 관리 (Configuration Management)
-
-형상 관리는 <span class="blue-text">소프트웨어 개발 과정에서 소프트웨어의 변경 사항을 관리</span>하기 위해 개발된 일련의 활동입니다.
-
-#### 형상 관리의 목적
-
-- 소프트웨어 변경의 원인을 알아내고 제어
-- 적절히 변경되고 있는지 확인하여 해당 담당자에게 통보
-- <span class="green-text">소프트웨어 개발의 전체 비용 절감</span>
-- <span class="green-text">개발 과정의 여러 방해 요인 최소화</span>
-
-#### 형상 관리의 적용 범위
-
-- 소프트웨어 개발의 <span class="blue-text">전 단계</span>에 적용
-- <span class="blue-text">유지보수 단계</span>에서도 수행
-
-### 소프트웨어 형상 항목 (SCI: Software Configuration Item)
-
-형상 관리의 대상이 되는 항목들을 개발 단계별로 정리하면 다음과 같습니다.
-
-| 개발 단계 | 형상 항목 |
-|----------|----------|
-| <span class="blue-text">계획 단계</span> | • 시스템 명세서<br/>• 개발 계획서<br/>• 품질평가 계획서<br/>• 개발 표준 및 매뉴얼 |
-| <span class="blue-text">요구 분석 단계</span> | • 자료 흐름도(DFD)<br/>• 자료 사전(Data Dictionary) |
-| <span class="blue-text">설계 단계</span> | • 입출력 명세서<br/>• 화면 설계서<br/>• 초기 사용자 매뉴얼<br/>• 시스템 구조도 |
-| <span class="blue-text">구현 단계</span> | • 원시 코드<br/>• 목적 코드<br/>• 실행 코드<br/>• 단위 시험 보고서 |
-| <span class="blue-text">시스템 통합 및 시험 단계</span> | • 통합 시험 보고서<br/>• 기능 시험 보고서<br/>• 성능 시험 보고서<br/>• 과부하 시험 보고서 |
-| <span class="blue-text">설치 및 운영 단계</span> | • 목적 코드<br/>• 실행 코드<br/>• 운영자 매뉴얼<br/>• 사용자 매뉴얼 |
-
-### 형상 관리의 기능
-
-| 기능 | 설명 | 주요 활동 |
-|------|------|----------|
-| <span class="blue-text">형상 식별</span> | 형상 관리 대상에 이름과 관리 번호 부여 | • 계층 구조로 구분<br/>• 수정 및 추적 용이하도록 식별자 부여 |
-| <span class="blue-text">버전 제어</span><br/>(버전 관리) | 소프트웨어 변경 과정에서 생성된 다른 버전 관리 | • 특정 절차와 도구 결합<br/>• 버전 관리 수행 |
-| <span class="blue-text">형상 통제</span><br/>(변경 관리) | 식별된 형상 항목에 대한 변경 요구 검토 | • 현재 기준선(Base Line) 갱신 또는 보류<br/>• 변경 요청 승인, 일정, 결함 과정 관리 |
-| <span class="blue-text">형상 감사</span> | 기준선의 무결성 평가 | • 확인, 검증, 검열 과정<br/>• 공식적 승인 |
-| <span class="blue-text">형상 기록</span><br/>(상태 보고) | 형상 작업 결과를 기록·관리 | • 보고서 작성<br/>• 이력 관리 |
-
-> 💡 **기준선(Base Line)**: 소프트웨어 개발 과정에서 공식적으로 검토되고 승인된 명세서나 제품으로, 추가 개발의 기준이 되며 공식 절차에 의해서만 변경 가능합니다.
+![header](https://capsule-render.vercel.app/api?type=waving&height=300&color=gradient&text=%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%EA%B8%B0%EB%8A%A5%EC%82%AC&reversal=false&textBg=false)
 
 ---
 
-## 핵심 요약 정리
+# PART 1. SELECT문의 기본
 
-### 결함 상태 추적 흐름
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 1.25rem;">💡</span>
+<strong style="font-size: 1rem; font-weight: 600; color: #111827; letter-spacing: -0.01em;">학습 TIP</strong>
+</div>
+<p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #4b5563;">
+SELECT문은 SQL에서 가장 빈번하게 출제되는 영역입니다. WHERE, GROUP BY, HAVING, ORDER BY 절의 역할과 실행 순서를 반드시 암기하세요.
+</p>
+</div>
+
+## 1.1 SELECT문의 개요
+
+<span class="blue-text">SELECT문</span>은 테이블의 튜플(행) 중에서 전체 또는 조건을 만족하는 튜플을 검색하여 주기억장치 상에 임시 테이블로 구성하는 명령문이다.
+
+```sql
+SELECT [PREDICATE] [테이블명.]속성명1, [테이블명.]속성명2, ...
+FROM 테이블명1, 테이블명2, ...
+[WHERE 조건]
+[GROUP BY 속성명1, 속성명2, ...]
+[HAVING 조건]
+[ORDER BY 속성명 [ASC | DESC]];
+```
+
+**각 절의 역할**
+
+| 절 | 설명 |
+|------|------|
+| **SELECT** | 검색할 속성(열) 또는 수식을 지정한다. 모든 속성을 검색할 때는 `*`를 사용한다. |
+| **FROM** | 검색할 데이터를 포함하는 테이블명을 지정한다. |
+| **WHERE** | 검색 조건을 기술한다. |
+| **GROUP BY** | 특정 속성을 기준으로 그룹화하여 검색할 때 사용한다. 그룹 함수와 함께 쓰인다. |
+| **HAVING** | GROUP BY로 그룹화한 결과에 대한 조건을 지정한다. |
+| **ORDER BY** | 특정 속성 기준으로 정렬한다. ASC(오름차순, 기본값), DESC(내림차순) |
+
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 1.25rem;">📌</span>
+<strong style="font-size: 1rem; font-weight: 600; color: #111827; letter-spacing: -0.01em;">PREDICATE 옵션</strong>
+</div>
+<p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #4b5563;">
+• <strong>ALL</strong> : 모든 튜플을 검색 (주로 생략)<br>
+• <strong>DISTINCT</strong> : 중복된 튜플이 있으면 그 중 첫 번째 것만 검색<br>
+• <strong>DISTINCTROW</strong> : 선택된 속성이 아닌 튜플 전체를 대상으로 중복 제거
+</p>
+</div>
+
+**SELECT문의 실행 순서**
 
 ```
-Open (등록) → Reviewed (검토) → Assigned (할당)
-                                      ↓
-Clarified (해제) ← Closed (종료) ← Resolved (수정)
-                                      ↓
-                                Deferred (보류)
+FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY
 ```
 
-### 결함 심각도 vs 우선순위
+---
 
-| 구분 | 의미 | 결정 기준 |
-|------|------|----------|
-| **심각도(Severity)** | 기술적 영향도 | 시스템에 미치는 영향 |
-| **우선순위(Priority)** | 비즈니스 중요도 | 업무 가중치 + 심각도 |
+## 1.2 조건 연산자와 주요 함수
 
-### 코드 인스펙션 vs 워크스루
+### 비교 연산자
+
+| 연산자 | 의미 |
+|--------|------|
+| `=` | 같다 |
+| `<>` | 같지 않다 |
+| `>` | 크다 |
+| `<` | 작다 |
+| `>=` | 크거나 같다 |
+| `<=` | 작거나 같다 |
+
+### 논리 연산자
+
+| 연산자 | 의미 |
+|--------|------|
+| `NOT` | 조건을 만족하지 않는 데이터 추출 |
+| `AND` | 두 조건을 모두 만족하는 데이터 추출 |
+| `OR` | 두 조건 중 하나라도 만족하는 데이터 추출 |
+
+### LIKE 연산자와 대표 문자
+
+| 대표 문자 | 의미 |
+|-----------|------|
+| `%` | 모든 문자를 대표 |
+| `_` | 문자 하나를 대표 |
+| `#` | 숫자 하나를 대표 |
+
+### 연산자 우선순위
 
 ```
-코드 인스펙션: 결함 파악 및 제거 (공식적, 체크리스트 O)
-워크스루: 산출물 평가 및 개선 (비공식적, 체크리스트 X)
+(1) 산술 연산자 : *, /, +, -
+(2) 관계 연산자 : =, <>, >, <, >=, <=
+(3) 논리 연산자 : NOT → AND → OR
 ```
 
-### 형상 관리 5대 기능
+### 주요 함수
 
-1. **형상 식별**: 이름과 번호 부여
-2. **버전 제어**: 버전 관리
-3. **형상 통제**: 변경 관리
-4. **형상 감사**: 무결성 평가
-5. **형상 기록**: 상태 보고
+| 함수 | 기능 |
+|------|------|
+| `AVG(필드명)` | 평균 |
+| `SUM(필드명)` | 합계 |
+| `COUNT(필드명)` | 개수 |
+| `MIN(필드명)` | 최솟값 |
+| `MAX(필드명)` | 최댓값 |
+| `UPPER(문자열)` | 대문자 변환 |
+| `LOWER(문자열)` | 소문자 변환 |
+| `LEN(문자열)` | 문자열 길이 |
+| `TRIM(문자열)` | 양쪽 공백 제거 |
 
-### 주요 결함 관리 도구
+---
 
-- **Mantis**: 결함 추적 + 작업 내용 기록
-- **Trac**: 결함 통합 관리
-- **Redmine**: 프로젝트 관리 + 결함 추적
-- **Bugzilla**: 심각도·우선순위 지정 가능
+## 1.3 기본 검색
 
-> 💡 **전문가의 조언**: 결함 관리는 단순히 버그를 찾아 고치는 것이 아니라, 체계적인 프로세스를 통해 관리하고, 우선순위에 따라 처리하며, 형상 관리를 통해 변경 이력을 추적하는 전체 과정입니다. 결함 상태, 심각도, 관리 도구의 특징을 명확히 이해하면 시험에서 좋은 점수를 받을 수 있습니다!
+다음 예제들은 아래의 <span class="blue-text">&lt;직원&gt;</span> 테이블을 기준으로 합니다.
+
+**&lt;직원&gt; 테이블**
+
+| 성명 | 팀 | 입사일 | 지역 | 급여 |
+|------|------|--------|------|------|
+| 김태현 | 개발 | 03/15/95 | 강남구 | 130 |
+| 박수진 | 마케팅 | 09/22/98 | 마포구 | 85 |
+| 이준혁 | 디자인 | 05/10/92 | 서초구 | 110 |
+| 정미래 | 디자인 | 11/03/96 | 강남구 | 95 |
+| 오세영 | 개발 | 06/18/90 | 송파구 | 105 |
+| 한지우 | 디자인 | 08/25/94 | 용산구 | 130 |
+| 최동현 | 개발 | 02/14/99 | 성동구 | 115 |
+| 송예린 | 마케팅 | 07/30/01 | NULL | 95 |
+
+**예제 1)** &lt;직원&gt; 테이블의 모든 튜플 검색
+
+```sql
+SELECT * FROM 직원;
+```
+
+**예제 2)** 지역 중복 제거 후 검색
+
+```sql
+SELECT DISTINCT 지역 FROM 직원;
+```
+
+**예제 3)** 급여에 10을 더한 결과 검색
+
+```sql
+SELECT 팀 + '팀' AS 소속,
+       성명 + '의 급여' AS 급여정보,
+       급여 + 10 AS 실급여
+FROM 직원;
+```
+
+---
+
+## 1.4 조건 지정 검색
+
+**예제 1)** 팀이 '개발'인 직원 검색
+
+```sql
+SELECT * FROM 직원
+WHERE 팀 = '개발';
+```
+
+**예제 2)** 팀이 '개발'이고 급여가 110 초과인 직원 검색
+
+```sql
+SELECT * FROM 직원
+WHERE 팀 = '개발' AND 급여 > 110;
+```
+
+**예제 3)** 팀이 '개발'이거나 '마케팅'인 직원 검색
+
+```sql
+SELECT * FROM 직원
+WHERE 팀 = '개발' OR 팀 = '마케팅';
+```
+
+**예제 4)** 성명이 '김'으로 시작하는 직원 검색
+
+```sql
+SELECT * FROM 직원
+WHERE 성명 LIKE '김%';
+```
+
+**예제 5)** 입사일이 1994~1998 사이인 직원 검색
+
+```sql
+SELECT * FROM 직원
+WHERE 입사일 BETWEEN #01/01/94# AND #12/31/98#;
+```
+
+**예제 6)** 지역이 NULL인 직원 검색
+
+```sql
+SELECT * FROM 직원
+WHERE 지역 IS NULL;
+```
+
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 1.25rem;">📌</span>
+<strong style="font-size: 1rem; font-weight: 600; color: #111827; letter-spacing: -0.01em;">IS NULL vs IS NOT NULL</strong>
+</div>
+<p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #4b5563;">
+• NULL 값을 비교할 때는 <code>=</code> 연산자를 사용할 수 없으며, 반드시 <code>IS NULL</code> 또는 <code>IS NOT NULL</code>을 사용해야 합니다.
+</p>
+</div>
+
+---
+
+## 1.5 정렬 검색
+
+**예제 1)** 지역을 내림차순으로 정렬하여 상위 2건 검색
+
+```sql
+SELECT TOP 2 *
+FROM 직원
+ORDER BY 지역 DESC;
+```
+
+**예제 2)** 팀 오름차순, 같은 팀은 성명 내림차순 정렬
+
+```sql
+SELECT *
+FROM 직원
+ORDER BY 팀 ASC, 성명 DESC;
+```
+
+---
+
+## 1.6 그룹 지정 검색
+
+**예제 1)** 팀별 평균 급여
+
+```sql
+SELECT 팀, AVG(급여) AS 평균
+FROM 직원
+GROUP BY 팀;
+```
+
+**예제 2)** 팀별 직원 수
+
+```sql
+SELECT 팀, COUNT(*) AS 직원수
+FROM 직원
+GROUP BY 팀;
+```
+
+**예제 3)** 급여가 100 이상인 직원이 2명 이상인 팀 검색
+
+```sql
+SELECT 팀, COUNT(*) AS 직원수
+FROM 직원
+WHERE 급여 >= 100
+GROUP BY 팀
+HAVING COUNT(*) >= 2;
+```
+
+**해설:**
+- 급여 >= 100인 직원: 김태현(130), 이준혁(110), 오세영(105), 한지우(130), 최동현(115)
+- 개발팀: 3명, 디자인팀: 2명 → 둘 다 HAVING 조건 충족
+
+---
+
+## 1.7 하위 질의
+
+하위 질의(서브쿼리)는 SELECT문 안에 또 다른 SELECT문을 포함하는 방식이다.
+
+**&lt;동호회&gt; 테이블**
+
+| 성명 | 활동 | 년수 |
+|------|------|------|
+| 김태현 | 축구 | 12 |
+| 이준혁 | 독서 | 8 |
+| 정미래 | 등산 | 5 |
+| 한지우 | 요리 | 15 |
+| 최동현 | 축구 | 3 |
+
+**예제 1)** 활동이 '요리'인 직원의 성명과 지역 검색
+
+```sql
+SELECT 성명, 지역
+FROM 직원
+WHERE 성명 = (
+  SELECT 성명
+  FROM 동호회
+  WHERE 활동 = '요리'
+);
+```
+
+**결과:** 한지우, 용산구
+
+**예제 2)** 동호회 활동을 하지 않는 직원 검색
+
+```sql
+SELECT *
+FROM 직원
+WHERE 성명 NOT IN (
+  SELECT 성명 FROM 동호회
+);
+```
+
+**결과:** 박수진, 오세영, 송예린 (동호회 테이블에 없는 직원)
+
+---
+
+## 1.8 복수 테이블 검색
+
+**예제)** 활동 년수가 10 이상인 직원의 성명, 팀, 활동, 년수 검색
+
+```sql
+SELECT 직원.성명, 직원.팀,
+       동호회.활동, 동호회.년수
+FROM 직원, 동호회
+WHERE 동호회.년수 >= 10
+  AND 직원.성명 = 동호회.성명;
+```
+
+**결과:**
+
+| 성명 | 팀 | 활동 | 년수 |
+|------|------|------|------|
+| 김태현 | 개발 | 축구 | 12 |
+| 한지우 | 디자인 | 요리 | 15 |
+
+---
+
+## 1.9 집합 연산자를 이용한 통합 질의
+
+```sql
+SELECT 속성명1, 속성명2, ...
+FROM 테이블명
+UNION | UNION ALL | INTERSECT | EXCEPT
+SELECT 속성명1, 속성명2, ...
+FROM 테이블명
+[ORDER BY 속성명 [ASC | DESC]];
+```
+
+| 집합 연산자 | 설명 |
+|-------------|------|
+| **UNION** | 두 SELECT 결과를 통합 (중복 행 <span class="red-text">제거</span>) |
+| **UNION ALL** | 두 SELECT 결과를 통합 (중복 행 <span class="green-text">포함</span>) |
+| **INTERSECT** | 두 결과의 공통된 행만 출력 (교집합) |
+| **EXCEPT** | 첫 번째 결과에서 두 번째 결과를 제외 (차집합) |
+
+**예제 1)** 직원 ∪ 계약직 (중복 제거)
+
+```sql
+SELECT * FROM 직원
+UNION
+SELECT * FROM 계약직;
+```
+
+**예제 2)** 직원 ∩ 계약직 (공통 행만)
+
+```sql
+SELECT * FROM 직원
+INTERSECT
+SELECT * FROM 계약직;
+```
+
+---
+
+# PART 2. JOIN
+
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 1.25rem;">💡</span>
+<strong style="font-size: 1rem; font-weight: 600; color: #111827; letter-spacing: -0.01em;">학습 TIP</strong>
+</div>
+<p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: #4b5563;">
+JOIN은 두 개 이상의 테이블을 연결하여 데이터를 검색하는 핵심 기법입니다. INNER JOIN과 OUTER JOIN의 차이, 그리고 다양한 표기 형식을 반드시 구분하세요.
+</p>
+</div>
+
+## 2.1 JOIN의 개념
+
+<span class="blue-text">JOIN</span>은 2개의 릴레이션에서 연관된 튜플들을 결합하여 하나의 새로운 릴레이션을 반환한다.
+
+- 일반적으로 FROM절에 기술하지만, 릴레이션이 사용되는 곳 어디에서나 사용 가능하다.
+- JOIN은 크게 <span class="blue-text">INNER JOIN</span>과 <span class="blue-text">OUTER JOIN</span>으로 구분된다.
+
+| 분류 | 종류 |
+|------|------|
+| INNER JOIN | EQUI JOIN, NON-EQUI JOIN, NATURAL JOIN |
+| OUTER JOIN | LEFT OUTER JOIN, RIGHT OUTER JOIN, FULL OUTER JOIN |
+
+다음 예제들은 아래의 테이블을 기준으로 합니다.
+
+**&lt;수강생&gt; 테이블**
+
+| 번호 | 이름 | 과정코드 | 멘토 | 점수 |
+|------|------|----------|------|------|
+| 101 | 김도윤 | dev | | 88 |
+| 102 | 이서연 | des | | 92 |
+| 103 | 박준서 | dev | 101 | 97 |
+| 104 | 최하윤 | des | 102 | 70 |
+| 105 | 정우진 | | 103 | 58 |
+
+**&lt;과정&gt; 테이블**
+
+| 과정코드 | 과정명 |
+|----------|--------|
+| dev | 개발 |
+| des | 디자인 |
+| mkt | 마케팅 |
+
+**&lt;점수등급&gt; 테이블**
+
+| 등급 | 하한 | 상한 |
+|------|------|------|
+| S | 90 | 100 |
+| A | 80 | 89 |
+| B | 60 | 79 |
+| C | 0 | 59 |
+
+---
+
+## 2.2 INNER JOIN
+
+### EQUI JOIN (동등 조인)
+
+<span class="blue-text">EQUI JOIN</span>은 `=` 비교에 의해 같은 값을 가지는 행을 연결하여 결과를 생성하는 방법이다.
+
+- 중복된 속성을 제거하여 한 번만 표기하는 방법을 <span class="yellow-code">NATURAL JOIN</span>이라 한다.
+- 연결 고리가 되는 공통 속성을 <span class="green-text">JOIN 속성</span>이라 한다.
+
+**표기 형식 1 - WHERE절 사용**
+
+```sql
+SELECT [테이블명1.]속성명, [테이블명2.]속성명, ...
+FROM 테이블명1, 테이블명2
+WHERE 테이블명1.속성명 = 테이블명2.속성명;
+```
+
+**표기 형식 2 - NATURAL JOIN 사용**
+
+```sql
+SELECT [테이블명1.]속성명, [테이블명2.]속성명, ...
+FROM 테이블명1 NATURAL JOIN 테이블명2;
+```
+
+**표기 형식 3 - USING절 사용**
+
+```sql
+SELECT [테이블명1.]속성명, [테이블명2.]속성명, ...
+FROM 테이블명1 JOIN 테이블명2 USING(속성명);
+```
+
+**표기 형식 4 - ON절 사용**
+
+```sql
+SELECT [테이블명1.]속성명, [테이블명2.]속성명, ...
+FROM 테이블명1 INNER JOIN 테이블명2
+ON 테이블명1.속성명 = 테이블명2.속성명;
+```
+
+**예제 1)** &lt;수강생&gt;과 &lt;과정&gt;에서 '과정코드'가 같은 튜플을 JOIN하여 '번호', '이름', '과정코드', '과정명'을 출력하시오.
+
+```sql
+-- WHERE절 사용
+SELECT 번호, 이름, 수강생.과정코드, 과정명
+FROM 수강생, 과정
+WHERE 수강생.과정코드 = 과정.과정코드;
+
+-- NATURAL JOIN 사용
+SELECT 번호, 이름, 과정코드, 과정명
+FROM 수강생 NATURAL JOIN 과정;
+
+-- USING절 사용
+SELECT 번호, 이름, 과정코드, 과정명
+FROM 수강생 JOIN 과정 USING(과정코드);
+```
+
+**결과:**
+
+| 번호 | 이름 | 과정코드 | 과정명 |
+|------|------|----------|--------|
+| 101 | 김도윤 | dev | 개발 |
+| 102 | 이서연 | des | 디자인 |
+| 103 | 박준서 | dev | 개발 |
+| 104 | 최하윤 | des | 디자인 |
+
+※ 정우진(105)은 과정코드가 NULL이므로 제외됨
+
+---
+
+### NON-EQUI JOIN
+
+<span class="blue-text">NON-EQUI JOIN</span>은 `=` 이외의 비교 연산자(`>`, `<`, `>=`, `<=`, `BETWEEN` 등)를 사용하는 JOIN 방법이다.
+
+**예제 2)** &lt;수강생&gt;과 &lt;점수등급&gt;을 JOIN하여 각 수강생의 '번호', '이름', '점수', '등급'을 출력하시오.
+
+```sql
+SELECT 번호, 이름, 점수, 등급
+FROM 수강생, 점수등급
+WHERE 수강생.점수 BETWEEN 점수등급.하한 AND 점수등급.상한;
+```
+
+**결과:**
+
+| 번호 | 이름 | 점수 | 등급 |
+|------|------|------|------|
+| 101 | 김도윤 | 88 | A |
+| 102 | 이서연 | 92 | S |
+| 103 | 박준서 | 97 | S |
+| 104 | 최하윤 | 70 | B |
+| 105 | 정우진 | 58 | C |
+
+---
+
+## 2.3 OUTER JOIN
+
+<span class="blue-text">OUTER JOIN</span>은 JOIN 조건에 만족하지 않는 튜플도 결과로 출력하기 위한 JOIN 방법이다.
+
+### LEFT OUTER JOIN
+
+INNER JOIN의 결과를 구한 후, 오른쪽 릴레이션의 어떤 튜플과도 맞지 않는 <span class="red-text">왼쪽 릴레이션</span>의 튜플들에 NULL 값을 붙여 결과에 추가한다.
+
+```sql
+SELECT [테이블명1.]속성명, [테이블명2.]속성명, ...
+FROM 테이블명1 LEFT OUTER JOIN 테이블명2
+ON 테이블명1.속성명 = 테이블명2.속성명;
+```
+
+**예제)** &lt;수강생&gt;과 &lt;과정&gt;에서 과정코드가 같은 튜플을 JOIN하되, 과정코드가 없는 수강생도 포함하여 출력하시오.
+
+```sql
+SELECT 번호, 이름, 수강생.과정코드, 과정명
+FROM 수강생 LEFT OUTER JOIN 과정
+ON 수강생.과정코드 = 과정.과정코드;
+```
+
+**결과:**
+
+| 번호 | 이름 | 과정코드 | 과정명 |
+|------|------|----------|--------|
+| 101 | 김도윤 | dev | 개발 |
+| 102 | 이서연 | des | 디자인 |
+| 103 | 박준서 | dev | 개발 |
+| 104 | 최하윤 | des | 디자인 |
+| 105 | 정우진 | NULL | NULL |
+
+---
+
+### RIGHT OUTER JOIN
+
+INNER JOIN의 결과를 구한 후, 왼쪽 릴레이션의 어떤 튜플과도 맞지 않는 <span class="red-text">오른쪽 릴레이션</span>의 튜플들에 NULL 값을 붙여 결과에 추가한다.
+
+```sql
+SELECT [테이블명1.]속성명, [테이블명2.]속성명, ...
+FROM 테이블명1 RIGHT OUTER JOIN 테이블명2
+ON 테이블명1.속성명 = 테이블명2.속성명;
+```
+
+---
+
+### FULL OUTER JOIN
+
+LEFT OUTER JOIN과 RIGHT OUTER JOIN을 합쳐 놓은 것으로, 양쪽 릴레이션에서 조건에 맞지 않는 <span class="red-text">모든 튜플</span>을 포함한다.
+
+```sql
+SELECT [테이블명1.]속성명, [테이블명2.]속성명, ...
+FROM 테이블명1 FULL OUTER JOIN 테이블명2
+ON 테이블명1.속성명 = 테이블명2.속성명;
+```
+
+**예제)** &lt;수강생&gt;과 &lt;과정&gt;에서 과정코드가 같은 튜플을 JOIN하되, 과정코드가 없는 수강생이나 수강생이 없는 과정도 모두 출력하시오.
+
+```sql
+SELECT 번호, 이름, 수강생.과정코드, 과정명
+FROM 수강생 FULL OUTER JOIN 과정
+ON 수강생.과정코드 = 과정.과정코드;
+```
+
+**결과:**
+
+| 번호 | 이름 | 과정코드 | 과정명 |
+|------|------|----------|--------|
+| 101 | 김도윤 | dev | 개발 |
+| 102 | 이서연 | des | 디자인 |
+| 103 | 박준서 | dev | 개발 |
+| 104 | 최하윤 | des | 디자인 |
+| 105 | 정우진 | NULL | NULL |
+| NULL | NULL | mkt | 마케팅 |
+
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 1.25rem;">📌</span>
+<strong style="font-size: 1rem; font-weight: 600; color: #111827; letter-spacing: -0.01em;">OUTER JOIN 정리</strong>
+</div>
+<table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+<tr style="background-color: #f9fafb;">
+<th style="border: 1px solid #e5e7eb; padding: 8px;">종류</th>
+<th style="border: 1px solid #e5e7eb; padding: 8px;">NULL이 추가되는 위치</th>
+</tr>
+<tr>
+<td style="border: 1px solid #e5e7eb; padding: 8px;">LEFT OUTER JOIN</td>
+<td style="border: 1px solid #e5e7eb; padding: 8px;">오른쪽 테이블에 NULL 추가 (왼쪽 테이블 기준)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #e5e7eb; padding: 8px;">RIGHT OUTER JOIN</td>
+<td style="border: 1px solid #e5e7eb; padding: 8px;">왼쪽 테이블에 NULL 추가 (오른쪽 테이블 기준)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #e5e7eb; padding: 8px;">FULL OUTER JOIN</td>
+<td style="border: 1px solid #e5e7eb; padding: 8px;">양쪽 모두에 NULL 추가</td>
+</tr>
+</table>
+</div>
+
+---
+
+# 연습문제
+
+## Part 1 - SELECT
+
+<div class="quiz-number">문제 1</div><strong>&lt;수강생&gt; 테이블에서 학기가 2 이상인 레코드의 과정코드를 검색하되, 동일한 과정코드는 한 번만 출력되도록 하는 SQL문이다. 괄호에 들어갈 알맞은 명령어를 쓰시오.</strong>
+
+{% capture code_block1 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>&lt;수강생&gt;
+
+학번    | 이름   | 학기 | 과정코드
+--------|--------|------|--------
+S101    | 김도윤 | 1    | WE
+S102    | 이서연 | 3    | DS
+S103    | 박준서 | 2    | AI
+S104    | 최하윤 | 1    | WE
+S105    | 정우진 | 2    | DS
+S106    | 한소율 | 4    | AI
+S107    | 오지훈 | 1    | WE
+
+SELECT (      ) 과정코드
+FROM 수강생
+WHERE 학기 >= 2;</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz1_select"
+   code_html=code_block1
+   answer="DISTINCT"
+   tags="SELECT, DISTINCT"
+%}
+
+---
+
+<div class="quiz-number">문제 2</div><strong>&lt;직원&gt; 테이블에서 '성과급'이 500 이상인 데이터를 조회하는 SQL문이다. 괄호에 알맞은 조건을 쓰시오.</strong>
+
+{% capture code_block2 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>&lt;직원&gt;
+
+사번   | 유저명 | 성과급
+-------|--------|------
+E101   | 김태현 | 200
+E102   | 박수진 | 350
+E103   | 이준혁 | 520
+E104   | 정미래 | 780
+E105   | 오세영 | 490
+E106   | 한지우 | 610
+
+SELECT *
+FROM 직원
+WHERE (                 );</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz2_select"
+   code_html=code_block2
+   answer="성과급 >= 500"
+   tags="SELECT, WHERE"
+%}
+
+---
+
+<div class="quiz-number">문제 3</div><strong>&lt;수강생&gt; 테이블에서 3학기이거나 전공이 '소프트웨어'인 수강생의 이름을 조회하는 SQL문이다. 괄호에 들어갈 알맞은 연산자를 쓰시오.</strong>
+
+{% capture code_block3 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>&lt;수강생&gt;
+
+번호 | 이름   | 전공       | 학기 | 평점
+-----|--------|------------|------|-----
+1    | 김도윤 | 소프트웨어 | 1    | 3.5
+2    | 이서연 | 건축       | 1    | 4.0
+3    | 박준서 | 기계       | 3    | 2.8
+4    | 최하윤 | 소프트웨어 | 3    | 4.2
+5    | 정우진 | 기계       | 2    | 3.9
+
+SELECT 이름
+FROM 수강생
+WHERE 학기 = 3 (      ) 전공 = '소프트웨어';</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz3_select"
+   code_html=code_block3
+   answer="OR"
+   tags="SELECT, WHERE"
+%}
+
+---
+
+<div class="quiz-number">문제 4</div><strong>&lt;직원&gt; 테이블에서 '팀'이 '개발'인 튜플의 사번과 유저명을 검색하고자 한다. 괄호(①~③)에 알맞은 명령어를 쓰시오.</strong>
+
+{% capture code_block4 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>SELECT ( ① ), ( ② )
+FROM 직원 ( ③ ) 팀 = '개발';</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz4_select"
+   code_html=code_block4
+   answer="사번, 유저명, WHERE|사번,유저명,WHERE"
+   tags="SELECT, WHERE"
+%}
+
+---
+
+<div class="quiz-number">문제 5</div><strong>다음은 SELECT문의 실행 순서를 나열한 것이다. 괄호(①~③)에 들어갈 알맞은 절을 &lt;보기&gt;에서 찾아 쓰시오.</strong>
+
+{% capture code_block5 %}
+<div style="margin: 15px 0; line-height: 1.8;">
+FROM → ( ① ) → ( ② ) → ( ③ ) → SELECT → ORDER BY<br><br>
+<strong>&lt;보기&gt;</strong><br>
+HAVING, GROUP BY, WHERE
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz5_select"
+   code_html=code_block5
+   answer="WHERE, GROUP BY, HAVING|WHERE,GROUP BY,HAVING"
+   tags="SELECT, 실행 순서"
+%}
+
+---
+
+<div class="quiz-number">문제 6</div><strong>&lt;교재&gt;, &lt;교재가격&gt; 테이블을 참고하여 다음 SQL문의 실행 결과를 쓰시오.</strong>
+
+{% capture code_block6 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>&lt;교재&gt;
+
+교재번호 | 교재명
+---------|----------
+A111     | 네트워크개론
+A222     | 알고리즘
+A333     | 데이터분석
+
+&lt;교재가격&gt;
+
+교재번호 | 가격
+---------|------
+A111     | 22000
+A222     | 18000
+A333     | 15000
+A444     | 9000
+
+SELECT 가격
+FROM 교재가격
+WHERE 교재번호 = (
+  SELECT 교재번호
+  FROM 교재
+  WHERE 교재명 = '알고리즘'
+);</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz6_select"
+   code_html=code_block6
+   answer="18000"
+   tags="SELECT, 하위 질의"
+%}
+
+---
+
+<div class="quiz-number">문제 7</div><strong>여러 개의 SQL문 결과에 대한 합집합을 구하되, 중복된 행은 한 번만 출력하는 집합 연산자를 쓰시오.</strong>
+
+{% include quiz-text.html
+   id="quiz7_select"
+   answer="UNION"
+   tags="SELECT, 집합 연산자"
+%}
+
+---
+
+<div class="quiz-number">문제 8</div><strong>&lt;고객&gt; 테이블에서 '이메일' 필드가 비어있는 고객의 유저명을 검색하는 SQL문이다. 괄호에 들어갈 알맞은 명령어를 쓰시오.</strong>
+
+{% capture code_block8 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>&lt;고객&gt;
+
+고객번호 | 유저명 | 이메일
+---------|--------|---------------
+C1       | 김도윤 | kim@mail.com
+C2       | 이서연 | lee@mail.com
+C3       | 박준서 | park@mail.com
+C4       | 최하윤 |
+C5       | 정우진 | jung@mail.com
+
+SELECT 유저명
+FROM 고객
+WHERE 이메일 (        );</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz8_select"
+   code_html=code_block8
+   answer="IS NULL"
+   tags="SELECT, NULL"
+%}
+
+---
+
+<div class="quiz-number">문제 9</div><strong>다음은 &lt;dept&gt; 테이블의 'name' 필드와 &lt;team&gt; 테이블의 'name' 필드를 통합하되, 중복된 레코드도 모두 출력하는 SQL문이다. 괄호에 들어갈 알맞은 명령어를 쓰시오.</strong>
+
+{% capture code_block9 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>SELECT name FROM dept
+UNION (        )
+SELECT name FROM team;</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz9_select"
+   code_html=code_block9
+   answer="ALL"
+   tags="SELECT, UNION ALL"
+%}
+
+---
+
+<div class="quiz-number">문제 10</div><strong>다음 &lt;회원&gt;, &lt;도서&gt;, &lt;대출&gt; 테이블을 참고하여 SQL문의 실행 결과로 출력되는 유저명을 모두 쓰시오. (쉼표로 구분)</strong>
+
+{% capture code_block10 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>&lt;회원&gt;
+회원코드 | 유저명 | 연락처
+---------|--------|----------
+M1       | 김태현 | 010-1111
+M2       | 박수진 | 010-2222
+M3       | 이준혁 | 010-3333
+M4       | 정미래 | 010-4444
+M5       | 오세영 | 010-5555
+
+&lt;대출&gt;
+회원코드 | 유저명 | 도서코드
+---------|--------|----------
+M1       | 김태현 | B2
+M1       | 김태현 | B3
+M2       | 박수진 | B4
+M2       | 박수진 | B5
+M3       | 이준혁 | B1
+M3       | 이준혁 | B3
+M4       | 정미래 | B3
+M4       | 정미래 | B4
+M5       | 오세영 | B5
+M5       | 오세영 | B1
+
+SELECT 회원.유저명, 회원.연락처
+FROM 회원, 대출
+WHERE 회원.회원코드 = 대출.회원코드
+  AND 대출.도서코드 = 'B3';</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz10_select"
+   code_html=code_block10
+   answer="김태현, 이준혁, 정미래|김태현,이준혁,정미래"
+   tags="SELECT, 복수 테이블"
+%}
+
+---
+
+## Part 2 - JOIN
+
+<div class="quiz-number">문제 11</div><strong>다음 &lt;직원&gt;, &lt;평가&gt; 테이블과 결과를 참고하여 SQL문의 괄호에 들어갈 알맞은 연산자를 쓰시오.</strong>
+
+{% capture code_block11 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>&lt;직원&gt;
+사번   | 유저명 | 직책
+-------|--------|------
+3001   | 김현우 | 영업
+3002   | 이수민 | 개발
+3003   | 박지영 | 영업
+3004   | 최민호 | 인사
+3005   | 장서윤 | 개발
+3006   | 한도현 | 개발
+3007   | 윤채원 | 인사
+
+&lt;평가&gt;
+대상번호 | 등급
+---------|------
+3001     | B+
+3002     | A
+3004     | C
+3006     | A-
+3008     | B
+
+&lt;결과&gt;
+사번   | 유저명
+-------|--------
+3004   | 최민호
+
+SELECT 사번, 유저명
+FROM 직원, 평가
+WHERE 사번 = 대상번호 (        ) 직책 = '인사';</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz11_join"
+   code_html=code_block11
+   answer="AND"
+   tags="JOIN, WHERE"
+%}
+
+---
+
+<div class="quiz-number">문제 12</div><strong>다음은 &lt;실적&gt; 테이블의 매출액이 3000 초과인 항목에 대해 &lt;주문&gt; 테이블의 수량을 &lt;실적&gt; 테이블의 수량으로 갱신하는 SQL문이다. 괄호에 적절한 예약어를 쓰시오.</strong>
+
+{% capture code_block12 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>UPDATE 주문 a INNER JOIN 실적 b
+(        ) a.코드 = b.코드
+SET a.수량 = b.수량
+WHERE b.매출액 > 3000;</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz12_join"
+   code_html=code_block12
+   answer="ON"
+   tags="JOIN, UPDATE"
+%}
+
+---
+
+<div class="quiz-number">문제 13</div><strong>다음 &lt;수강생&gt;, &lt;성적&gt; 테이블과 결과를 분석하여 SQL문의 괄호에 들어갈 알맞은 명령어를 쓰시오. (mydb는 두 테이블이 속한 데이터베이스명)</strong>
+
+{% capture code_block13 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>&lt;수강생&gt;
+번호 | 이름   | 연락처     | 전공
+-----|--------|------------|----------
+1    | 김도윤 | 010-1111   | 컴퓨터공학
+2    | 이서연 | 010-2222   | 전자공학
+3    | 박준서 | 010-3333   | 생명공학
+4    | 최하윤 | 010-4444   | 로봇공학
+5    | 정우진 | 010-5555   | 유전공학
+
+&lt;성적&gt;
+번호 | 점수
+-----|------
+1    | 88
+2    | 91
+3    | 73
+4    | 82
+5    | 95
+
+&lt;결과&gt;
+번호 | 이름   | 전공       | 점수
+-----|--------|------------|------
+1    | 김도윤 | 컴퓨터공학 | 88
+2    | 이서연 | 전자공학   | 91
+3    | 박준서 | 생명공학   | 73
+4    | 최하윤 | 로봇공학   | 82
+5    | 정우진 | 유전공학   | 95
+
+SELECT 번호, 이름, 전공, 점수
+FROM mydb.수강생, mydb.성적
+(        ) mydb.수강생.번호 = mydb.성적.번호;</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz13_join"
+   code_html=code_block13
+   answer="WHERE"
+   tags="JOIN, WHERE"
+%}
+
+---
+
+<div class="quiz-number">문제 14</div><strong>다음은 &lt;게시판&gt; 테이블과 &lt;작성자&gt; 테이블을 결합하는 SQL문이다. 결과를 참고하여 괄호에 들어갈 알맞은 명령어를 쓰시오.</strong>
+
+{% capture code_block14 %}
+<div class="quiz-code" style="margin-bottom: 15px;">
+<pre style="background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>&lt;게시판&gt;
+글번호 | 제목   | 내용       | 작성자ID
+-------|--------|------------|--------
+1      | sql    | sql입문    | 1
+2      | java   | java기초   | 1
+3      | python | python심화 | 3
+4      | react  | react개발  | 2
+5      | linux  | linux명령  | 1
+
+&lt;작성자&gt;
+ID | 이름   | 역할
+---|--------|--------
+1  | 김도윤 | 강사
+2  | 이서연 | DBA
+3  | 박준서 | 연구원
+
+SELECT * FROM 게시판
+LEFT (        ) 작성자
+ON 게시판.작성자ID = 작성자.ID;</code></pre>
+</div>
+{% endcapture %}
+
+{% include quiz-text.html
+   id="quiz14_join"
+   code_html=code_block14
+   answer="JOIN|OUTER JOIN"
+   tags="JOIN, LEFT JOIN"
+%}
+
+---
+
+# 핵심 요약
+
+<div style="background: #ffffff; padding: 24px; border-radius: 12px; margin: 32px 0; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);">
+
+<h3 style="margin-top: 0; margin-bottom: 16px; font-size: 1.1rem; font-weight: 600; color: #111827;">SELECT문</h3>
+<ul style="margin: 0 0 24px 0; padding-left: 20px; color: #4b5563;">
+<li><strong>기본 형식</strong>: SELECT ~ FROM ~ WHERE ~ GROUP BY ~ HAVING ~ ORDER BY</li>
+<li><strong>실행 순서</strong>: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY</li>
+<li><strong>DISTINCT</strong>: 중복 행 제거</li>
+<li><strong>LIKE</strong>: 패턴 검색 (%, _, #)</li>
+<li><strong>IS NULL / IS NOT NULL</strong>: NULL 값 비교</li>
+<li><strong>집합 연산자</strong>: UNION(중복제거), UNION ALL(중복포함), INTERSECT(교집합), EXCEPT(차집합)</li>
+</ul>
+
+<h3 style="margin-bottom: 16px; font-size: 1.1rem; font-weight: 600; color: #111827;">그룹 함수</h3>
+<ul style="margin: 0 0 24px 0; padding-left: 20px; color: #4b5563;">
+<li><strong>AVG</strong>: 평균, <strong>SUM</strong>: 합계, <strong>COUNT</strong>: 개수</li>
+<li><strong>MAX</strong>: 최댓값, <strong>MIN</strong>: 최솟값</li>
+<li><strong>GROUP BY</strong>로 그룹화 후 <strong>HAVING</strong>으로 그룹 조건 지정</li>
+</ul>
+
+<h3 style="margin-bottom: 16px; font-size: 1.1rem; font-weight: 600; color: #111827;">JOIN</h3>
+<ul style="margin: 0; padding-left: 20px; color: #4b5563;">
+<li><strong>EQUI JOIN</strong>: = 조건으로 같은 값의 행을 연결 (WHERE, NATURAL JOIN, USING, ON)</li>
+<li><strong>NON-EQUI JOIN</strong>: &gt;, &lt;, BETWEEN 등 비교 연산자 사용</li>
+<li><strong>LEFT OUTER JOIN</strong>: 왼쪽 테이블 기준, 매칭 안 되는 행에 NULL 추가</li>
+<li><strong>RIGHT OUTER JOIN</strong>: 오른쪽 테이블 기준, 매칭 안 되는 행에 NULL 추가</li>
+<li><strong>FULL OUTER JOIN</strong>: 양쪽 모두 매칭 안 되는 행에 NULL 추가</li>
+</ul>
+
+</div>
+
+---

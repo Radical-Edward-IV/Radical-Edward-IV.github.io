@@ -86,6 +86,10 @@ notes-kr:
         url:    /notes/kr/info-processing-technician/chapter-07
       - title:  7. 예상문제은행 (SQL)
         url:    /notes/kr/info-processing-technician/chapter-08
+      - title:  8. DML - SELECT와 JOIN
+        url:    /notes/kr/info-processing-technician/chapter-09
+      - title:  9. 예상문제은행 (SELECT & JOIN)
+        url:    /notes/kr/info-processing-technician/chapter-10
   - title:      정보처리기사
     children:
       - title:  1. 요구사항 분석
