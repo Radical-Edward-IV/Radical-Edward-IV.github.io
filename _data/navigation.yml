@@ -90,6 +90,10 @@ notes-kr:
         url:    /notes/kr/info-processing-technician/chapter-09
       - title:  9. 예상문제은행 (SELECT & JOIN)
         url:    /notes/kr/info-processing-technician/chapter-10
+      - title:  10. 예시문제 (실기)
+        url:    /notes/kr/info-processing-technician/chapter-11
+      - title:  11. 모의고사 1회 (실기)
+        url:    /notes/kr/info-processing-technician/chapter-12
   - title:      정보처리기사
     children:
       - title:  1. 요구사항 분석
