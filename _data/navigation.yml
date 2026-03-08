@@ -94,6 +94,8 @@ notes-kr:
         url:    /notes/kr/info-processing-technician/chapter-11
       - title:  11. 모의고사 1회 (실기)
         url:    /notes/kr/info-processing-technician/chapter-12
+      - title:  12. 연습문제 (실기)
+        url:    /notes/kr/info-processing-technician/chapter-13
   - title:      정보처리기사
     children:
       - title:  1. 요구사항 분석
